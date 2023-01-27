@@ -1,11 +1,12 @@
 #include <millisDelay.h>;
 const int threshold = 400;
-const int delayMs = 100;
+const int delayMs = 175;
 const int drumCount = 1;
 bool hits[1];
 int vals[1];
 int maxVals[1];
 unsigned long delayStart[1];
+int hitCount =0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -20,7 +21,9 @@ void loop() {
     vals[i] = analogRead(i);
     if (vals[i] > threshold && hits[i] == false) {
       Serial.print(i); 
-      Serial.println(" on"); 
+      Serial.print(" on: ");
+      Serial.println(hitCount); 
+      hitCount++;
       delayStart[i] = millis();
       hits[i] = true;
     } else if (hits[i]) {
