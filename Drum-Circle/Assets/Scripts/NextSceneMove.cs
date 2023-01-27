@@ -10,6 +10,11 @@ public class NextSceneMove : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void LoadCharacter()
+    {
+        SceneManager.LoadScene("CharacterSelect");
+    }
+
     public void Quit()
     {
         Application.Quit();
