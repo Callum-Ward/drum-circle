@@ -9,7 +9,7 @@ void loop() {
   int val2 = analogRead(2);
   int val3 = analogRead(3);  
   
-  if (val1 > 10) {
+  if (val1 > 500) {
     Serial.println(val1);
   }
 }

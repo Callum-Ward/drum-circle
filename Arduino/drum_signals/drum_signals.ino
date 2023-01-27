@@ -1,5 +1,5 @@
 #include <millisDelay.h>;
-const int threshold = 400;
+const int threshold = 500;
 const int delayMs = 175;
 const int drumCount = 1;
 bool hits[1];
@@ -20,22 +20,22 @@ void loop() {
   for (auto i =0;i<drumCount;i++) {
     vals[i] = analogRead(i);
     if (vals[i] > threshold && hits[i] == false) {
-      Serial.print(i); 
-      Serial.print(" on: ");
-      Serial.println(hitCount); 
+      Serial.print("on:"); 
+      Serial.println(i);
+      //Serial.print("count:"); 
+      //Serial.println(hitCount);
       hitCount++;
       delayStart[i] = millis();
       hits[i] = true;
     } else if (hits[i]) {
       if (vals[i] > maxVals[i]) maxVals[i] = vals[i];
-      if (millis()-delayStart[i] >= delayMs) {
-        
-        Serial.print("delay time: ");
-        Serial.println(millis()-delayStart[i]); 
-        Serial.print("max:");
-        Serial.println(maxVals[i]);
-        Serial.print(i);
-        Serial.println(" off"); 
+      if (millis()-delayStart[i] >= delayMs) {  
+        //Serial.print("delay time: ");
+        //Serial.println(millis()-delayStart[i]); 
+        //Serial.print("max:");
+        //Serial.println(maxVals[i]);
+        //Serial.print(i);
+        //Serial.println(" off"); 
         hits[i]=false;
         maxVals[i]=0;
       }
