@@ -32,6 +32,8 @@ public class drumBall : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             rb.velocity = new Vector3(0, 5f, 0);
+
+            FindObjectOfType<AudioManager>().Play("BaseMusic");
         }
 
         try
