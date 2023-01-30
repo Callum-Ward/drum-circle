@@ -27,7 +27,7 @@ public class drumBall : MonoBehaviour
         {
             print(ex.ToString());
         }
-        
+
     }
 
 
@@ -82,7 +82,7 @@ public class drumBall : MonoBehaviour
             print(e.ToString());
 
         }
-        
+
 
 
 
