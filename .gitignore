@@ -3,3 +3,7 @@
 
 # VS Code
 *.vscode
+
+/Assests/Openpose
+/Assests/OpenPose/Plugins/cudnn64_7.dll
+
