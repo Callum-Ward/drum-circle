@@ -11,37 +11,62 @@ public class AudioTimestamp {
     public bool isBeat;
 }
 
+public class TrackAnalysis {
+    public string name;
+    public string path;
+    public List<AudioTimestamp> timestampedOnsets;
+}
+
 public class AudioAnalyser : MonoBehaviour {
 
-    private List<AudioTimestamp> activeSourceTimestamps;
+    public TrackAnalysis[] tracks;
+    public static AudioAnalyser instance;
+
+    public TrackAnalysis activeAnalysis;
+
+    public void loadTrackAnalysis(string name)
+    {
+        TrackAnalysis t = Array.Find(tracks, track => track.name == name);
+        if (t == null)
+        {
+            Debug.LogWarning("Track analysis for " + name + " not found!");
+            return;
+        }
+        this.activeAnalysis = t;
+    }
 
     // Awake is called before the Start method
     void Awake()
     {
-        List<AudioTimestamp> timestamps;
-        using (StreamReader r = new StreamReader("/Users/patcH/Documents/repos/drum-circle/Audio/Dataset.json"))  
-        {  
-            string json = r.ReadToEnd();  
-            timestamps = JsonConvert.DeserializeObject<List<AudioTimestamp>>(json);  
-        }  
-        this.activeSourceTimestamps = timestamps;
-    }
-    public void Update()
-    {
-        int index = (int)(Math.Round(FindObjectOfType<AudioManager>().activeSource.time, 2) * 100);
-        if(index < this.activeSourceTimestamps.Count){
-            int lb = index == 0 ? 0 : index - 1;
-            int ub = index == this.activeSourceTimestamps.Count - 1 ? index : index + 1;
-            for(int i = lb; i <= ub; i++){
-                if(this.activeSourceTimestamps[i].isOnset){
-                    Debug.LogWarning("Onset");
-                    this.activeSourceTimestamps[i].isOnset = false;
-                }
-                if(this.activeSourceTimestamps[i].isBeat){
-                    Debug.LogWarning("Beat");
-                    this.activeSourceTimestamps[i].isBeat = false;
-                }
-            }
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(gameObject);
+
+        /******Test track**********/
+
+        TrackAnalysis TEST_TRACK = new TrackAnalysis();
+        TEST_TRACK.name = "drums";
+        TEST_TRACK.path = "/Users/patcH/Documents/repos/drum-circle/Audio/Dataset.json";
+        tracks = new TrackAnalysis[] {TEST_TRACK};
+
+        /**************************/
+
+        foreach(TrackAnalysis t in tracks)
+        {
+
+            List<AudioTimestamp> timestamps;
+            using (StreamReader r = new StreamReader(t.path))  
+            {  
+                string json = r.ReadToEnd();  
+                timestamps = JsonConvert.DeserializeObject<List<AudioTimestamp>>(json);  
+            }  
+            t.timestampedOnsets = timestamps;
         }
     }
 }
