@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveBeat : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float moveSpeed = 5;
+    public float moveSpeed = 1;
     public float removeHeight = 1;
     void Start()
     {
@@ -20,6 +20,6 @@ public class MoveBeat : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
     }
+
 }
