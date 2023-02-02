@@ -6,8 +6,9 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour {
 
     public Sound[] sounds;
-
     public static AudioManager instance;
+
+    public AudioSource activeSource;
 
     // Awake is called before the Start method
     void Awake()
@@ -31,6 +32,8 @@ public class AudioManager : MonoBehaviour {
 
             s.source.loop = s.loop;
         }
+
+        Play("drums");
     }
 
     public void Play(string name)
@@ -41,6 +44,7 @@ public class AudioManager : MonoBehaviour {
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-        s.source.Play();
+        this.activeSource = s.source;
+        this.activeSource.Play();
     }
 }
