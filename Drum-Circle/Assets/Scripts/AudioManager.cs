@@ -45,7 +45,22 @@ public class AudioManager : MonoBehaviour {
         s.source.Play();
     }
 
-    public void Volume(string name, float volume)
+    public float Volume(string name, float volume)
+    {
+        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
+
+
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return 0f;
+        }
+        s.source.volume = volume;
+
+        return s.source.volume;
+    }
+
+    public void FadeIn(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
 
@@ -55,6 +70,6 @@ public class AudioManager : MonoBehaviour {
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-        s.source.volume = volume;
+        s.source.volume = s.source.volume + 0.01f;
     }
 }

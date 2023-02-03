@@ -15,6 +15,9 @@ public class drumBall : MonoBehaviour
     public float speed=5;
     public string[] sections;
 
+    public int streak = 0;
+    public int streakCombo = 0;
+
     void Start() {
         try
         {
@@ -27,32 +30,10 @@ public class drumBall : MonoBehaviour
         
     }
 
-    public int streakCombo = 0;
-    public int streak = 0;
+
 
     // Update is called once per frame
     void Update() {
-
-        if (streakCombo == 5)
-        {
-            streak++;
-            streakCombo = 0;
-        }
-
-        if (streak == 0)
-            FindObjectOfType<AudioManager>().Volume("layer2", 0f);
-
-        if (streak == 1)
-        {
-            FindObjectOfType<AudioManager>().Volume("layer2", 1f);
-            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
-        }
-
-        if (streak == 2)
-            FindObjectOfType<AudioManager>().Volume("layer3", 0.2f);
-
-        if (streak > 2)
-            streak = 2;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -85,6 +66,8 @@ public class drumBall : MonoBehaviour
                 streak = 0;
         }
 
+        Layers();
+
         try
         {
             receivedString = data_stream.ReadLine();
@@ -113,4 +96,28 @@ public class drumBall : MonoBehaviour
 
 
     }
+
+    void Layers()
+    {
+        if (streakCombo == 5)
+        {
+            streak++;
+            streakCombo = 0;
+        }
+
+        if (streak == 0)
+            FindObjectOfType<AudioManager>().Volume("layer2", 0f);
+
+        if (streak == 1)
+            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
+
+        if (streak >= 1)
+            FindObjectOfType<AudioManager>().FadeIn("layer2");
+
+        if (streak >= 2)
+            FindObjectOfType<AudioManager>().FadeIn("layer3");
+
+        if (streak > 2)
+            streak = 2;
+     }
 }
