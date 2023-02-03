@@ -27,14 +27,62 @@ public class drumBall : MonoBehaviour
         
     }
 
+    public int streakCombo = 0;
+    public int streak = 0;
 
     // Update is called once per frame
-    void Update(){
+    void Update() {
 
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+        if (streakCombo == 5)
+        {
+            streak++;
+            streakCombo = 0;
+        }
+
+        if (streak == 0)
+            FindObjectOfType<AudioManager>().Volume("layer2", 0f);
+
+        if (streak == 1)
+        {
+            FindObjectOfType<AudioManager>().Volume("layer2", 1f);
+            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
+        }
+
+        if (streak == 2)
+            FindObjectOfType<AudioManager>().Volume("layer3", 0.2f);
+
+        if (streak > 2)
+            streak = 2;
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("BaseMusic");
+            FindObjectOfType<AudioManager>().Play("layer1");
+            FindObjectOfType<AudioManager>().Play("layer2");
+            FindObjectOfType<AudioManager>().Volume("layer2", 0f);
+            FindObjectOfType<AudioManager>().Play("layer3");
+            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            rb.velocity = new Vector3(0, 5f, 0);
+
+            FindObjectOfType<AudioManager>().Play("drumTap");
+
+            streakCombo++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            rb.velocity = new Vector3(0, 5f, 0);
+
+            FindObjectOfType<AudioManager>().Play("tapFail");
+            if (streak > 0)
+                streak--;
+            else
+                streak = 0;
         }
 
         try
