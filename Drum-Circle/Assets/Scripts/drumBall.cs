@@ -7,11 +7,12 @@ public class drumBall : MonoBehaviour
 {
     // Start is called before the first frame update
     //WINDOWS
-    //SerialPort data_stream = new SerialPort("COM3", 9600);
+    SerialPort data_stream = new SerialPort("COM3", 9600);
     //MAC
-    SerialPort data_stream = new SerialPort("/dev/cu.usbmodem141301", 9600);
+    //SerialPort data_stream = new SerialPort("/dev/cu.usbmodem141301", 9600);
     public string receivedString;
     public Rigidbody rb;
+    public float speed=5;
     public string[] sections;
 
     void Start() {
@@ -40,7 +41,7 @@ public class drumBall : MonoBehaviour
             sections = receivedString.Split(":");
             if (sections[0] == "on")
             {
-                rb.velocity = new Vector3(0, 5f, 0);
+                rb.velocity = new Vector3(0, speed, 0);
             }
         }
         catch (System.Exception e)
