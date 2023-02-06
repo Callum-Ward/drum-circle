@@ -33,7 +33,7 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drums");
+        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drakkar");
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class BeatmapScript : MonoBehaviour
         }
         else if(FindObjectOfType<AudioManager>().activeSource == null)
         {
-            FindObjectOfType<AudioManager>().Play("drums");
+            FindObjectOfType<AudioManager>().Play("drakkar");
         }
         else
         {
