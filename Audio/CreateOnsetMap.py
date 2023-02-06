@@ -4,7 +4,7 @@ import numpy as np
 
 def main():
     hop_length = 512
-    x, sr = librosa.load('./download.wav')
+    x, sr = librosa.load('./drakkar.mp3')
 
     onset_frames = librosa.onset.onset_detect(x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1)
     onset_times = librosa.frames_to_time(onset_frames)
