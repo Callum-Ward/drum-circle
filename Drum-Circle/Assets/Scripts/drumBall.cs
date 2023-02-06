@@ -27,7 +27,7 @@ public class drumBall : MonoBehaviour
         {
             print(ex.ToString());
         }
-        
+
     }
 
 
