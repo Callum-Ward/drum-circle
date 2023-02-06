@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class NextSceneMove : MonoBehaviour
 {
-    public void Play()
+    public void Continue()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
@@ -13,6 +13,21 @@ public class NextSceneMove : MonoBehaviour
     public void LoadCharacter()
     {
         SceneManager.LoadScene("CharacterSelect");
+    }
+
+    public void NumberPlayer()
+    {
+        SceneManager.LoadScene("");
+    }
+
+    public void BackMenu()
+    {
+        SceneManager.LoadScene("2MissionSelect");
+    }
+
+    public void Return()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void Quit()
