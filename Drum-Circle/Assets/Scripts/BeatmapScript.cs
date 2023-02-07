@@ -6,12 +6,25 @@ using UnityEngine;
 public class BeatmapScript : MonoBehaviour
 {
     public RhythmSpawner spawner;
-    private float timer = 0.0f;
+    public float timer = 0.0f;
+    public float window = 0f;
+    private float windowtime = 0.3f;
+
+    public ScoreManager scoreManager;
+    public AudioAnalyser audioAnalyser;
+    public AudioManager audioManager;
+
+    void Awake()
+    {
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+    }
 
     private void spawnOnTime(float time)
     {
             int index = (int)(Math.Round(time, 2) * 100);
-            List<AudioTimestamp> timestampedOnsets = FindObjectOfType<AudioAnalyser>().activeAnalysis.timestampedOnsets;
+            List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
 
             if(index < timestampedOnsets.Count){
                 int lb = index == 0 ? 0 : index - 1;
@@ -19,40 +32,77 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isOnset){
                         spawner.spawn(1, 0);
-                        timestampedOnsets[i].isOnset = false;
                     }
-                    if(timestampedOnsets[i].isBeat){
+                    if(timestampedOnsets[i].isBeat)
+                    {
                         spawner.spawn(1, 1);
-                        timestampedOnsets[i].isBeat = false;
                     }
                 }
             } 
     }
 
+    private void hitWindow(float time)
+    {
+        int index = (int)(Math.Round(time, 2) * 100);
+        List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
+
+        if (index < timestampedOnsets.Count)
+        {
+            int lb = index == 0 ? 0 : index - 1;
+            int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
+            for (int i = lb; i <= ub; i++)
+            {
+                if (timestampedOnsets[i].isOnset)
+                {
+                    window = windowtime;
+                }
+                if (timestampedOnsets[i].isBeat)
+                {
+                    window = windowtime;
+                }
+            }
+        }
+    }
+    
+
     // Start is called before the first frame update
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drakkar");
+        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drums");
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if(timer <= 4.0f && FindObjectOfType<AudioManager>().activeSource == null)
+        Debug.Log("Window: " + window);
+        if (timer <= 4.0f && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
             timer += Time.deltaTime;
-
         }
-        else if(FindObjectOfType<AudioManager>().activeSource == null)
+        else if(audioManager.activeSource == null)
         {
-            FindObjectOfType<AudioManager>().Play("drakkar");
+            audioManager.Play("drums");
         }
         else
         {
-            spawnOnTime(FindObjectOfType<AudioManager>().activeSource.time + 4.0f);
+            spawnOnTime(audioManager.activeSource.time + 4.0f + (windowtime / 2));
+            hitWindow(audioManager.activeSource.time + windowtime);
+
+            if (window <= 0f && Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                audioManager.Play("tapFail");
+                audioManager.SetActive("drums");
+                scoreManager.Miss();
+            }
+            else if (window > 0f)
+            {
+                window -= Time.deltaTime;
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                    scoreManager.Hit(windowtime / 2 - Mathf.Abs((windowtime / 2) - window));
+                }
+            }
         }
     }
 }
