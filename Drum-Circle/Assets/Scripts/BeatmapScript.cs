@@ -83,11 +83,7 @@ public class BeatmapScript : MonoBehaviour
         }
         else if(audioManager.activeSource == null)
         {
-<<<<<<< HEAD
-            FindObjectOfType<AudioManager>().Play("drums");
-=======
             audioManager.Play("drums");
->>>>>>> music-testing
         }
         else
         {
