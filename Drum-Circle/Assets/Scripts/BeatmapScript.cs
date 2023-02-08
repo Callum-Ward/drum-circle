@@ -17,13 +17,13 @@ public class BeatmapScript : MonoBehaviour
                 int lb = index == 0 ? 0 : index - 1;
                 int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
                 for(int i = lb; i <= ub; i++){
-                    if(timestampedOnsets[i].isOnset){
-                        spawner.spawn(1, 0);
-                        timestampedOnsets[i].isOnset = false;
-                    }
                     if(timestampedOnsets[i].isBeat){
                         spawner.spawn(1, 1);
                         timestampedOnsets[i].isBeat = false;
+                    }
+                    if(timestampedOnsets[i].isOnset){
+                        spawner.spawn(1, 0);
+                        timestampedOnsets[i].isOnset = false;
                     }
                 }
             } 
@@ -33,7 +33,7 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drakkar");
+        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drums");
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class BeatmapScript : MonoBehaviour
         }
         else if(FindObjectOfType<AudioManager>().activeSource == null)
         {
-            FindObjectOfType<AudioManager>().Play("drakkar");
+            FindObjectOfType<AudioManager>().Play("drums");
         }
         else
         {

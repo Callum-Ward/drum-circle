@@ -51,7 +51,7 @@ public class AudioAnalyser : MonoBehaviour {
         /******Test track**********/
 
         TrackAnalysis TEST_TRACK = new TrackAnalysis();
-        TEST_TRACK.name = "drakkar";
+        TEST_TRACK.name = "drums";
         TEST_TRACK.path = "/Users/an20421/drum-circle/Audio/Dataset.json";
         tracks = new TrackAnalysis[] {TEST_TRACK};
 

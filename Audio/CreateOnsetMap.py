@@ -4,7 +4,7 @@ import numpy as np
 
 def main():
     hop_length = 512
-    x, sr = librosa.load('./drakkar.mp3')
+    x, sr = librosa.load('./break_130.wav')
 
     onset_frames = librosa.onset.onset_detect(x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1)
     onset_times = librosa.frames_to_time(onset_frames)
@@ -23,13 +23,13 @@ def main():
     data = []
     for i in range(0, int(round(duration, 2) * 100)):
         timestamp = {"isOnset": False, "isBeat": False, "strength": 0.0}
-        for t in onset_times:
-            if int(round(t, 2) * 100) == i:
-                timestamp["isOnset"] = True
-                break
         for t in beat_times:
             if int(round(t, 2) * 100) == i:
                 timestamp["isBeat"] = True
+                break
+        for t in onset_times:
+            if int(round(t, 2) * 100) == i and not timestamp["isBeat"]:
+                timestamp["isOnset"] = True
                 break
         data.append(timestamp)
                 
