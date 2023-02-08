@@ -2,9 +2,14 @@ import json
 import librosa
 import numpy as np
 
-def main():
+files = [
+    ('./drakkar.mp3', 'drakkar_data.json'),
+    ('./break_130.wav', 'break_130_data.json')
+]
+
+def create_onset_map(path, output):
     hop_length = 512
-    x, sr = librosa.load('./break_130.wav')
+    x, sr = librosa.load(path)
 
     onset_frames = librosa.onset.onset_detect(x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1)
     onset_times = librosa.frames_to_time(onset_frames)
@@ -33,7 +38,11 @@ def main():
                 break
         data.append(timestamp)
                 
-    with open("Dataset.json", "w") as f:
+    with open(output, "w") as f:
         json.dump(data, f)
+
+def main():
+    for path, output in files:
+        create_onset_map(path, output)
 
 main()
