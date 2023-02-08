@@ -32,10 +32,11 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat){
                         spawner.spawn(1, 1);
+                        break;
                     }
                     if(timestampedOnsets[i].isOnset){
                         spawner.spawn(1, 0);
-                        timestampedOnsets[i].isOnset = false;
+                        break;
                     }
                 }
             } 
@@ -55,10 +56,12 @@ public class BeatmapScript : MonoBehaviour
                 if (timestampedOnsets[i].isOnset)
                 {
                     window = windowtime;
+                    break;
                 }
                 if (timestampedOnsets[i].isBeat)
                 {
                     window = windowtime;
+                    break;
                 }
             }
         }
@@ -90,17 +93,19 @@ public class BeatmapScript : MonoBehaviour
             spawnOnTime(audioManager.activeSource.time + 4.0f + (windowtime / 2));
             hitWindow(audioManager.activeSource.time + windowtime);
 
-            if (window <= 0f && Input.GetKeyDown(KeyCode.LeftArrow))
+            if (window <= -(windowtime / 2) && Input.GetKeyDown(KeyCode.LeftArrow))   //0f
             {
                 audioManager.Play("tapFail");
                 audioManager.SetActive("drums");
                 scoreManager.Miss();
             }
-            else if (window > 0f)
+            else if (window > -(windowtime / 2))
             {
                 window -= Time.deltaTime;
                 if (Input.GetKeyDown(KeyCode.LeftArrow)) {
                     scoreManager.Hit(windowtime / 2 - Mathf.Abs((windowtime / 2) - window));
+                    audioManager.Play("drum1");
+                    audioManager.SetActive("drums");
                 }
             }
         }

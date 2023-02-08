@@ -4,7 +4,8 @@ import numpy as np
 
 files = [
     ('./drakkar.mp3', 'drakkar_data.json'),
-    ('./break_130.wav', 'break_130_data.json')
+    ('./break_130.wav', 'break_130_data.json'),
+    ('./download.wav', 'download_data.json')
 ]
 
 def create_onset_map(path, output):
@@ -22,8 +23,7 @@ def create_onset_map(path, output):
 
     duration = librosa.get_duration(y=x, sr=sr)
 
-    print(len(onset_env))
-    print(len(onset_times))
+    print(tempo)
 
     data = []
     for i in range(0, int(round(duration, 2) * 100)):

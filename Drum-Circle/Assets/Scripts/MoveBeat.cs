@@ -20,8 +20,8 @@ public class MoveBeat : MonoBehaviour
     {
         transform.position += Vector3.down * moveSpeed * Time.deltaTime;
 
-        Debug.Log("remove height: " + removeHeight);
-        Debug.Log("tap height: " + tapArea);
+        //Debug.Log("remove height: " + removeHeight);
+        //Debug.Log("tap height: " + tapArea);
 
         if (transform.position.y < removeHeight)
         {
