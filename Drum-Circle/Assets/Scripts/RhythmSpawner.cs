@@ -9,11 +9,13 @@ public class RhythmSpawner : MonoBehaviour
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
+    private BeatManager beatManager;
     //spawn range x= -3.5 to 3.5
 
     // Start is called before the first frame update
     void Start()
     {
+        beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         //set beat spawner location with respect to camera position
         transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
         //set left most spawn location with respect to spawner postion
@@ -39,11 +41,11 @@ public class RhythmSpawner : MonoBehaviour
    
         if (left==1)
         {
-            Instantiate(leftBeat, spawnLoc, transform.rotation);
+            beatManager.AddToQueue(Instantiate(leftBeat, spawnLoc, transform.rotation));
         }
         else
         {
-            Instantiate(rightBeat, spawnLoc, transform.rotation);
+            beatManager.AddToQueue(Instantiate(rightBeat, spawnLoc, transform.rotation));
         }
 
 

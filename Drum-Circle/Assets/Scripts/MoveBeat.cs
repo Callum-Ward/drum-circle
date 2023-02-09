@@ -7,12 +7,14 @@ public class MoveBeat : MonoBehaviour
     // Start is called before the first frame update
     private float moveSpeed = 2;
     private float removeHeight = 1;
-    private float tapArea = 1.3f;
+    //private float tapArea = 1.3f;
     public ScoreManager scoreManager;
+    public BeatManager beatManager;
 
     void Awake()
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
     }
 
     // Update is called once per frame
@@ -26,13 +28,13 @@ public class MoveBeat : MonoBehaviour
         if (transform.position.y < removeHeight)
         {
             scoreManager.Miss();
-            Destroy(gameObject);
+            beatManager.BeatDelete();
         }
 
-        if (transform.position.y < tapArea && Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Destroy(gameObject);
-        }
+       // if (transform.position.y < tapArea && Input.GetKeyDown(KeyCode.LeftArrow))
+        //{
+            //Destroy(gameObject);
+        //}
     }
 
 }

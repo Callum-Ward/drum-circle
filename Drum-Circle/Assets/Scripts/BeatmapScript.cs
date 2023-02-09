@@ -14,12 +14,14 @@ public class BeatmapScript : MonoBehaviour
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
+    public BeatManager beatManager;
 
     void Awake()
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
     }
 
     private void spawnOnTime(float time)
@@ -99,6 +101,7 @@ public class BeatmapScript : MonoBehaviour
                 audioManager.Play("tapFail");
                 audioManager.SetActive("drums");
                 scoreManager.Miss();
+                beatManager.BeatDelete();
             }
             else if (window > 0)
             {
