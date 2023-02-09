@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -426,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd6acedb28061e4b8b81dfa1aee488f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beatTarget: {fileID: 1648900045813027432, guid: 91a7c717dd2177f40aa39fc9e0af5fc8, type: 3}
   leftBeat: {fileID: 1648900045813027432, guid: 51656b4c7cc3de344bc381bf373d4247, type: 3}
   rightBeat: {fileID: 5282272894402615112, guid: cf2ec63bd6588ec4fbb659f3fe6352b2, type: 3}
 --- !u!4 &356736940
@@ -577,7 +578,7 @@ MonoBehaviour:
   sounds:
   - Name: drums
     clip: {fileID: 8300000, guid: 30271849a9bee1b4e9b3f12a28e0929c, type: 3}
-    volume: 1
+    volume: 0
     pitch: 1
     loop: 0
     source: {fileID: 0}
@@ -589,8 +590,15 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
     spectrumData: []
-  - Name: drumTap
-    clip: {fileID: 8300000, guid: f0d1c29f5b171be49ae2847e26dd72e5, type: 3}
+  - Name: drum1
+    clip: {fileID: 8300000, guid: 020ea63dea5d23b4e978a4519967d61e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+    spectrumData: []
+  - Name: drum2
+    clip: {fileID: 8300000, guid: 5760920640c51f248b918e566ab3a68f, type: 3}
     volume: 1
     pitch: 1
     loop: 0

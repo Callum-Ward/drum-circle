@@ -9,6 +9,7 @@ public class BeatmapScript : MonoBehaviour
     public float timer = 0.0f;
     public float window = 0f;
     private float windowtime = 0.3f;
+    private float delay = 2.0f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -30,12 +31,13 @@ public class BeatmapScript : MonoBehaviour
                 int lb = index == 0 ? 0 : index - 1;
                 int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
                 for(int i = lb; i <= ub; i++){
+                    if(timestampedOnsets[i].isBeat){
+                        spawner.spawn(1, 1);
+                        break;
+                    }
                     if(timestampedOnsets[i].isOnset){
                         spawner.spawn(1, 0);
-                    }
-                    if(timestampedOnsets[i].isBeat)
-                    {
-                        spawner.spawn(1, 1);
+                        break;
                     }
                 }
             } 
@@ -55,10 +57,12 @@ public class BeatmapScript : MonoBehaviour
                 if (timestampedOnsets[i].isOnset)
                 {
                     window = windowtime;
+                    break;
                 }
                 if (timestampedOnsets[i].isBeat)
                 {
                     window = windowtime;
+                    break;
                 }
             }
         }
@@ -76,7 +80,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
         Debug.Log("Window: " + window);
-        if (timer <= 4.0f && audioManager.activeSource == null)
+        if (timer <= delay && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
             timer += Time.deltaTime;
@@ -87,20 +91,22 @@ public class BeatmapScript : MonoBehaviour
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + 4.0f + (windowtime / 2));
+            spawnOnTime(audioManager.activeSource.time + delay + (windowtime / 2));
             hitWindow(audioManager.activeSource.time + windowtime);
 
-            if (window <= 0f && Input.GetKeyDown(KeyCode.LeftArrow))
+            if (window <= 0 && Input.GetKeyDown(KeyCode.LeftArrow))   //0f
             {
                 audioManager.Play("tapFail");
                 audioManager.SetActive("drums");
                 scoreManager.Miss();
             }
-            else if (window > 0f)
+            else if (window > 0)
             {
                 window -= Time.deltaTime;
                 if (Input.GetKeyDown(KeyCode.LeftArrow)) {
                     scoreManager.Hit(windowtime / 2 - Mathf.Abs((windowtime / 2) - window));
+                    audioManager.Play("drum1");
+                    audioManager.SetActive("drums");
                 }
             }
         }
