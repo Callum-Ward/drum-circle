@@ -426,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd6acedb28061e4b8b81dfa1aee488f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beatTarget: {fileID: 1648900045813027432, guid: 91a7c717dd2177f40aa39fc9e0af5fc8, type: 3}
   leftBeat: {fileID: 1648900045813027432, guid: 51656b4c7cc3de344bc381bf373d4247, type: 3}
   rightBeat: {fileID: 5282272894402615112, guid: cf2ec63bd6588ec4fbb659f3fe6352b2, type: 3}
 --- !u!4 &356736940
