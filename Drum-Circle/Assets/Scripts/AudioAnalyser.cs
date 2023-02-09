@@ -52,7 +52,7 @@ public class AudioAnalyser : MonoBehaviour {
 
         TrackAnalysis TEST_TRACK = new TrackAnalysis();
         TEST_TRACK.name = "drums";
-        TEST_TRACK.path = "/Users/an20421/drum-circle/Audio/drakkar_data.json";
+        TEST_TRACK.path = "C://Users/Jack/Documents/University Work/gameProject/drum-circle/Audio/drakkar_data.json";
         tracks = new TrackAnalysis[] {TEST_TRACK};
 
         /**************************/
