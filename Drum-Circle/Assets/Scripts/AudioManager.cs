@@ -47,7 +47,7 @@ public class AudioManager : MonoBehaviour {
         this.activeSource.Play();
     }
 
-     public float Volume(string name, float volume)
+    public float Volume(string name, float volume)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
 
