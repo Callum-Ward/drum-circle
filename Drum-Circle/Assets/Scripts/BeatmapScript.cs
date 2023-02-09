@@ -9,6 +9,7 @@ public class BeatmapScript : MonoBehaviour
     public float timer = 0.0f;
     public float window = 0f;
     private float windowtime = 0.3f;
+    private float delay = 2.0f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -79,7 +80,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
         Debug.Log("Window: " + window);
-        if (timer <= 4.0f && audioManager.activeSource == null)
+        if (timer <= delay && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
             timer += Time.deltaTime;
@@ -90,16 +91,16 @@ public class BeatmapScript : MonoBehaviour
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + 4.0f + (windowtime / 2));
+            spawnOnTime(audioManager.activeSource.time + delay + (windowtime / 2));
             hitWindow(audioManager.activeSource.time + windowtime);
 
-            if (window <= -(windowtime / 2) && Input.GetKeyDown(KeyCode.LeftArrow))   //0f
+            if (window <= 0 && Input.GetKeyDown(KeyCode.LeftArrow))   //0f
             {
                 audioManager.Play("tapFail");
                 audioManager.SetActive("drums");
                 scoreManager.Miss();
             }
-            else if (window > -(windowtime / 2))
+            else if (window > 0)
             {
                 window -= Time.deltaTime;
                 if (Input.GetKeyDown(KeyCode.LeftArrow)) {
