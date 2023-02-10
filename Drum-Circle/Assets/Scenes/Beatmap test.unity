@@ -263,6 +263,59 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: TEST
+--- !u!1 &165674714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165674716}
+  - component: {fileID: 165674715}
+  m_Layer: 0
+  m_Name: BeatmapScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &165674715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165674714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df1181807c982c04388e7b9414f2234b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawner: {fileID: 0}
+  timer: 0
+  window: 0
+  windowtime: 1
+  delay: 2
+  scoreManager: {fileID: 0}
+  audioAnalyser: {fileID: 0}
+  audioManager: {fileID: 0}
+  beatManager: {fileID: 0}
+--- !u!4 &165674716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165674714}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6233877, y: 1.26996, z: 2.3462288}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &203865714
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +447,8 @@ MonoBehaviour:
   spawner: {fileID: 0}
   timer: 0
   window: 0
+  windowtime: 0.3
+  delay: 2
   scoreManager: {fileID: 0}
   audioAnalyser: {fileID: 0}
   audioManager: {fileID: 0}
@@ -649,6 +704,20 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
     spectrumData: []
+  - Name: layer1
+    clip: {fileID: 8300000, guid: 6ec569146d44b4342b07b7c000d46cb6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+    spectrumData: []
+  - Name: layer2#
+    clip: {fileID: 8300000, guid: 2fd68d449cacdce47b753f9de951d981, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+    spectrumData: []
   activeSource: {fileID: 0}
 --- !u!4 &1442526204
 Transform:
@@ -698,6 +767,7 @@ MonoBehaviour:
   ScoreMultiplier: 1
   ComboCounter: 0
   ComboCount: 0
+  audioManager: {fileID: 0}
 --- !u!4 &1457132206
 Transform:
   m_ObjectHideFlags: 0

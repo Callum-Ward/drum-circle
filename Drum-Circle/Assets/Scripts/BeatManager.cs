@@ -5,24 +5,50 @@ using UnityEngine;
 public class BeatManager : MonoBehaviour
 
 {
-    private Queue<GameObject> beatQueue = new Queue<GameObject>();
+    public Queue<GameObject> beatQueueL = new Queue<GameObject>();
+    public Queue<GameObject> beatQueueR = new Queue<GameObject>();
     // Start is called before the first frame update
     void Start()
         {
-            Queue<GameObject> beatQueue;
+            //Queue<GameObject> beatQueue;
         }
     // Update is called once per frame
     void Update()
         {
-        
-        }
-    public void AddToQueue(GameObject beat)
+        if (beatQueueL.Count > 0)
         {
-            beatQueue.Enqueue(beat);
+            if (beatQueueL.Peek().GetComponent<MoveBeat>().delete == true)
+            {
+                BeatDelete("left");
+            }
+            if (beatQueueR.Peek().GetComponent<MoveBeat>().delete == true)
+            {
+                BeatDelete("right");
+            }
         }
-    public void BeatDelete()
+    }
+    public void AddToQueueL(GameObject beat)
         {
-            GameObject lastelem = beatQueue.Dequeue();
-            Destroy(lastelem);
+            beatQueueL.Enqueue(beat);
         }
+    public void AddToQueueR(GameObject beat)
+        {
+            beatQueueR.Enqueue(beat);
+        }
+    public void BeatDelete(string side)
+        {
+        if (beatQueueL.Count > 0)
+        {
+            if (side == "left")
+            {
+                GameObject lastelem = beatQueueL.Dequeue();
+                Destroy(lastelem);
+            }
+            else if (side == "right")
+            {
+                GameObject lastelem = beatQueueR.Dequeue();
+                Destroy(lastelem);
+            }
+        }
+    }
 }

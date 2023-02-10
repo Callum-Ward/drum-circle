@@ -10,7 +10,6 @@ public class RhythmSpawner : MonoBehaviour
     public GameObject rightBeat;
     private Vector3 startSpawn;
     private BeatManager beatManager;
-    //spawn range x= -3.5 to 3.5
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +20,6 @@ public class RhythmSpawner : MonoBehaviour
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0f, 0f);
         
-        //Instantiate(beatTarget, startSpawn + new Vector3(-0.1f, -4.0f, 0.1f), transform.rotation);
 
     }
 
@@ -41,11 +39,11 @@ public class RhythmSpawner : MonoBehaviour
    
         if (left==1)
         {
-            beatManager.AddToQueue(Instantiate(leftBeat, spawnLoc, transform.rotation));
+            beatManager.AddToQueueL(Instantiate(leftBeat, spawnLoc, transform.rotation));
         }
         else
         {
-            beatManager.AddToQueue(Instantiate(rightBeat, spawnLoc, transform.rotation));
+            beatManager.AddToQueueR(Instantiate(rightBeat, spawnLoc, transform.rotation));
         }
 
 

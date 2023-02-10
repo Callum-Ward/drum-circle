@@ -8,8 +8,8 @@ public class BeatmapScript : MonoBehaviour
     public RhythmSpawner spawner;
     public float timer = 0.0f;
     public float window = 0f;
-    private float windowtime = 0.3f;
-    private float delay = 2.0f;
+    public float windowtime = 1f;
+    public float delay = 2.0f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -33,43 +33,31 @@ public class BeatmapScript : MonoBehaviour
                 int lb = index == 0 ? 0 : index - 1;
                 int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
                 for(int i = lb; i <= ub; i++){
-                    if(timestampedOnsets[i].isBeat){
+                    if(timestampedOnsets[i].isBeat)
+                    {
+                        StartCoroutine(WindowDelay(delay - windowtime/2));
                         spawner.spawn(1, 1);
+                        timestampedOnsets[i].isBeat = false;
                         break;
                     }
-                    if(timestampedOnsets[i].isOnset){
-                        spawner.spawn(1, 0);
+                    if(timestampedOnsets[i].isOnset)
+                        {
+                        StartCoroutine(WindowDelay(delay - windowtime/2));
+                        spawner.spawn(1, 0); 
+                        timestampedOnsets[i].isOnset = false;
                         break;
                     }
                 }
             } 
     }
 
-    private void hitWindow(float time)
+    IEnumerator WindowDelay(float time)
     {
-        int index = (int)(Math.Round(time, 2) * 100);
-        List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
+        yield return new WaitForSeconds(time);
 
-        if (index < timestampedOnsets.Count)
-        {
-            int lb = index == 0 ? 0 : index - 1;
-            int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
-            for (int i = lb; i <= ub; i++)
-            {
-                if (timestampedOnsets[i].isOnset)
-                {
-                    window = windowtime;
-                    break;
-                }
-                if (timestampedOnsets[i].isBeat)
-                {
-                    window = windowtime;
-                    break;
-                }
-            }
-        }
+        window = windowtime;
     }
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -81,7 +69,6 @@ public class BeatmapScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Window: " + window);
         if (timer <= delay && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
@@ -90,28 +77,46 @@ public class BeatmapScript : MonoBehaviour
         else if(audioManager.activeSource == null)
         {
             audioManager.Play("drums");
+            //audioManager.Play("layer1");
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + delay + (windowtime / 2));
-            hitWindow(audioManager.activeSource.time + windowtime);
-
-            if (window <= 0 && Input.GetKeyDown(KeyCode.LeftArrow))   //0f
+            spawnOnTime(audioManager.activeSource.time + delay + (windowtime));
+            
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                audioManager.Play("tapFail");
-                audioManager.SetActive("drums");
-                scoreManager.Miss();
-                beatManager.BeatDelete();
-            }
-            else if (window > 0)
-            {
-                window -= Time.deltaTime;
-                if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-                    scoreManager.Hit(windowtime / 2 - Mathf.Abs((windowtime / 2) - window));
-                    audioManager.Play("drum1");
+                if (beatManager.beatQueueL.Peek().GetComponent<MoveBeat>().window == true)
+                {
+                    scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - window));
+                    beatManager.BeatDelete("left");
+                    audioManager.Volume("drums", 1f);
+                }
+                else
+                {
+                    scoreManager.Miss();
+                    //audioManager.Play("tapFail");
                     audioManager.SetActive("drums");
+                    audioManager.Volume("drums", 0f);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                if (beatManager.beatQueueR.Peek().GetComponent<MoveBeat>().window == true)
+                {
+                    scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - window));
+                    beatManager.BeatDelete("right");
+                    audioManager.Volume("drums", 1f);
+                }
+                else
+                {
+                    scoreManager.Miss();
+                    //audioManager.Play("tapFail");
+                    audioManager.SetActive("drums");
+                    audioManager.Volume("drums", 0f);
                 }
             }
         }
     }
 }
+
