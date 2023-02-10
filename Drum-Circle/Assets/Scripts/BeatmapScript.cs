@@ -8,7 +8,7 @@ public class BeatmapScript : MonoBehaviour
     public RhythmSpawner spawner;
     public float timer = 0.0f;
     public float window = 0f;
-    public float windowtime = 1f;
+    public float windowtime = 0.3f;
     public float delay = 2.0f;
 
     public ScoreManager scoreManager;
@@ -81,39 +81,46 @@ public class BeatmapScript : MonoBehaviour
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + delay + (windowtime));
+            spawnOnTime(audioManager.activeSource.time + delay);
             
             if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                if (beatManager.beatQueueL.Peek().GetComponent<MoveBeat>().window == true)
-                {
-                    scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - window));
-                    beatManager.BeatDelete("left");
-                    audioManager.Volume("drums", 1f);
-                }
-                else
-                {
-                    scoreManager.Miss();
-                    //audioManager.Play("tapFail");
-                    audioManager.SetActive("drums");
-                    audioManager.Volume("drums", 0f);
-                }
+                if (beatManager.beatQueueL.Count > 0) {
+                    {
+                        var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
+                        if (beatL.window == true)
+                        {
+                            scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
+                            beatManager.BeatDelete("left");
+                            audioManager.Volume("drums", 1f);
+                        }
+                        else
+                        {
+                            scoreManager.Miss();
+                            //audioManager.Play("tapFail");
+                            audioManager.SetActive("drums");
+                            audioManager.Volume("drums", 0f);
+                        }
+                    }
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (beatManager.beatQueueR.Peek().GetComponent<MoveBeat>().window == true)
+                if (beatManager.beatQueueR.Count > 0)
                 {
-                    scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - window));
-                    beatManager.BeatDelete("right");
-                    audioManager.Volume("drums", 1f);
-                }
-                else
-                {
-                    scoreManager.Miss();
-                    //audioManager.Play("tapFail");
-                    audioManager.SetActive("drums");
-                    audioManager.Volume("drums", 0f);
+                    var beatR = beatManager.beatQueueR.Peek().GetComponent<MoveBeat>();
+                    if (beatR.window == true)
+                    {
+                        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatR.windowScore));
+                        beatManager.BeatDelete("right");
+                        audioManager.Volume("drums", 1f);
+                    }
+                    else
+                    {
+                        scoreManager.Miss();
+                        audioManager.Play("tapFail");
+                        audioManager.SetActive("drums");
+                        audioManager.Volume("drums", 0f);
+                    }
                 }
             }
         }

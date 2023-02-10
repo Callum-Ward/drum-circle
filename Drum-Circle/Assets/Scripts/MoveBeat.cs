@@ -9,6 +9,7 @@ public class MoveBeat : MonoBehaviour
     private float windowtime = 0f;
     public bool window = false;
     public bool delete = false;
+    public float windowScore = 0f;
      
 
     public ScoreManager scoreManager;
@@ -39,23 +40,13 @@ public class MoveBeat : MonoBehaviour
         else if (timer >= (beatmapScript.delay - (windowtime/2)))
         {
             window = true;
+            windowScore = Mathf.Abs(timer - beatmapScript.delay);
         }
 
         else if (timer < (beatmapScript.delay - (windowtime / 2))) 
         {
             window = false;
         }
-
-        //if (transform.position.y < removeHeight - (windowTime))
-        //{
-        //    scoreManager.Miss();
-        //    beatManager.BeatDelete();
-        //}
-
-       // if (transform.position.y < tapArea && Input.GetKeyDown(KeyCode.LeftArrow))
-        //{
-            //Destroy(gameObject);
-        //}
     }
 
 }
