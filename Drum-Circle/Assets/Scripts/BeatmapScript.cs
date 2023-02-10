@@ -77,7 +77,9 @@ public class BeatmapScript : MonoBehaviour
         else if(audioManager.activeSource == null)
         {
             audioManager.Play("drums");
-            //audioManager.Play("layer1");
+            audioManager.Play("layer1");
+            audioManager.Play("layer2");
+            audioManager.Volume("layer2", 0f);
         }
         else
         {
@@ -96,7 +98,7 @@ public class BeatmapScript : MonoBehaviour
                         else
                         {
                             scoreManager.Miss();
-                            //audioManager.Play("tapFail");
+                            audioManager.Play("tapFail");
                             audioManager.SetActive("drums");
                             audioManager.Volume("drums", 0f);
                         }
