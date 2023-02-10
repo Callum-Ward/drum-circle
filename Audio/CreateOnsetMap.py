@@ -3,9 +3,10 @@ import librosa
 import numpy as np
 
 files = [
-    ('./drakkar.mp3', 'drakkar_data.json'),
-    ('./break_130.wav', 'break_130_data.json'),
-    ('./download.wav', 'download_data.json')
+    #('./drakkar.mp3', 'drakkar_data.json'),
+    #('./break_130.wav', 'break_130_data.json'),
+    #('./download.wav', 'download_data.json'),
+    ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
 ]
 
 def create_onset_map(path, output):
