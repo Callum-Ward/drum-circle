@@ -5,7 +5,8 @@ using UnityEngine;
 public class RhythmSpawner : MonoBehaviour
 
 {
-    public GameObject beatTarget;
+    public GameObject leftTarget;
+    public GameObject rightTarget;
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
@@ -20,7 +21,8 @@ public class RhythmSpawner : MonoBehaviour
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0f, 0f);
         
-
+        Instantiate(leftTarget, startSpawn + new Vector3(0f, -4.3f, 0f), transform.rotation);
+        Instantiate(rightTarget, startSpawn + new Vector3(1.5f, -4.3f, 0f), transform.rotation);
     }
 
     // Update is called once per frame
