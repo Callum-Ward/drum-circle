@@ -4,21 +4,48 @@ using UnityEngine;
 
 public class MoveBeat : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public float moveSpeed = 1;
-    public float removeHeight = 1;
-    void Start()
+    private float moveSpeed = 2f;
+    private float timer = 0f;
+    private float windowtime = 0f;
+    public bool window = false;
+    public bool delete = false;
+    public float windowScore = 0f;
+     
+
+    public ScoreManager scoreManager;
+    public BeatManager beatManager;
+    public BeatmapScript beatmapScript;
+    public AudioManager audioManager;
+
+    void Awake()
     {
-        
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
+        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.position += Vector3.down * moveSpeed * Time.deltaTime;
-        if (transform.position.y < removeHeight)
+        timer += Time.deltaTime;
+        windowtime = beatmapScript.windowtime;
+
+        if (timer > (beatmapScript.delay + (beatmapScript.windowtime / 2)))
         {
-            Destroy(gameObject);
+            delete = true;
+        }
+
+        else if (timer >= (beatmapScript.delay - (windowtime/2)))
+        {
+            window = true;
+            windowScore = Mathf.Abs(timer - beatmapScript.delay);
+        }
+
+        else if (timer < (beatmapScript.delay - (windowtime / 2))) 
+        {
+            window = false;
         }
     }
 

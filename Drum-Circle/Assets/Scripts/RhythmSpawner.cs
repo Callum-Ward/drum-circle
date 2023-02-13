@@ -5,20 +5,24 @@ using UnityEngine;
 public class RhythmSpawner : MonoBehaviour
 
 {
+    public GameObject leftTarget;
+    public GameObject rightTarget;
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
-    //spawn range x= -3.5 to 3.5
+    private BeatManager beatManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         //set beat spawner location with respect to camera position
         transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0f, 0f);
-
-
+        
+        Instantiate(leftTarget, startSpawn + new Vector3(0f, -4.3f, 0f), transform.rotation);
+        Instantiate(rightTarget, startSpawn + new Vector3(1.5f, -4.3f, 0f), transform.rotation);
     }
 
     // Update is called once per frame
@@ -37,11 +41,11 @@ public class RhythmSpawner : MonoBehaviour
    
         if (left==1)
         {
-            Instantiate(leftBeat, spawnLoc, transform.rotation);
+            beatManager.AddToQueueL(Instantiate(leftBeat, spawnLoc, transform.rotation));
         }
         else
         {
-            Instantiate(rightBeat, spawnLoc, transform.rotation);
+            beatManager.AddToQueueR(Instantiate(rightBeat, spawnLoc, transform.rotation));
         }
 
 

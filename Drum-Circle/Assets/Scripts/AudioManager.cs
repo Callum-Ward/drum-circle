@@ -74,4 +74,17 @@ public class AudioManager : MonoBehaviour {
         }
         s.source.volume = s.source.volume + 0.01f;
     }
+
+    public void SetActive(string name)
+    {
+        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
+
+
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: " + name + " not found!");
+            return;
+        }
+        this.activeSource = s.source;
+    }
 }
