@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveBeat : MonoBehaviour
 {
-    private float moveSpeed = 2f;
+    public float moveSpeed = 2f;
     private float timer = 0f;
     private float windowtime = 0f;
     public bool window = false;
