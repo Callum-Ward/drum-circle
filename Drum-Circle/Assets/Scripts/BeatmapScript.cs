@@ -148,7 +148,7 @@ public class BeatmapScript : MonoBehaviour
             }
 
             //if (Input.GetKeyDown(KeyCode.RightArrow))
-            if (hitR == true || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (hitR == true || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
