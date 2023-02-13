@@ -1,10 +1,10 @@
-const int threshold = 400;
-const int delayMs = 75;
-const int drumCount = 1;
-bool hits[1];
-int vals[1];
-int maxVals[1];
-unsigned long delayStart[1];
+const int threshold = 200;
+const int delayMs = 100;
+const int drumCount = 2;
+bool hits[drumCount];
+int vals[drumCount];
+int maxVals[drumCount];
+unsigned long delayStart[drumCount];
 int hitCount =0;
 
 void setup() {

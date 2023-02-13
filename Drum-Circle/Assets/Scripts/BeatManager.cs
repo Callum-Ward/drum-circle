@@ -7,6 +7,9 @@ public class BeatManager : MonoBehaviour
 {
     public Queue<GameObject> beatQueueL = new Queue<GameObject>();
     public Queue<GameObject> beatQueueR = new Queue<GameObject>();
+    public float deleteDelay = 0.15f;
+
+
     // Start is called before the first frame update
     void Start()
         {
@@ -50,14 +53,14 @@ public class BeatManager : MonoBehaviour
                 GameObject lastelem = beatQueueL.Dequeue();
                 lastelem.GetComponent<MoveBeat>().fade = true;
                 lastelem.GetComponent<MoveBeat>().highlight = highlight;
-                StartCoroutine(WindowDelay(0.15f, lastelem));
+                StartCoroutine(WindowDelay(deleteDelay, lastelem));
             }
             else if (side == "right")
             {
                 GameObject lastelem = beatQueueR.Dequeue();
                 lastelem.GetComponent<MoveBeat>().fade = true;
                 lastelem.GetComponent<MoveBeat>().highlight = highlight;
-                StartCoroutine(WindowDelay(0.15f, lastelem));
+                StartCoroutine(WindowDelay(deleteDelay, lastelem));
             }
         }
     }

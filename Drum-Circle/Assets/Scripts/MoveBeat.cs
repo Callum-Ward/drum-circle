@@ -13,12 +13,12 @@ public class MoveBeat : MonoBehaviour
     private float alpha = 1.0f;
     public bool fade = false;
     public bool highlight = false;
-     
 
     public ScoreManager scoreManager;
     public BeatManager beatManager;
     public BeatmapScript beatmapScript;
     public AudioManager audioManager;
+    MeshRenderer beatRenderer;
 
     void Awake()
     {
@@ -26,6 +26,10 @@ public class MoveBeat : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+    }
+
+    void start()
+    {
     }
 
     // Update is called once per frame
@@ -46,26 +50,39 @@ public class MoveBeat : MonoBehaviour
             windowScore = Mathf.Abs(timer - beatmapScript.delay);
         }
 
-        else if (timer < (beatmapScript.delay - (windowtime/2))) 
+        else if (timer < (beatmapScript.delay - (windowtime/3))) 
         {
             window = false;
         }
         if (fade == true) {
             moveSpeed = 0.2f;
-            alpha = 0.0f;
+            alpha -= (1f / beatManager.deleteDelay) * Time.deltaTime;
             BeatHighlight();
         }
     }
 
 public void BeatHighlight()
     {
-        Color color = new Color(50,50,50,alpha);
-        if(highlight){
-            color = new Color(255,215,0,alpha);
+        Color color = Color.grey;
+        if (highlight)
+        {
+            color = Color.yellow;
         }
-        MeshRenderer beatRenderer = gameObject.GetComponent<MeshRenderer>();
+        beatRenderer = gameObject.GetComponent<MeshRenderer>();
         Material newMaterial = new Material(Shader.Find("Standard"));
+        newMaterial.SetFloat("_Mode", 2f);
+        newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        newMaterial.SetInt("_ZWrite", 0);
+        newMaterial.DisableKeyword("_ALPHATEST_ON");
+        newMaterial.EnableKeyword("_ALPHABLEND_ON");
+        newMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        newMaterial.renderQueue = 3000;
+        color.a = alpha;
         newMaterial.color = color;
+
+        gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0.00f);
+
         beatRenderer.material = newMaterial;
     }
 }
