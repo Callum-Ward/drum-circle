@@ -18,26 +18,18 @@ public class BeatManager : MonoBehaviour
         if (beatQueueL.Count > 0)
         {
             GameObject beatL = beatQueueL.Peek();
-            if (beatL.GetComponent<MoveBeat>().window == true)
-            {
-                BeatHighlight(beatL);
-            }
             if (beatL.GetComponent<MoveBeat>().delete == true)
             {
-                BeatDelete("left");
+                BeatDelete("left", false);
             }
 
         }
         if (beatQueueR.Count > 0)
         {
             GameObject beatR = beatQueueR.Peek();
-            if (beatR.GetComponent<MoveBeat>().window == true)
-            {
-                BeatHighlight(beatR);
-            }
             if (beatR.GetComponent<MoveBeat>().delete == true)
             {
-                BeatDelete("right");
+                BeatDelete("right", false);
             }
         }
     }
@@ -49,28 +41,30 @@ public class BeatManager : MonoBehaviour
         {
             beatQueueR.Enqueue(beat);
         }
-    public void BeatDelete(string side)
+    public void BeatDelete(string side, bool highlight)
         {
         if (beatQueueL.Count > 0)
         {
             if (side == "left")
             {
                 GameObject lastelem = beatQueueL.Dequeue();
-                Destroy(lastelem);
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
+                StartCoroutine(WindowDelay(0.15f, lastelem));
             }
             else if (side == "right")
             {
                 GameObject lastelem = beatQueueR.Dequeue();
-                Destroy(lastelem);
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
+                StartCoroutine(WindowDelay(0.15f, lastelem));
             }
         }
     }
-    public void BeatHighlight(GameObject beat)
+    IEnumerator WindowDelay(float time, GameObject o)
     {
-        Color color = new Color(255,215,0,1);
-        MeshRenderer beatRenderer = beat.GetComponent<MeshRenderer>();
-        Material newMaterial = new Material(Shader.Find("Standard"));
-        newMaterial.color = color;
-        beatRenderer.material = newMaterial;
+        yield return new WaitForSeconds(time);
+
+        Destroy(o);
     }
 }

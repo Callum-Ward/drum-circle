@@ -92,7 +92,7 @@ public class BeatmapScript : MonoBehaviour
                         if (beatL.window == true)
                         {
                             scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
-                            beatManager.BeatDelete("left");
+                            beatManager.BeatDelete("left", true);
                             audioManager.Volume("drums", 1f);
                         }
                         else
@@ -113,7 +113,7 @@ public class BeatmapScript : MonoBehaviour
                     if (beatR.window == true)
                     {
                         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatR.windowScore));
-                        beatManager.BeatDelete("right");
+                        beatManager.BeatDelete("right", true);
                         audioManager.Volume("drums", 1f);
                     }
                     else
