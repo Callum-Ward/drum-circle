@@ -48,29 +48,18 @@ public class BeatManager : MonoBehaviour
             if (side == "left")
             {
                 GameObject lastelem = beatQueueL.Dequeue();
-                lastelem.GetComponent<MoveBeat>().moveSpeed = 0.2f;
-                BeatHighlight(lastelem, highlight);
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
                 StartCoroutine(WindowDelay(0.15f, lastelem));
             }
             else if (side == "right")
             {
                 GameObject lastelem = beatQueueR.Dequeue();
-                lastelem.GetComponent<MoveBeat>().moveSpeed = 0.2f;
-                BeatHighlight(lastelem, highlight);
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
                 StartCoroutine(WindowDelay(0.15f, lastelem));
             }
         }
-    }
-    public void BeatHighlight(GameObject beat, bool highlight)
-    {
-        Color color = new Color(50,50,50,1);
-        if(highlight){
-            color = new Color(255,215,0,1);
-        }
-        MeshRenderer beatRenderer = beat.GetComponent<MeshRenderer>();
-        Material newMaterial = new Material(Shader.Find("Standard"));
-        newMaterial.color = color;
-        beatRenderer.material = newMaterial;
     }
     IEnumerator WindowDelay(float time, GameObject o)
     {
