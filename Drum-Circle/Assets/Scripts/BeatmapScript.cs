@@ -37,22 +37,22 @@ public class BeatmapScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    // void Update()
+    // {
 
-        if(timer <= 4.0f && FindObjectOfType<AudioManager>().activeSource == null)
-        {
-            spawnOnTime(timer);
-            timer += Time.deltaTime;
+    //     if(timer <= 4.0f && FindObjectOfType<AudioManager>().activeSource == null)
+    //     {
+    //         spawnOnTime(timer);
+    //         timer += Time.deltaTime;
 
-        }
-        else if(FindObjectOfType<AudioManager>().activeSource == null)
-        {
-            FindObjectOfType<AudioManager>().Play("drakkar");
-        }
-        else
-        {
-            spawnOnTime(FindObjectOfType<AudioManager>().activeSource.time + 4.0f);
-        }
-    }
+    //     }
+    //     else if(FindObjectOfType<AudioManager>().activeSource == null)
+    //     {
+    //         FindObjectOfType<AudioManager>().Play("drakkar");
+    //     }
+    //     else
+    //     {
+    //         spawnOnTime(FindObjectOfType<AudioManager>().activeSource.time + 4.0f);
+    //     }
+    // }
 }

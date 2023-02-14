@@ -1,18 +1,18 @@
 using System;
 using UnityEngine;
 
-public class Branch {
-    int id = 0;
-    bool leaf = true;
+public class Branch : MonoBehaviour {
+    public int id = 0;
+    public int depth = 0;
+    public bool leaf = true;
 
-    Branch a, b, parent;
+    public Branch a, b, parent;
 
-    float ratio, spread, splitSize;
-    int depth = 0;
-    float splitDecay = 1;
+    public float ratio, spread, splitSize;
+    public float splitDecay = 1;
 
-    Vector3 dir = new Vector3(0, 1, 0); //up
-    float length = 0, area = 0.1;
+    public Vector3 dir = Vector3.up;
+    public float length = 0.0f, radius = 0.0f, area = 0.1f;
 
     Branch(float ratio, float spread, float splitSize) {
         this.ratio = ratio;
@@ -31,23 +31,27 @@ public class Branch {
         parent = b;
     }
 
-    public int GetId() {
-        return this.id;
+    void Start() {
     }
 
-    public void Grow(float feed) {
+    void Update() {
+    }
+
+    void Grow(float feed) {
+        radius = (float)Math.Sqrt(area/Math.PI);
+
         if (leaf) {
-            length += Math.Cbrt(feed);
-            feed -= Math.Cbrt(feed);
+            length += (float)Math.Cbrt(feed);
+            feed -= (float)Math.Cbrt(feed);
             area += feed / length;
 
             if (length > splitSize * Math.Exp(-splitDecay * depth)) {
-                //Split();
+                Split();
             } 
         }
 
         else {
-            pass = (a.area + b.area) / (a.area + b.area + this.area);
+            float pass = (a.area + b.area) / (a.area + b.area + this.area);
 
             area += pass * feed / length;
             feed *= (1 - pass); 
@@ -63,7 +67,18 @@ public class Branch {
         a = new Branch(this, this.id * 2);
         b = new Branch(this, this.id * 2 + 1);
 
-        Vector3 density = leafDensity();
+        Vector3 density = leafDensity(this.depth);
+        Vector3 norm = Vector3.Cross(density, this.dir).normalized;
+        Vector3 reflect = -1.0f * norm;
+
+        System.Random r = new System.Random();
+        float randFlip = (float)r.NextDouble();
+
+        a.dir = Vector3.Normalize(randFlip * this.spread * norm * (1 - ratio) +
+            dir * ratio);
+        b.dir = Vector3.Normalize(randFlip * this.spread * reflect * ratio +
+            dir * (1 - ratio));
+
     }
 
     Vector3 leafAverage(Branch branch) {
@@ -77,7 +92,7 @@ public class Branch {
 
     Vector3 leafDensity(int searchDepth) {
         System.Random r = new System.Random();
-        Vector3 rand = new Vector3(float(r.NextDouble()), r.NextDouble(), r.NextDouble());
+        Vector3 rand = -new Vector3((float)r.NextDouble(), (float)r.NextDouble(), (float)r.NextDouble()).normalized;
 
         Branch ancestor = this;
         Vector3 rel = new Vector3(0, 0, 0);
