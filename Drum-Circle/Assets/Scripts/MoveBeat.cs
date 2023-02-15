@@ -59,8 +59,6 @@ public class MoveBeat : MonoBehaviour
             alpha -= (1f / beatManager.deleteDelay) * Time.deltaTime;
             BeatHighlight();
         }
-        beatRenderer = gameObject.GetComponent<MeshRenderer>();
-        Debug.Log("Square size: " + beatRenderer.bounds.size);
     }
 
 public void BeatHighlight()
