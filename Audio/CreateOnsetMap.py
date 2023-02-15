@@ -6,7 +6,7 @@ files = [
     #('./drakkar.mp3', 'drakkar_data.json'),
     #('./break_130.wav', 'break_130_data.json'),
     #('./download.wav', 'download_data.json'),
-    ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
+    #('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
 ]
 
 def create_onset_map(path, output):
@@ -24,7 +24,7 @@ def create_onset_map(path, output):
 
     duration = librosa.get_duration(y=x, sr=sr)
 
-    print(tempo)
+    print(onset_env)
 
     data = []
     for i in range(0, int(round(duration, 2) * 100)):
@@ -43,6 +43,7 @@ def create_onset_map(path, output):
         json.dump(data, f)
 
 def main():
+    create_onset_map('./download.wav', 'd.json')
     for path, output in files:
         create_onset_map(path, output)
 

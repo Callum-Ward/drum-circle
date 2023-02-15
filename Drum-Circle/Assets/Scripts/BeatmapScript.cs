@@ -44,14 +44,14 @@ public class BeatmapScript : MonoBehaviour
                     if(timestampedOnsets[i].isBeat)
                     {
                         StartCoroutine(WindowDelay(delay - windowtime/2));
-                        spawner.spawn(1, 1);
+                        spawner.spawn(1, 1, 1);
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
                         StartCoroutine(WindowDelay(delay - windowtime/2));
-                        spawner.spawn(1, 0); 
+                        spawner.spawn(1, 0, 2); 
                         timestampedOnsets[i].isOnset = false;
                         break;
                     }
