@@ -6,7 +6,8 @@ files = [
     #('./drakkar.mp3', 'drakkar_data.json'),
     #('./break_130.wav', 'break_130_data.json'),
     #('./download.wav', 'download_data.json'),
-    ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
+    #('./BiBDrumsBass.mp3', 'BiBDrumsBass.json'),
+    ('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json')
 ]
 
 def create_onset_map(path, output):

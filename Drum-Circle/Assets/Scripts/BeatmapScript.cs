@@ -11,6 +11,7 @@ public class BeatmapScript : MonoBehaviour
     public float window = 0f;
     public float windowtime = 0.3f;
     public float delay = 2.0f;
+    public float inputDelay = 0.1f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -43,14 +44,14 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat)
                     {
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
+                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
                         spawner.spawn(1, 1);
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
+                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
                         spawner.spawn(1, 0); 
                         timestampedOnsets[i].isOnset = false;
                         break;
@@ -121,7 +122,7 @@ public class BeatmapScript : MonoBehaviour
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + delay);
+            spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
             
             //if (Input.GetKeyDown(KeyCode.LeftArrow))
             if (hitL == true || Input.GetKeyDown(KeyCode.LeftArrow))
