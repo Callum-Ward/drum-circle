@@ -13,18 +13,17 @@ def create_onset_map(path, output):
     hop_length = 512
     x, sr = librosa.load(path)
 
-    onset_frames = librosa.onset.onset_detect(x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1)
-    onset_times = librosa.frames_to_time(onset_frames)
+    D = np.abs(librosa.stft(x))
+    onset_env_times = librosa.times_like(D)
 
     onset_env = librosa.onset.onset_strength(x, sr=sr, aggregate=np.median)
-    times = librosa.times_like(onset_env, sr=sr, hop_length=hop_length)
+    onset_frames = librosa.onset.onset_detect(x, sr=sr, onset_envelope=onset_env, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1)
+    onset_times = librosa.frames_to_time(onset_frames)
 
     tempo, beats = librosa.beat.beat_track(x, sr=sr)
     beat_times = librosa.frames_to_time(beats)
 
     duration = librosa.get_duration(y=x, sr=sr)
-
-    print(onset_env)
 
     data = []
     for i in range(0, int(round(duration, 2) * 100)):
@@ -36,6 +35,10 @@ def create_onset_map(path, output):
         for t in onset_times:
             if int(round(t, 2) * 100) == i and not timestamp["isBeat"]:
                 timestamp["isOnset"] = True
+                break
+        for j in range(0, len(onset_env_times)):
+            if int(round(onset_env_times[j], 2) * 100) == i and (timestamp["isBeat"] or timestamp["isOnset"]):
+                timestamp["strength"] = str(onset_env[j])
                 break
         data.append(timestamp)
                 
