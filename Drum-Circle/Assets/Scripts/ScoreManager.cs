@@ -40,8 +40,6 @@ public class ScoreManager : MonoBehaviour
         ComboCount++;
         Score += proximity * 100;
 
-        Debug.Log("Count: " + ComboCount + " Counter: " + ComboCounter);
-
         if (ScoreMultiplier < 5 && ComboCounter >= 10)
         {
             ComboCounter = 0;

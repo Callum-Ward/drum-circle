@@ -105,11 +105,9 @@ public class BeatmapScript : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            print(e.ToString());
+            //print(e.ToString());
 
         }
-
-        Debug.Log("Readline: " + receivedString);
 
         if (timer <= delay && audioManager.activeSource == null)
         {
