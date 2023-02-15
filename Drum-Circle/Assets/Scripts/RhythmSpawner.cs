@@ -23,9 +23,9 @@ public class RhythmSpawner : MonoBehaviour
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
         
-        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -3.9f, 0f), transform.rotation);
-        Instantiate(targetLine, startSpawn + new Vector3(0f, -4.25f, 0f), transform.rotation);
-        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -4.6f, 0f), transform.rotation);
+        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -3.8f, 0f), transform.rotation);
+        Instantiate(targetLine, startSpawn + new Vector3(0f, -4.15f, 0f), transform.rotation);
+        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -4.5f, 0f), transform.rotation);
     }
 
     // Update is called once per frame

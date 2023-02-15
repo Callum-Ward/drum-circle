@@ -44,13 +44,13 @@ public class MoveBeat : MonoBehaviour
             delete = true;
         }
 
-        else if (timer >= (beatmapScript.delay - windowtime/3))
+        else if (timer >= (beatmapScript.delay - windowtime/2))
         {
             window = true;
             windowScore = Mathf.Abs(timer - beatmapScript.delay);
         }
 
-        else if (timer < (beatmapScript.delay - (windowtime/3))) 
+        else if (timer < (beatmapScript.delay - (windowtime/2))) 
         {
             window = false;
         }
@@ -59,6 +59,8 @@ public class MoveBeat : MonoBehaviour
             alpha -= (1f / beatManager.deleteDelay) * Time.deltaTime;
             BeatHighlight();
         }
+        beatRenderer = gameObject.GetComponent<MeshRenderer>();
+        Debug.Log("Square size: " + beatRenderer.bounds.size);
     }
 
 public void BeatHighlight()
