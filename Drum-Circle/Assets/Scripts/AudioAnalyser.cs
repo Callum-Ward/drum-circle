@@ -53,7 +53,7 @@ public class AudioAnalyser : MonoBehaviour {
 
         TrackAnalysis TEST_TRACK = new TrackAnalysis();
         TEST_TRACK.name = "drums";
-        TEST_TRACK.path = "../Audio/BiBDrumsBass.json";
+        TEST_TRACK.path = "../Audio/PrettyWomanDrums.json";
         tracks = new TrackAnalysis[] {TEST_TRACK};
 
         /**************************/

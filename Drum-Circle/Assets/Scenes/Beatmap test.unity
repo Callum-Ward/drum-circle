@@ -957,7 +957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   sounds:
   - Name: drums
-    clip: {fileID: 8300000, guid: 41bcc964bda531d4fa6fd85d049e2e1e, type: 3}
+    clip: {fileID: 8300000, guid: 10ff63a5f67cab14eaba451c2eb13f10, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -985,7 +985,7 @@ MonoBehaviour:
     source: {fileID: 0}
     spectrumData: []
   - Name: layer1
-    clip: {fileID: 8300000, guid: 7c60ed1529e2a244289660348723b9ca, type: 3}
+    clip: {fileID: 8300000, guid: bddeb2e38b6408e4faea48d2541e3735, type: 3}
     volume: 1
     pitch: 1
     loop: 0

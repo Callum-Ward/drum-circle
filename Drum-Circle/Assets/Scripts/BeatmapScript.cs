@@ -11,6 +11,7 @@ public class BeatmapScript : MonoBehaviour
     public float window = 0f;
     public float windowtime = 0.3f;
     public float delay = 2.0f;
+    public float inputDelay = 0.1f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -43,17 +44,27 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat)
                     {
+<<<<<<< HEAD
                         int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
                         StartCoroutine(WindowDelay(delay - windowtime/2));
                         spawner.spawn(1, 1, size);
+=======
+                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
+                        spawner.spawn(1, 1);
+>>>>>>> 8f529fa0 (Added new song and input delay compensation)
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
+<<<<<<< HEAD
                         int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
                         StartCoroutine(WindowDelay(delay - windowtime/2));
                         spawner.spawn(1, 0, size); 
+=======
+                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
+                        spawner.spawn(1, 0); 
+>>>>>>> 8f529fa0 (Added new song and input delay compensation)
                         timestampedOnsets[i].isOnset = false;
                         break;
                     }
@@ -123,7 +134,7 @@ public class BeatmapScript : MonoBehaviour
         }
         else
         {
-            spawnOnTime(audioManager.activeSource.time + delay);
+            spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
             
             //if (Input.GetKeyDown(KeyCode.LeftArrow))
             if (hitL == true || Input.GetKeyDown(KeyCode.LeftArrow))
