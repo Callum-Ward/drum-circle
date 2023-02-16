@@ -40,7 +40,7 @@ public class ScoreManager : MonoBehaviour
     {
         ComboCounter++;
         ComboCount++;
-        Score += proximity * 100;
+        Score += Mathf.Pow((proximity * 100f), 1.25f);
 
         if (ScoreMultiplier < 5 && ComboCounter >= 10)
         {
