@@ -48,7 +48,7 @@ public class Branch : MonoBehaviour {
             area += feed / length; 
 
             if (length > splitSize * Math.Exp(-splitDecay * depth)) {
-                Split();
+                if (depth < 6 )Split();
             } 
         }
 
@@ -65,6 +65,15 @@ public class Branch : MonoBehaviour {
         radius = (float)Math.Sqrt((double)area/Math.PI);
 
         transform.localScale = Vector3.one * length / 1000;
+    }
+
+    void placeBranch(GameObject branch, Vector3 direction) {
+        branch.transform.parent = this.transform;
+
+        Mesh mesh = this.GetComponent<Mesh>();
+        branch.transform.position = mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
+
+        branch.transform.rotation = Quaternion.Euler(direction);
     }
 
     public void Split() {
@@ -89,17 +98,15 @@ public class Branch : MonoBehaviour {
         System.Random r = new System.Random();
         float randFlip = (float)r.NextDouble();
 
-        branchA.dir = Vector3.Normalize(randFlip * this.spread * norm * (1 - ratio) +
-            dir * ratio);
-        a.transform.parent = this.gameObject.transform;
-        a.transform.position = transform.up * transform.localScale.y;
-        a.transform.rotation = Quaternion.Euler(branchA.dir);
+        var branchADir = Vector3.Normalize(randFlip * this.spread * norm * (1 - ratio) +
+            this.dir * ratio);
 
-        branchB.dir = Vector3.Normalize(randFlip * this.spread * reflect * ratio +
+        placeBranch(a ,branchADir);
+
+        var branchBDir = Vector3.Normalize(randFlip * this.spread * reflect * ratio +
             dir * (1 - ratio));
-        b.transform.parent = this.gameObject.transform;
-        b.transform.position = transform.up * transform.localScale.y;
-        b.transform.rotation = Quaternion.Euler(branchB.dir);
+        
+        placeBranch(b, branchBDir);
     }
 
     Vector3 leafAverage(Branch branch) {
