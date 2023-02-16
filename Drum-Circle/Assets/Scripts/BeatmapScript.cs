@@ -14,8 +14,6 @@ public class BeatmapScript : MonoBehaviour
     public float inputDelay = 0.1f;
     private bool hitL = false;
     private bool hitR = false;
-    private bool lastHitL = false;
-    private bool lastHitR = false;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -24,7 +22,7 @@ public class BeatmapScript : MonoBehaviour
     public string[] sections;
     public string receivedString;
 
-    SerialPort data_stream = new SerialPort("COM8", 19200);
+    SerialPort data_stream = new SerialPort("COM8", 9600);
 
     void Awake()
     {
@@ -46,17 +44,15 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat)
                     {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
                         StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
-                        spawner.spawn(1, 1, size);
+                        spawner.spawn(1, 1);
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
                         StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
-                        spawner.spawn(1, 0, size); 
+                        spawner.spawn(1, 0); 
                         timestampedOnsets[i].isOnset = false;
                         break;
                     }
@@ -118,15 +114,6 @@ public class BeatmapScript : MonoBehaviour
 
         }
 
-        if (hitL == false)
-        {
-            lastHitL = hitL;
-        }
-        if (hitR == false)
-        {
-            lastHitR = hitR;
-        }
-
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null)
         {
@@ -146,7 +133,8 @@ public class BeatmapScript : MonoBehaviour
         {
             spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 
-            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && lastHitL == false)
+            //Register left drum hit and perform code
+            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
                 if (beatManager.beatQueueL.Count > 0) {
                     {
                         var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
@@ -170,11 +158,10 @@ public class BeatmapScript : MonoBehaviour
                             }
                         }
                     }
-                lastHitL = true;
             }
 
             //Register right drum hit and perform code
-            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && lastHitR == false)
+            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
@@ -200,7 +187,6 @@ public class BeatmapScript : MonoBehaviour
                         
                     }
                 }
-                lastHitR = true;
             }
         }
     }
