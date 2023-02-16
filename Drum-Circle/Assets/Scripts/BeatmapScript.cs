@@ -12,8 +12,8 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0.1f;
-    private bool lastHitL = false;
-    private bool lastHitR = false;
+    private bool hitL = false;
+    private bool hitR = false;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -21,9 +21,6 @@ public class BeatmapScript : MonoBehaviour
     public BeatManager beatManager;
     public string[] sections;
     public string receivedString;
-
-    private bool hitL = false;
-    private bool hitR = false;
 
     SerialPort data_stream = new SerialPort("COM8", 9600);
 
@@ -129,15 +126,6 @@ public class BeatmapScript : MonoBehaviour
 
         }
 
-        if (hitL == false)
-        {
-            lastHitL = hitL;
-        }
-        if (hitR == false)
-        {
-            lastHitR = hitR;
-        }
-
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null)
         {
@@ -156,17 +144,17 @@ public class BeatmapScript : MonoBehaviour
         else
         {
             spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
-            
+
             //Register left drum hit and perform code
-            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && lastHitL == false)
+            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
                 if (beatManager.beatQueueL.Count > 0) {
                     {
                         var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
                         if (beatL.window == true)
                         {
                             scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
-                            beatManager.BeatDelete("left", true);
                             //audioManager.Volume("drums", 1f);
+                            beatManager.BeatDelete("left", true);
                             audioManager.FadeIn("drums", "fast");
                         }
                         else
@@ -174,24 +162,27 @@ public class BeatmapScript : MonoBehaviour
                             scoreManager.Miss();
                             audioManager.Play("tapFail");
                             audioManager.SetActive("drums");
-                            //audioManager.Volume("drums", 0f);
-                            audioManager.FadeOut("drums");
+                            audioManager.Volume("drums", 0f);
+                            //audioManager.FadeOut("drums");
+                            if (beatL.timer >= (delay * 0.75))
+                            {
+                                beatManager.BeatDelete("left", false);
+                            }
                         }
                     }
-                    lastHitL = true;
             }
 
             //Register right drum hit and perform code
-            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && lastHitR == false)
+            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
                     var beatR = beatManager.beatQueueR.Peek().GetComponent<MoveBeat>();
                     if (beatR.window == true)
                     {
-                        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatR.windowScore));
-                        beatManager.BeatDelete("right", true);
+                        scoreManager.Hit((windowtime / 2) - beatR.windowScore);
                         //audioManager.Volume("drums", 1f);
+                        beatManager.BeatDelete("right", true);
                         audioManager.FadeIn("drums", "fast");
                     }
                     else
@@ -199,11 +190,15 @@ public class BeatmapScript : MonoBehaviour
                         scoreManager.Miss();
                         audioManager.Play("tapFail");
                         audioManager.SetActive("drums");
-                        //audioManager.Volume("drums", 0f);
-                        audioManager.FadeOut("drums");
+                        audioManager.Volume("drums", 0f);
+                        //audioManager.FadeOut("drums");
+                        if (beatR.timer >= (delay * 0.75))
+                        {
+                            beatManager.BeatDelete("right", false);
+                        }
+                        
                     }
                 }
-                lastHitR = true;
             }
         }
     }

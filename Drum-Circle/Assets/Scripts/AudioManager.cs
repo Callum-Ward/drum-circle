@@ -93,7 +93,7 @@ public class AudioManager : MonoBehaviour {
         }
         if (speed == "fast")
         {
-            s.source.volume = s.source.volume + 0.33f;
+            s.source.volume = s.source.volume + 0.5f;
             fadeSpeed = speed;
         }
         else if (speed == "slow")

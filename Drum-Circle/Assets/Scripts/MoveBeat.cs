@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveBeat : MonoBehaviour
 {
     public float moveSpeed = 2f;
-    private float timer = 0f;
+    public float timer = 0f;
     private float windowtime = 0f;
     public bool window = false;
     public bool delete = false;
@@ -55,6 +55,7 @@ public class MoveBeat : MonoBehaviour
         {
             window = false;
         }
+
         if (fade == true) {
             moveSpeed = 0.2f;
             alpha -= (1f / beatManager.deleteDelay) * Time.deltaTime;
@@ -68,7 +69,7 @@ public void BeatHighlight()
         Color color = Color.grey;
         if (highlight)
         {
-            color = Color.yellow;
+            color = Color.green;
         }
         beatRenderer = gameObject.GetComponent<MeshRenderer>();
         Material newMaterial = new Material(Shader.Find("Standard"));
