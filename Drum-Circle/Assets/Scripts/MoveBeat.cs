@@ -32,7 +32,7 @@ public class MoveBeat : MonoBehaviour
     {
     }
 
-    // Update is called once per frame
+    //Checks if beat needs to be deleted each frame and calculates score for hitting beat at this time.
     void Update()
     {
         transform.position += Vector3.down * moveSpeed * Time.deltaTime;
@@ -42,6 +42,7 @@ public class MoveBeat : MonoBehaviour
         if (timer > (beatmapScript.delay + (beatmapScript.windowtime)))
         {
             delete = true;
+            audioManager.FadeOut("drums");
         }
 
         else if (timer >= (beatmapScript.delay - windowtime/2))
@@ -61,6 +62,7 @@ public class MoveBeat : MonoBehaviour
         }
     }
 
+//Function for changing colour of beat and activating alpha manipuation for fading.
 public void BeatHighlight()
     {
         Color color = Color.grey;

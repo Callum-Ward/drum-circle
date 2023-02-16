@@ -25,15 +25,17 @@ public class ScoreManager : MonoBehaviour
 
     }
 
+    //Resets combo and score multiplier on miss. Also mutes a layer of music.
     public void Miss()
     {
         ComboCounter = 0;
         ComboCount = 0;
         ScoreMultiplier = 1f;
         Debug.Log("Miss registered");
-        audioManager.Volume("layer2", 0f);
+        audioManager.FadeOut("layer2");
     }
 
+    //Increments counters on hit and calculates multiplier increase.
     public void Hit(float proximity)
     {
         ComboCounter++;
