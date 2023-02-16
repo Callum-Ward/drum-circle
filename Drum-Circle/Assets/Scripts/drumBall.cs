@@ -112,10 +112,10 @@ public class drumBall : MonoBehaviour
             FindObjectOfType<AudioManager>().Volume("layer3", 0f);
 
         if (streak >= 1)
-            FindObjectOfType<AudioManager>().FadeIn("layer2");
+            FindObjectOfType<AudioManager>().FadeIn("layer2", "fast");
 
         if (streak >= 2)
-            FindObjectOfType<AudioManager>().FadeIn("layer3");
+            FindObjectOfType<AudioManager>().FadeIn("layer3", "fast");
 
         if (streak > 2)
             streak = 2;

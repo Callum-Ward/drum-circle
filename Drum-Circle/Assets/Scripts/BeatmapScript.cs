@@ -12,6 +12,8 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0.1f;
+    private bool lastHitL = false;
+    private bool lastHitR = false;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -33,6 +35,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
     }
 
+    //Function for spawning beats based on passed variable
     private void spawnOnTime(float time)
     {
             int index = (int)(Math.Round(time, 2) * 100);
@@ -72,6 +75,7 @@ public class BeatmapScript : MonoBehaviour
             } 
     }
 
+    //Coroutine function for delaying hit-window
     IEnumerator WindowDelay(float time)
     {
         yield return new WaitForSeconds(time);
@@ -85,6 +89,8 @@ public class BeatmapScript : MonoBehaviour
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
         FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drums");
+       
+        //Opens the data stream for the connected drums
         try
         {
             data_stream.Open();
@@ -98,6 +104,9 @@ public class BeatmapScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Checks if there was an input in the data stream
+        hitL = false;
+        hitR = false;
         try
         {
             receivedString = data_stream.ReadLine();
@@ -120,11 +129,22 @@ public class BeatmapScript : MonoBehaviour
 
         }
 
+        if (hitL == false)
+        {
+            lastHitL = hitL;
+        }
+        if (hitR == false)
+        {
+            lastHitR = hitR;
+        }
+
+        //Start the timer
         if (timer <= delay && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
             timer += Time.deltaTime;
         }
+        //Play all layers of music simultaneously
         else if(audioManager.activeSource == null)
         {
             audioManager.Play("drums");
@@ -132,12 +152,13 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Play("layer2");
             audioManager.Volume("layer2", 0f);
         }
+        //Drum hit functionality
         else
         {
             spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
             
-            //if (Input.GetKeyDown(KeyCode.LeftArrow))
-            if (hitL == true || Input.GetKeyDown(KeyCode.LeftArrow))
+            //Register left drum hit and perform code
+            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && lastHitL == false)
                 if (beatManager.beatQueueL.Count > 0) {
                     {
                         var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
@@ -145,21 +166,23 @@ public class BeatmapScript : MonoBehaviour
                         {
                             scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
                             beatManager.BeatDelete("left", true);
-                            audioManager.Volume("drums", 1f);
+                            //audioManager.Volume("drums", 1f);
+                            audioManager.FadeIn("drums", "fast");
                         }
                         else
                         {
                             scoreManager.Miss();
                             audioManager.Play("tapFail");
                             audioManager.SetActive("drums");
-                            audioManager.Volume("drums", 0f);
+                            //audioManager.Volume("drums", 0f);
+                            audioManager.FadeOut("drums");
                         }
                     }
-                    hitL = false;
+                    lastHitL = true;
             }
 
-            //if (Input.GetKeyDown(KeyCode.RightArrow))
-            if (hitR == true || Input.GetKeyDown(KeyCode.RightArrow))
+            //Register right drum hit and perform code
+            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && lastHitR == false)
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
@@ -168,17 +191,19 @@ public class BeatmapScript : MonoBehaviour
                     {
                         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatR.windowScore));
                         beatManager.BeatDelete("right", true);
-                        audioManager.Volume("drums", 1f);
+                        //audioManager.Volume("drums", 1f);
+                        audioManager.FadeIn("drums", "fast");
                     }
                     else
                     {
                         scoreManager.Miss();
                         audioManager.Play("tapFail");
                         audioManager.SetActive("drums");
-                        audioManager.Volume("drums", 0f);
+                        //audioManager.Volume("drums", 0f);
+                        audioManager.FadeOut("drums");
                     }
                 }
-                hitR = false;
+                lastHitR = true;
             }
         }
     }
