@@ -19,12 +19,12 @@ public class RhythmScript : MonoBehaviour
     {
         if (timer > 2)
         {
-            spawner.spawn(1, 1, 1);
-            spawner.spawn(1, 0, 1);
-            spawner.spawn(3, 1, 1);
-            spawner.spawn(3, 0, 1);
-            spawner.spawn(5, 1, 1);
-            spawner.spawn(5, 0, 1);
+            spawner.spawn(1, 1);
+            spawner.spawn(1, 0);
+            spawner.spawn(3, 1);
+            spawner.spawn(3, 0);
+            spawner.spawn(5, 1);
+            spawner.spawn(5, 0);
             timer = 0;
         }
         else
