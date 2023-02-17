@@ -1,5 +1,5 @@
-const int threshold = 200;
-const int delayMs = 100;
+const int threshold = 175;
+const int delayMs = 125;
 const int drumCount = 2;
 bool hits[drumCount];
 int vals[drumCount];
@@ -16,8 +16,8 @@ void setup() {
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.print("off:"); 
-  Serial.println(0);  
+  //Serial.print("off:"); 
+  //Serial.println(0);  
   for (auto i =0;i<drumCount;i++) {
     vals[i] = analogRead(i);
     
