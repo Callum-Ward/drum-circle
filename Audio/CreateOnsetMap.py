@@ -97,8 +97,8 @@ def print_onset_map_from_json(file):
 
 def main():
     #print_onset_map_from_json('./BiBDrumsBass-str.json')
-    create_onset_map('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
-    #for path, output in files:
-        #create_onset_map(path, output)
+    #create_onset_map('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
+    for path, output in files:
+        create_onset_map(path, output)
 
 main()
