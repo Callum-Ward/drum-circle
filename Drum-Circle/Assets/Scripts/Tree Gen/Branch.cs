@@ -16,7 +16,7 @@ public class Branch : MonoBehaviour {
     public Vector3 dir = Vector3.up;
     public float length = 0.0f, radius = 0.0f, area = 0.1f;
 
-    const int MAX_DEPTH = 2;
+    const int MAX_DEPTH = 6;
 
     void Start() {
         transform.localScale = new Vector3(radius, length, radius);
@@ -89,8 +89,7 @@ public class Branch : MonoBehaviour {
 
     void placeBranch(GameObject branch, Vector3 direction) {
         var mesh = this.GetComponent<MeshFilter>().mesh;
-        branch.transform.position = 0.9f * mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
-
+        branch.transform.position = 0.9f * mesh.bounds.size.y * this.transform.localScale.y * this.transform.up + this.transform.position;
         Debug.Log(direction);
         branch.transform.rotation = Quaternion.Euler(direction * 180);
     }

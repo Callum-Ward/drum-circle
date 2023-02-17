@@ -391,7 +391,7 @@ MonoBehaviour:
   ratio: 0.5
   spread: 0.5
   splitSize: 10
-  splitDecay: 0
+  splitDecay: 0.33
   directedness: 0.8
   dir: {x: 0, y: 1, z: 0}
   length: 0
