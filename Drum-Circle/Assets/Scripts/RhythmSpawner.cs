@@ -5,14 +5,15 @@ using UnityEngine;
 public class RhythmSpawner : MonoBehaviour
 
 {
-    public GameObject targetBoundary;
-    public GameObject targetLine;
-    public GameObject leftTarget;
-    public GameObject rightTarget;
+    public GameObject leftTargetForeground;
+    public GameObject leftTargetBase;
+    public GameObject rightTargetForeground;
+    public GameObject rightTargetBase;
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
     private BeatManager beatManager;
+    private const float spawnScale = 1.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -23,9 +24,13 @@ public class RhythmSpawner : MonoBehaviour
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
         
-        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -3.9f, 0f), transform.rotation);
-        Instantiate(targetLine, startSpawn + new Vector3(0f, -4.25f, 0f), transform.rotation);
-        Instantiate(targetBoundary, startSpawn + new Vector3(0f, -4.6f, 0f), transform.rotation);
+        Instantiate(leftTargetBase, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
+        Instantiate(rightTargetBase, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);
+
+        GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3(0f, -4.25f, 0f), transform.rotation);
+        GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3(1.5f, -4.25f, 0f), transform.rotation);
+        newLeftTarget.transform.localScale *= spawnScale;
+        newRightTarget.transform.localScale *= spawnScale;
     }
 
     // Update is called once per frame
@@ -33,7 +38,7 @@ public class RhythmSpawner : MonoBehaviour
     {
     }
 
-    public void spawn(int pos, int left)
+    public void spawn(int pos, int left, int size)
     {
         //pos: 1,2,3,4,5
         //if single player central position will be used to spawn 3
@@ -41,14 +46,19 @@ public class RhythmSpawner : MonoBehaviour
         //if three players then 1,3,5 used
         //left: each player has 2 beat lines, if 1 then left beat spawn else right
         Vector3 spawnLoc = startSpawn + new Vector3(pos*1.5f-(left*1.5f), 0f, 0f);
+        Vector3 spawnScaleAddition = new Vector3((size - 1)*0.1f, (size-1)*0.1f, 0f);
    
         if (left==1)
         {
-            beatManager.AddToQueueL(Instantiate(leftBeat, spawnLoc, transform.rotation));
+            GameObject newBeat = Instantiate(leftBeat, spawnLoc, transform.rotation);
+            newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
+            beatManager.AddToQueueL(newBeat);
         }
         else
         {
-            beatManager.AddToQueueR(Instantiate(rightBeat, spawnLoc, transform.rotation));
+            GameObject newBeat = Instantiate(rightBeat, spawnLoc, transform.rotation);
+            newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
+            beatManager.AddToQueueR(newBeat);
         }
 
 
