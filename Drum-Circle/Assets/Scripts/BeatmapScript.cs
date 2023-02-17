@@ -21,8 +21,9 @@ public class BeatmapScript : MonoBehaviour
     public BeatManager beatManager;
     public string[] sections;
     public string receivedString;
+    private const int beatmapWidth = 10;
 
-    SerialPort data_stream = new SerialPort("COM8", 9600);
+    SerialPort data_stream = new SerialPort("COM3", 9600);
 
     void Awake()
     {
@@ -39,8 +40,8 @@ public class BeatmapScript : MonoBehaviour
             List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
     
             if(index < timestampedOnsets.Count){
-                int lb = index == 0 ? 0 : index - 1;
-                int ub = index == timestampedOnsets.Count - 1 ? index : index + 1;
+                int lb = index  < beatmapWidth ? 0 : index - beatmapWidth;
+                int ub = index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth;
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat)
                     {
