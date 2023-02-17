@@ -21,6 +21,7 @@ public class RhythmSpawner : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         //set beat spawner location with respect to camera position
         transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
+        //transform.rotation = Camera.main.transform.rotation;
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
         
