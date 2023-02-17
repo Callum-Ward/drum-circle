@@ -15,7 +15,8 @@ public class BeatManager : MonoBehaviour
         {
             //Queue<GameObject> beatQueue;
         }
-    // Update is called once per frame
+
+    //Checks if beats need to be deleted every frame.
     void Update()
         {
         if (beatQueueL.Count > 0)
@@ -36,6 +37,8 @@ public class BeatManager : MonoBehaviour
             }
         }
     }
+
+    //Queues for beats based on track.
     public void AddToQueueL(GameObject beat)
         {
             beatQueueL.Enqueue(beat);
@@ -44,6 +47,8 @@ public class BeatManager : MonoBehaviour
         {
             beatQueueR.Enqueue(beat);
         }
+
+    //Deletes beat from queue if queue isn't empty is available.
     public void BeatDelete(string side, bool highlight)
         {
         if (beatQueueL.Count > 0)
@@ -65,6 +70,7 @@ public class BeatManager : MonoBehaviour
         }
     }
 
+    //Coroutine to delay destruction of object after specified amount of time.
     IEnumerator WindowDelay(float time, GameObject o)
     {
         yield return new WaitForSeconds(time);
