@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Unity.Collections;
+
 public class Branch : MonoBehaviour {
     public int id = 1;
     public int depth = 0;
@@ -14,15 +15,15 @@ public class Branch : MonoBehaviour {
     public Vector3 dir = Vector3.up;
     public float length = 0.0f, radius = 0.0f, area = 0.1f;
 
-    void Start() {
-        
+    const int MAX_DEPTH = 1;
 
+    void Start() {
         transform.localScale = new Vector3(radius, length, radius);
     }
 
     void Update() {
-        if (Input.GetKeyDown("space"))
-            Grow(5);
+        if (Input.GetKey("space"))
+            Grow(100);
 
     }
 
@@ -35,6 +36,10 @@ public class Branch : MonoBehaviour {
 
         this.depth = parent.depth + 1;
 
+        this.length = 0;
+        this.radius = 0;
+        this.area = 0.1f;
+
         this.ratio = parent.ratio;
         this.spread = parent.spread;
         this.splitSize = parent.splitSize;
@@ -42,37 +47,52 @@ public class Branch : MonoBehaviour {
     }
 
     public void Grow(float feed) {
-        if (leaf) {
-            length += (float)Math.Cbrt(feed);
-            feed -= (float)Math.Cbrt(feed);
-            area += feed / length; 
+        // if (id != 1)
+        //     Debug.Log("branch " + this.id.ToString() + " recieved " + feed.ToString() + "feed");
 
-            if (length > splitSize * Math.Exp(-splitDecay * depth)) {
-                if (depth < 6 )Split();
+        if (leaf) {
+            length += (float)Math.Cbrt(feed) / 1000;
+            feed -= (float)Math.Cbrt(feed) / 1000;
+            area += (feed / length) / 10000; 
+
+            transform.localScale = Vector3.one * length / 10;
+
+            if (length > splitSize * Math.Exp   (-splitDecay * depth) &&
+                    depth < MAX_DEPTH) {
+                Debug.Log("split branch id " + this.id.ToString());
+                Split();
             } 
         }
 
         else {
             float pass = (branchA.area + branchB.area) / (branchA.area + branchB.area + this.area);
 
-            area += pass * feed / length;
+            Debug.Log(pass);
+
+            area += pass * feed / length / 1000;
             feed *= (1 - pass); 
+
+            transform.localScale = new Vector3(1, 0, 1) * radius / 10 + new Vector3(1, transform.localScale.y, 1);
+
+            for (int i = 0; i < transform.childCount; i++) {
+                var child = transform.GetChild(i);
+                child.transform.localScale -= new Vector3(1, 0, 1) * radius / 10;
+            }
 
             branchA.Grow(ratio * feed);
             branchB.Grow((1 - ratio) * feed);
         }
 
         radius = (float)Math.Sqrt((double)area/Math.PI);
-
-        transform.localScale = Vector3.one * length / 1000;
     }
 
     void placeBranch(GameObject branch, Vector3 direction) {
         branch.transform.parent = this.transform;
 
-        Mesh mesh = this.GetComponent<Mesh>();
-        branch.transform.position = mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
+        var mesh = this.GetComponent<MeshFilter>().mesh;
+        branch.transform.position = 0.9f * mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
 
+        Debug.Log(direction);
         branch.transform.rotation = Quaternion.Euler(direction);
     }
 
