@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7305649572316112274}
   - component: {fileID: 7305649572316112277}
   m_Layer: 0
-  m_Name: AudioManager 1
+  m_Name: AudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

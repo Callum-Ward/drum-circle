@@ -44,15 +44,17 @@ public class BeatmapScript : MonoBehaviour
                 for(int i = lb; i <= ub; i++){
                     if(timestampedOnsets[i].isBeat)
                     {
-                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
-                        spawner.spawn(1, 1);
+                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
+                        StartCoroutine(WindowDelay(delay - windowtime/2));
+                        spawner.spawn(1, 1, size);
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
-                        StartCoroutine(WindowDelay(delay + inputDelay - windowtime/2));
-                        spawner.spawn(1, 0); 
+                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
+                        StartCoroutine(WindowDelay(delay - windowtime/2));
+                        spawner.spawn(1, 0, size); 
                         timestampedOnsets[i].isOnset = false;
                         break;
                     }
