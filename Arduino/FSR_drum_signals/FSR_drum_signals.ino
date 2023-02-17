@@ -1,5 +1,5 @@
-const int threshold = 150;
-const int delayMs = 150;
+const int threshold = 175;
+const int delayMs = 125;
 const int drumCount = 2;
 bool hits[drumCount];
 int vals[drumCount];
@@ -11,7 +11,7 @@ void setup() {
   // put your setup code here, to run once:
   for (bool &hit : hits) hit = false;
   for (int &maxVal : maxVals) maxVal = 0;
-  Serial.begin(19200);
+  Serial.begin(9600);
   
 }
 void loop() {
