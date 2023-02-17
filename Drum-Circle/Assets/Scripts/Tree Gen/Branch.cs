@@ -55,7 +55,7 @@ public class Branch : MonoBehaviour {
             feed -= (float)Math.Cbrt(feed) / 1000;
             area += (feed / length) / 10000; 
 
-            transform.localScale = Vector3.one * length / 10;
+            transform.localScale = new Vector3(radius, length, radius);
 
             if (length > splitSize * Math.Exp   (-splitDecay * depth) &&
                     depth < MAX_DEPTH) {
@@ -69,14 +69,14 @@ public class Branch : MonoBehaviour {
 
             Debug.Log(pass);
 
-            area += pass * feed / length / 1000;
+            area += pass * feed / length / 10000;
             feed *= (1 - pass); 
 
-            transform.localScale = new Vector3(1, 0, 1) * radius / 10 + new Vector3(1, transform.localScale.y, 1);
+            transform.localScale = new Vector3(radius, length, radius);
 
             for (int i = 0; i < transform.childCount; i++) {
                 var child = transform.GetChild(i);
-                child.transform.localScale -= new Vector3(1, 0, 1) * radius / 10;
+                child.transform.localScale = Vector3.one;
             }
 
             branchA.Grow(ratio * feed);
@@ -87,7 +87,7 @@ public class Branch : MonoBehaviour {
     }
 
     void placeBranch(GameObject branch, Vector3 direction) {
-        branch.transform.parent = this.transform;
+        //branch.transform.parent = this.transform;
 
         var mesh = this.GetComponent<MeshFilter>().mesh;
         branch.transform.position = 0.9f * mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
