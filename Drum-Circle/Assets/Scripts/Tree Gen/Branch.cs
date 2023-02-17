@@ -11,11 +11,12 @@ public class Branch : MonoBehaviour {
 
     public float ratio, spread, splitSize;
     public float splitDecay = 1;
+    public float directedness = 0.8f;
 
     public Vector3 dir = Vector3.up;
     public float length = 0.0f, radius = 0.0f, area = 0.1f;
 
-    const int MAX_DEPTH = 1;
+    const int MAX_DEPTH = 2;
 
     void Start() {
         transform.localScale = new Vector3(radius, length, radius);
@@ -67,7 +68,7 @@ public class Branch : MonoBehaviour {
         else {
             float pass = (branchA.area + branchB.area) / (branchA.area + branchB.area + this.area);
 
-            Debug.Log(pass);
+            // Debug.Log(pass);
 
             area += pass * feed / length / 10000;
             feed *= (1 - pass); 
@@ -87,13 +88,11 @@ public class Branch : MonoBehaviour {
     }
 
     void placeBranch(GameObject branch, Vector3 direction) {
-        //branch.transform.parent = this.transform;
-
         var mesh = this.GetComponent<MeshFilter>().mesh;
         branch.transform.position = 0.9f * mesh.bounds.size.y * this.transform.localScale.y * Vector3.up;   
 
         Debug.Log(direction);
-        branch.transform.rotation = Quaternion.Euler(direction);
+        branch.transform.rotation = Quaternion.Euler(direction * 180);
     }
 
     public void Split() {
@@ -112,6 +111,7 @@ public class Branch : MonoBehaviour {
         branchB.SetBranch(id * 2 + 1, this);
 
         Vector3 density = leafDensity(this.depth);
+        Debug.Log("leaf density vector: " + density);
         Vector3 norm = Vector3.Cross(density, this.dir).normalized;
         Vector3 reflect = -1.0f * norm;
 
@@ -152,6 +152,10 @@ public class Branch : MonoBehaviour {
             searchDepth--;
         }
 
-        return Vector3.Normalize(leafAverage(ancestor) - rel) + rand; // <- REDO!
+        Debug.Log("relative position to root: " + rel);
+
+        Debug.Log("leaf average direction vector: " + leafAverage(ancestor));
+
+        return Vector3.Normalize(leafAverage(ancestor) - rel) + rand * (1 - this.directedness); // <- REDO!
     }
 }

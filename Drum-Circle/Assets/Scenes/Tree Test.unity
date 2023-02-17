@@ -369,7 +369,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820877679}
-  m_Mesh: {fileID: -6353546005895360454, guid: 5885e5269b4235b44b18dfb59c71f69a, type: 3}
+  m_Mesh: {fileID: -5076798556035486163, guid: 62aad7afbebb9c34085964e88cdaa1a7, type: 3}
 --- !u!114 &820877682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,7 +391,8 @@ MonoBehaviour:
   ratio: 0.5
   spread: 0.5
   splitSize: 10
-  splitDecay: 1
+  splitDecay: 0
+  directedness: 0.8
   dir: {x: 0, y: 1, z: 0}
   length: 0
   radius: 0
