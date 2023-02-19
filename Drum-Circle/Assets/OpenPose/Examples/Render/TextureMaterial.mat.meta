@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Drum-Circle/Assets/OpenPose/Examples/Render/TextureMaterial.mat.meta
 guid: 05771c19f9f470a4395f3f170d4d82b4
+=======
+guid: 2b8cc894fc90c1d4586e5d8b483f8814
+>>>>>>> Stashed changes:Drum-Circle/Assets/Materials/black.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 2100000
