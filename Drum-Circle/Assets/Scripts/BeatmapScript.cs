@@ -172,7 +172,7 @@ public class BeatmapScript : MonoBehaviour
                     var beatR = beatManager.beatQueueR.Peek().GetComponent<MoveBeat>();
                     if (beatR.window == true)
                     {
-                        scoreManager.Hit((windowtime / 2) - beatR.windowScore);
+                        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
                         //audioManager.Volume("drums", 1f);
                         beatManager.BeatDelete("right", true);
                         audioManager.FadeIn("drums", "fast");
