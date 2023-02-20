@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class AudioTimestamp {
     public bool isOnset;
     public bool isBeat;
+    public string strength;
 }
 
 public class TrackAnalysis {

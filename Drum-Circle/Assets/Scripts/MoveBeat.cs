@@ -81,7 +81,8 @@ public void BeatHighlight()
         color.a = alpha;
         newMaterial.color = color;
 
-        gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0.00f);
+        //gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0.00f);
+        gameObject.transform.localScale *= 1.005f;
 
         beatRenderer.material = newMaterial;
     }
