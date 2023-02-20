@@ -23,7 +23,7 @@ public class BeatmapScript : MonoBehaviour
     public string receivedString;
     private const int beatmapWidth = 10;
 
-    SerialPort data_stream = new SerialPort("COM3", 9600);
+    SerialPort data_stream = new SerialPort("COM8", 19200);
 
     void Awake()
     {
@@ -82,6 +82,7 @@ public class BeatmapScript : MonoBehaviour
         try
         {
             data_stream.Open();
+            data_stream.ReadTimeout = 10;
         }
         catch (System.Exception ex)
         {
