@@ -11,11 +11,11 @@ public class BeatmapScript : MonoBehaviour
     public float window = 0f;
     public float windowtime = 0.3f;
     public float delay = 2.0f;
-    public float inputDelay = 0.1f;
+    public float inputDelay = 0f;
     private bool hitL = false;
     private bool hitR = false;
-    private Queue holdDownL;
-    private Queue holdDownR;
+    // private Queue holdDownL;
+    // private Queue holdDownR;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -35,8 +35,8 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
-        holdDownL = new Queue();
-        holdDownR = new Queue();
+        // holdDownL = new Queue();
+        // holdDownR = new Queue();
     }
 
     //Function for spawning beats based on passed variable
@@ -123,12 +123,12 @@ public class BeatmapScript : MonoBehaviour
             messageListener.message = null;
         }
         
-        if(hitL == false && holdDownL.Count != 0) {
-            holdDownL.Dequeue();
-        }
-        if(hitR == false && holdDownR.Count != 0) {
-            holdDownR.Dequeue();
-        }
+        // if(hitL == false && holdDownL.Count != 0) {
+        //     holdDownL.Dequeue();
+        // }
+        // if(hitR == false && holdDownR.Count != 0) {
+        //     holdDownR.Dequeue();
+        // }
 
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null)
@@ -150,7 +150,8 @@ public class BeatmapScript : MonoBehaviour
             spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 
             //Register left drum hit and perform code
-            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && holdDownL.Count == 0)
+            // if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && holdDownL.Count == 0)
+            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
                 if (beatManager.beatQueueL.Count > 0) {
                     {
                         var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
@@ -160,6 +161,7 @@ public class BeatmapScript : MonoBehaviour
                             //audioManager.Volume("drums", 1f);
                             beatManager.BeatDelete("left", true);
                             audioManager.FadeIn("drums", "fast");
+                            beatL.dontDelete = true;
                         }
                         else
                         {
@@ -174,12 +176,13 @@ public class BeatmapScript : MonoBehaviour
                             }
                         }
                     }
-                holdDownL.Enqueue("1");
-                holdDownL.Enqueue("1");
+                // holdDownL.Enqueue("1");
+                // holdDownL.Enqueue("1");
             }
 
             //Register right drum hit and perform code
-            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && holdDownR.Count == 0)
+            // if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && holdDownR.Count == 0)
+            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
@@ -190,6 +193,7 @@ public class BeatmapScript : MonoBehaviour
                         //audioManager.Volume("drums", 1f);
                         beatManager.BeatDelete("right", true);
                         audioManager.FadeIn("drums", "fast");
+                        beatR.dontDelete = true;
                     }
                     else
                     {
@@ -204,8 +208,8 @@ public class BeatmapScript : MonoBehaviour
                         } 
                     }
                 }
-                holdDownR.Enqueue("1");
-                holdDownR.Enqueue("1");
+                // holdDownR.Enqueue("1");
+                // holdDownR.Enqueue("1");
             }
         }
     }

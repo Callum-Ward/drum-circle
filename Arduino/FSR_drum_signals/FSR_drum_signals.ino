@@ -1,5 +1,5 @@
-const int threshold = 200;
-const int delayMs = 100;
+const int threshold = 175;
+const int delayMs = 125;
 const int drumCount = 2;
 bool hits[drumCount];
 int vals[drumCount];
