@@ -14,6 +14,7 @@ public class BeatmapScript : MonoBehaviour
     public float inputDelay = 0.1f;
     private bool hitL = false;
     private bool hitR = false;
+    public string input = null;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -22,7 +23,7 @@ public class BeatmapScript : MonoBehaviour
     public string[] sections;
     public string receivedString;
 
-    SerialPort data_stream = new SerialPort("COM8", 9600);
+    SerialPort data_stream = new SerialPort("COM8", 19200);
 
     void Awake()
     {
@@ -81,6 +82,7 @@ public class BeatmapScript : MonoBehaviour
         try
         {
             data_stream.Open();
+            data_stream.ReadTimeout = 10;
         }
         catch (System.Exception ex)
         {
@@ -103,10 +105,12 @@ public class BeatmapScript : MonoBehaviour
                 if (sections[1] == "1")
                 {
                     hitL = true;
+                    Debug.Log("Hit");
                 }
                 else if (sections[1] == "0")
                 {
                     hitR= true;
+                    Debug.Log("Hit");
                 }
             }
         }

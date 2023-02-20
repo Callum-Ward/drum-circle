@@ -11,7 +11,7 @@ void setup() {
   // put your setup code here, to run once:
   for (bool &hit : hits) hit = false;
   for (int &maxVal : maxVals) maxVal = 0;
-  Serial.begin(9600);
+  Serial.begin(19200);
   
 }
 void loop() {
