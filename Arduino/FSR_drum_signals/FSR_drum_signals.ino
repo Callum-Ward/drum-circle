@@ -11,13 +11,13 @@ void setup() {
   // put your setup code here, to run once:
   for (bool &hit : hits) hit = false;
   for (int &maxVal : maxVals) maxVal = 0;
-  Serial.begin(9600);
+  Serial.begin(19200);
   
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.print("off:"); 
-  Serial.println(0);  
+  //Serial.print("off:"); 
+  //Serial.println(0);  
   for (auto i =0;i<drumCount;i++) {
     vals[i] = analogRead(i);
     

@@ -14,11 +14,14 @@ public class BeatmapScript : MonoBehaviour
     public float inputDelay = 0.1f;
     private bool hitL = false;
     private bool hitR = false;
+    private Queue holdDownL;
+    private Queue holdDownR;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
     public BeatManager beatManager;
+    public MessageListener messageListener;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -31,6 +34,9 @@ public class BeatmapScript : MonoBehaviour
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
+        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        holdDownL = new Queue();
+        holdDownR = new Queue();
     }
 
     //Function for spawning beats based on passed variable
@@ -42,7 +48,8 @@ public class BeatmapScript : MonoBehaviour
             if(index < timestampedOnsets.Count){
                 int lb = index  < beatmapWidth ? 0 : index - beatmapWidth;
                 int ub = index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth;
-                for(int i = lb; i <= ub; i++){
+                for(int i = lb; i <= ub; i++)
+                {
                     if(timestampedOnsets[i].isBeat)
                     {
                         int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
@@ -96,10 +103,11 @@ public class BeatmapScript : MonoBehaviour
         //Checks if there was an input in the data stream
         hitL = false;
         hitR = false;
-        try
+        
+        string message = messageListener.message;
+        if (message != null)
         {
-            receivedString = data_stream.ReadLine();
-            sections = receivedString.Split(":");
+            sections = message.Split(":");
             if (sections[0] == "on")
             {
                 if (sections[1] == "1")
@@ -110,12 +118,16 @@ public class BeatmapScript : MonoBehaviour
                 {
                     hitR= true;
                 }
+                
             }
+            messageListener.message = null;
         }
-        catch (System.Exception e)
-        {
-            //print(e.ToString());
-
+        
+        if(hitL == false && holdDownL.Count != 0) {
+            holdDownL.Dequeue();
+        }
+        if(hitR == false && holdDownR.Count != 0) {
+            holdDownR.Dequeue();
         }
 
         //Start the timer
@@ -138,7 +150,7 @@ public class BeatmapScript : MonoBehaviour
             spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 
             //Register left drum hit and perform code
-            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
+            if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && holdDownL.Count == 0)
                 if (beatManager.beatQueueL.Count > 0) {
                     {
                         var beatL = beatManager.beatQueueL.Peek().GetComponent<MoveBeat>();
@@ -162,17 +174,19 @@ public class BeatmapScript : MonoBehaviour
                             }
                         }
                     }
+                holdDownL.Enqueue("1");
+                holdDownL.Enqueue("1");
             }
 
             //Register right drum hit and perform code
-            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
+            if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && holdDownR.Count == 0)
             {
                 if (beatManager.beatQueueR.Count > 0)
                 {
                     var beatR = beatManager.beatQueueR.Peek().GetComponent<MoveBeat>();
                     if (beatR.window == true)
                     {
-                        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatL.windowScore));
+                        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beatR.windowScore));
                         //audioManager.Volume("drums", 1f);
                         beatManager.BeatDelete("right", true);
                         audioManager.FadeIn("drums", "fast");
@@ -187,10 +201,11 @@ public class BeatmapScript : MonoBehaviour
                         if (beatR.timer >= (delay * 0.75))
                         {
                             beatManager.BeatDelete("right", false);
-                        }
-                        
+                        } 
                     }
                 }
+                holdDownR.Enqueue("1");
+                holdDownR.Enqueue("1");
             }
         }
     }
