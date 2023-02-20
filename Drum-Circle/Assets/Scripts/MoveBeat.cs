@@ -5,9 +5,10 @@ using UnityEngine;
 public class MoveBeat : MonoBehaviour
 {
     public float moveSpeed = 2f;
-    private float timer = 0f;
+    public float timer = 0f;
     private float windowtime = 0f;
     public bool window = false;
+    public bool dontDelete = false;
     public bool delete = false;
     public float windowScore = 0f;
     private float alpha = 1.0f;
@@ -32,28 +33,30 @@ public class MoveBeat : MonoBehaviour
     {
     }
 
-    // Update is called once per frame
+    //Checks if beat needs to be deleted each frame and calculates score for hitting beat at this time.
     void Update()
     {
         transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         timer += Time.deltaTime;
         windowtime = beatmapScript.windowtime;
 
-        if (timer > (beatmapScript.delay + (beatmapScript.windowtime)))
+        if (timer > (beatmapScript.delay + (beatmapScript.windowtime)) && dontDelete == false)
         {
             delete = true;
+            audioManager.FadeOut("drums");
         }
 
-        else if (timer >= (beatmapScript.delay - windowtime/3))
+        else if (timer >= (beatmapScript.delay - windowtime/2))
         {
             window = true;
             windowScore = Mathf.Abs(timer - beatmapScript.delay);
         }
 
-        else if (timer < (beatmapScript.delay - (windowtime/3))) 
+        else if (timer < (beatmapScript.delay - (windowtime/2))) 
         {
             window = false;
         }
+
         if (fade == true) {
             moveSpeed = 0.2f;
             alpha -= (1f / beatManager.deleteDelay) * Time.deltaTime;
@@ -61,12 +64,13 @@ public class MoveBeat : MonoBehaviour
         }
     }
 
+//Function for changing colour of beat and activating alpha manipuation for fading.
 public void BeatHighlight()
     {
         Color color = Color.grey;
         if (highlight)
         {
-            color = Color.yellow;
+            color = Color.green;
         }
         beatRenderer = gameObject.GetComponent<MeshRenderer>();
         Material newMaterial = new Material(Shader.Find("Standard"));

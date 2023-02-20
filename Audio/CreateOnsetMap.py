@@ -6,7 +6,8 @@ files = [
     ('./drakkar.mp3', 'drakkar_data.json'),
     ('./break_130.wav', 'break_130_data.json'),
     ('./download.wav', 'download_data.json'),
-    ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
+    ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json'),
+    ('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json')
 ]
 
 def print_progress_bar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -96,8 +97,8 @@ def print_onset_map_from_json(file):
 
 def main():
     #print_onset_map_from_json('./BiBDrumsBass-str.json')
-    create_onset_map('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
-    #for path, output in files:
-        #create_onset_map(path, output)
+    #create_onset_map('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
+    for path, output in files:
+        create_onset_map(path, output)
 
 main()
