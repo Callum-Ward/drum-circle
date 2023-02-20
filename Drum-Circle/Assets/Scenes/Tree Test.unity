@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -388,11 +388,11 @@ MonoBehaviour:
   branchA: {fileID: 0}
   branchB: {fileID: 0}
   parent: {fileID: 0}
-  ratio: 0.5
+  ratio: 0.66
   spread: 0.5
   splitSize: 10
   splitDecay: 0.33
-  directedness: 0.8
+  directedness: 0.66
   dir: {x: 0, y: 1, z: 0}
   length: 0
   radius: 0

@@ -23,7 +23,7 @@ public class Branch : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKey("space"))
+        if (Input.GetKey("space") && depth == 0)
             Grow(100);
 
     }
@@ -37,7 +37,7 @@ public class Branch : MonoBehaviour {
 
         this.depth = parent.depth + 1;
 
-        this.length = 0;
+        this.length = (float)(splitSize * Math.Exp(-splitDecay * depth) / 2);
         this.radius = 0;
         this.area = 0.1f;
 
@@ -48,27 +48,24 @@ public class Branch : MonoBehaviour {
     }
 
     public void Grow(float feed) {
-        // if (id != 1)
-        //     Debug.Log("branch " + this.id.ToString() + " recieved " + feed.ToString() + "feed");
+        if (depth == MAX_DEPTH 
+            && this.length >= splitSize * Math.Exp(-splitDecay * depth)) return;
 
         if (leaf) {
-            length += (float)Math.Cbrt(feed) / 1000;
-            feed -= (float)Math.Cbrt(feed) / 1000;
+            length += (float)Math.Sqrt(feed) / 1000;
+            feed -= (float)Math.Sqrt(feed) / 1000;
             area += (feed / length) / 10000; 
 
             transform.localScale = new Vector3(radius, length, radius);
 
-            if (length > splitSize * Math.Exp   (-splitDecay * depth) &&
+            if (length > splitSize * Math.Exp(-splitDecay * depth) &&
                     depth < MAX_DEPTH) {
-                Debug.Log("split branch id " + this.id.ToString());
                 Split();
             } 
         }
 
         else {
             float pass = (branchA.area + branchB.area) / (branchA.area + branchB.area + this.area);
-
-            // Debug.Log(pass);
 
             area += pass * feed / length / 10000;
             feed *= (1 - pass); 
