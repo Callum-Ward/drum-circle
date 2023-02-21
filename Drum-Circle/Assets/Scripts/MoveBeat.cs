@@ -8,6 +8,7 @@ public class MoveBeat : MonoBehaviour
     public float timer = 0f;
     private float windowtime = 0f;
     public bool window = false;
+    public bool dontDelete = false;
     public bool delete = false;
     public float windowScore = 0f;
     private float alpha = 1.0f;
@@ -39,7 +40,7 @@ public class MoveBeat : MonoBehaviour
         timer += Time.deltaTime;
         windowtime = beatmapScript.windowtime;
 
-        if (timer > (beatmapScript.delay + (beatmapScript.windowtime)))
+        if (timer > (beatmapScript.delay + (beatmapScript.windowtime)) && dontDelete == false)
         {
             delete = true;
             audioManager.FadeOut("drums");
