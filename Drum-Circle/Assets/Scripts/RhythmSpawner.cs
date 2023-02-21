@@ -27,10 +27,10 @@ public class RhythmSpawner : MonoBehaviour
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
 
-        GameObject lt = Instantiate(leftTrack, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
-        GameObject rt = Instantiate(leftTrack, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);
-        fadeTrack(lt);
-        fadeTrack(rt);
+        GameObject newLeftTrack = Instantiate(leftTrack, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
+        GameObject newRightTrack = Instantiate(leftTrack, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);
+        fadeTrack(newLeftTrack);
+        fadeTrack(newRightTrack);
         
         Instantiate(leftTargetBase, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
         Instantiate(rightTargetBase, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);

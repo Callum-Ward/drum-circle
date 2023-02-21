@@ -83,7 +83,6 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-        FindObjectOfType<AudioAnalyser>().loadTrackAnalysis("drums");
        
         //Opens the data stream for the connected drums
         try
@@ -139,9 +138,9 @@ public class BeatmapScript : MonoBehaviour
         //Play all layers of music simultaneously
         else if(audioManager.activeSource == null)
         {
-            audioManager.Play("drums");
-            audioManager.Play("layer1");
-            audioManager.Play("layer2");
+            audioManager.Play("drums", audioAnalyser);
+            audioManager.Play("layer1", null);
+            audioManager.Play("layer2", null);
             audioManager.Volume("layer2", 0f);
         }
         //Drum hit functionality
@@ -166,7 +165,7 @@ public class BeatmapScript : MonoBehaviour
                         else
                         {
                             scoreManager.Miss();
-                            audioManager.Play("tapFail");
+                            audioManager.Play("tapFail", null);
                             audioManager.SetActive("drums");
                             audioManager.Volume("drums", 0f);
                             //audioManager.FadeOut("drums");
@@ -198,7 +197,7 @@ public class BeatmapScript : MonoBehaviour
                     else
                     {
                         scoreManager.Miss();
-                        audioManager.Play("tapFail");
+                        audioManager.Play("tapFail", null);
                         audioManager.SetActive("drums");
                         audioManager.Volume("drums", 0f);
                         //audioManager.FadeOut("drums");
