@@ -26,7 +26,7 @@ public class BeatmapScript : MonoBehaviour
     public string receivedString;
     private const int beatmapWidth = 10;
 
-    SerialPort data_stream = new SerialPort("COM8", 19200);
+    SerialPort data_stream = new SerialPort("COM3", 19200);
 
     void Awake()
     {
