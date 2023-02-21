@@ -39,10 +39,10 @@ public class drumBall : MonoBehaviour
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("layer1");
-            FindObjectOfType<AudioManager>().Play("layer2");
+            FindObjectOfType<AudioManager>().Play("layer1", null);
+            FindObjectOfType<AudioManager>().Play("layer2", null);
             FindObjectOfType<AudioManager>().Volume("layer2", 0f);
-            FindObjectOfType<AudioManager>().Play("layer3");
+            FindObjectOfType<AudioManager>().Play("layer3", null);
             FindObjectOfType<AudioManager>().Volume("layer3", 0f);
         }
 
@@ -50,7 +50,7 @@ public class drumBall : MonoBehaviour
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("drumTap");
+            FindObjectOfType<AudioManager>().Play("drumTap", null);
 
             streakCombo++;
         }
@@ -59,7 +59,7 @@ public class drumBall : MonoBehaviour
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("tapFail");
+            FindObjectOfType<AudioManager>().Play("tapFail", null);
             if (streak > 0)
                 streak--;
             else

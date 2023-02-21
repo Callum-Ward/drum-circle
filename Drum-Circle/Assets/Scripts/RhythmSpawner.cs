@@ -9,6 +9,8 @@ public class RhythmSpawner : MonoBehaviour
     public GameObject leftTargetBase;
     public GameObject rightTargetForeground;
     public GameObject rightTargetBase;
+    public GameObject leftTrack;
+    public GameObject rightTrack;
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
@@ -24,6 +26,11 @@ public class RhythmSpawner : MonoBehaviour
         //transform.rotation = Camera.main.transform.rotation;
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
+
+        GameObject newLeftTrack = Instantiate(leftTrack, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
+        GameObject newRightTrack = Instantiate(leftTrack, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);
+        fadeTrack(newLeftTrack);
+        fadeTrack(newRightTrack);
         
         Instantiate(leftTargetBase, startSpawn + new Vector3(-0.01f, -4.26f, 0.01f), transform.rotation);
         Instantiate(rightTargetBase, startSpawn + new Vector3(1.49f, -4.26f, 0.01f), transform.rotation);
@@ -63,5 +70,23 @@ public class RhythmSpawner : MonoBehaviour
         }
 
 
+    }
+
+    public void fadeTrack(GameObject track)
+    {
+        Color color = Color.black;
+        MeshRenderer renderer = track.GetComponent<MeshRenderer>();
+        Material newMaterial = new Material(Shader.Find("Standard"));
+        newMaterial.SetFloat("_Mode", 2f);
+        newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        newMaterial.SetInt("_ZWrite", 0);
+        newMaterial.DisableKeyword("_ALPHATEST_ON");
+        newMaterial.EnableKeyword("_ALPHABLEND_ON");
+        newMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        newMaterial.renderQueue = 3000;
+        color.a = 0.7f;
+        newMaterial.color = color;
+        renderer.material = newMaterial;
     }
 }

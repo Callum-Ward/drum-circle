@@ -20,20 +20,25 @@ public class TrackAnalysis {
 
 public class AudioAnalyser : MonoBehaviour {
 
-    public TrackAnalysis[] tracks;
     public static AudioAnalyser instance;
 
+    public string analysisFile;
     public TrackAnalysis activeAnalysis;
 
     public void loadTrackAnalysis(string name)
     {
-        TrackAnalysis t = Array.Find(tracks, track => track.name == name);
-        if (t == null)
-        {
-            Debug.LogWarning("Track analysis for " + name + " not found!");
-            return;
-        }
-        this.activeAnalysis = t;
+        string path = "../Audio/" + name + ".json";
+        List<AudioTimestamp> timestamps;
+        using (StreamReader r = new StreamReader(path))  
+        {  
+            string json = r.ReadToEnd();  
+            timestamps = JsonConvert.DeserializeObject<List<AudioTimestamp>>(json);  
+        }  
+
+        this.activeAnalysis = new TrackAnalysis();
+        this.activeAnalysis.name = name;
+        this.activeAnalysis.path = path;
+        this.activeAnalysis.timestampedOnsets = timestamps;
     }
 
     // Awake is called before the Start method
@@ -48,26 +53,6 @@ public class AudioAnalyser : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
-
-        /******Test tracks**********/
-
-        TrackAnalysis TEST_TRACK = new TrackAnalysis();
-        TEST_TRACK.name = "drums";
-        TEST_TRACK.path = "../Audio/PrettyWomanDrums.json";
-        tracks = new TrackAnalysis[] {TEST_TRACK};
-
-        /**************************/
-
-        foreach(TrackAnalysis t in tracks)
-        {
-
-            List<AudioTimestamp> timestamps;
-            using (StreamReader r = new StreamReader(t.path))  
-            {  
-                string json = r.ReadToEnd();  
-                timestamps = JsonConvert.DeserializeObject<List<AudioTimestamp>>(json);  
-            }  
-            t.timestampedOnsets = timestamps;
-        }
+        loadTrackAnalysis(this.analysisFile);
     }
 }
