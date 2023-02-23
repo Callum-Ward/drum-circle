@@ -7,7 +7,8 @@ files = [
     ('./break_130.wav', 'break_130_data.json'),
     ('./download.wav', 'download_data.json'),
     ('./BiBDrumsBass.mp3', 'BiBDrumsBass.json'),
-    ('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json')
+    ('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json'),
+    ('./Jormungandr.mp3', 'Jormungandr.json')
 ]
 
 def print_progress_bar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):

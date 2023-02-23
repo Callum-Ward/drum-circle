@@ -21,12 +21,15 @@ public class MoveBeat : MonoBehaviour
     public AudioManager audioManager;
     MeshRenderer beatRenderer;
 
+    private Vector3 baseScale;
+
     void Awake()
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        baseScale = gameObject.transform.localScale;
     }
 
     void start()
@@ -85,8 +88,7 @@ public void BeatHighlight()
         color.a = alpha;
         newMaterial.color = color;
 
-        //gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0.00f);
-        gameObject.transform.localScale *= 1.005f;
+        gameObject.transform.localScale += baseScale * 0.2f;
 
         beatRenderer.material = newMaterial;
     }
