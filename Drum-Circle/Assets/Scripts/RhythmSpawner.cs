@@ -16,7 +16,7 @@ public class RhythmSpawner : MonoBehaviour
     private BeatManager beatManager;
     private const float spawnScale = 1.25f;
 
-    private Color[] trackColors = {Color.black, Color.blue, Color.red};
+    private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
     private const int playerCount = 3;
 
     // Start is called before the first frame update
@@ -30,8 +30,8 @@ public class RhythmSpawner : MonoBehaviour
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
 
         for(int i = 0; i < playerCount; i++){
-            GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3(0f, -4.25f, 0f), transform.rotation);
-            GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3(1.25f, -4.25f, 0f), transform.rotation);
+            GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f), -4.25f, 0f), transform.rotation);
+            GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
             newLeftTarget.transform.localScale *= spawnScale;
             newRightTarget.transform.localScale *= spawnScale;
 
