@@ -5,14 +5,14 @@ using UnityEngine;
 public class BeatManager : MonoBehaviour
 
 {
-    private const int playerCount =  3;
-
-    public Queue<GameObject>[] beatQueues = new Queue<GameObject>[playerCount * 2];
+    public Queue<GameObject>[] beatQueues;
     public float deleteDelay = 0.15f;
+    private int playerCount;
 
     // Start is called before the first frame update
     void Start()
         {
+            beatQueues = new Queue<GameObject>[playerCount * 2];
             for(int i = 0; i < playerCount * 2; i++)
             {
                 beatQueues[i] = new Queue<GameObject>();
@@ -30,6 +30,12 @@ public class BeatManager : MonoBehaviour
                 BeatDelete(i, false);
             }
         }
+    }
+
+    //Sets the total number of players from main scene script
+    public void setPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 
     //Queues for beats based on track.

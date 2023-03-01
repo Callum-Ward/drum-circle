@@ -21,6 +21,7 @@ public class BeatmapScript : MonoBehaviour
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
     public BeatManager beatManager;
+    public RhythmSpawner beatSpawner;
     public MessageListener messageListener;
     public string[] sections;
     public string receivedString;
@@ -28,7 +29,7 @@ public class BeatmapScript : MonoBehaviour
 
     SerialPort data_stream = new SerialPort("COM3", 19200);
 
-    private const int playerCount = 3;
+    public int playerCount = 3;
 
     void Awake()
     {
@@ -36,7 +37,12 @@ public class BeatmapScript : MonoBehaviour
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
+        beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+
+        beatManager.setPlayerCount(this.playerCount);
+        beatSpawner.setPlayerCount(this.playerCount);
+
         // holdDownL = new Queue();
         // holdDownR = new Queue();
     }
@@ -56,12 +62,9 @@ public class BeatmapScript : MonoBehaviour
                     {
                         int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
                         StartCoroutine(WindowDelay(delay - windowtime/2));
-                        spawner.spawn(1, 1, size);
-                        
-                        //Other two players (testing)
-                        spawner.spawn(2, 1, size);
-                        spawner.spawn(3, 1, size);
-
+                        for(int j = 0; j < playerCount; j++){
+                            spawner.spawn(j + 1, 1, size);
+                        }
                         timestampedOnsets[i].isBeat = false;
                         break;
                     }
@@ -69,12 +72,9 @@ public class BeatmapScript : MonoBehaviour
                         {
                         int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
                         StartCoroutine(WindowDelay(delay - windowtime/2));
-                        spawner.spawn(1, 0, size);
-
-                        //Other two players (testing)
-                        spawner.spawn(2, 0, size);
-                        spawner.spawn(3, 0, size);
-
+                        for(int j = 0; j < playerCount; j++){
+                            spawner.spawn(j + 1, 0, size);
+                        }
                         timestampedOnsets[i].isOnset = false;
                         break;
                     }

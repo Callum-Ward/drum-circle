@@ -17,7 +17,7 @@ public class RhythmSpawner : MonoBehaviour
     private const float spawnScale = 1.25f;
 
     private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
-    private const int playerCount = 3;
+    private int playerCount;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +50,12 @@ public class RhythmSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    //Sets the total number of players from main scene script
+    public void setPlayerCount(int playerCount)
+    {
+        this.playerCount = playerCount;
     }
 
     public void spawn(int pos, int left, int size)
