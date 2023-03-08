@@ -3,6 +3,8 @@ using UnityEngine;
 using Unity.Collections;
 
 public class Branch : MonoBehaviour {
+
+    [SerializeField] GameObject leafObj;
     public int id = 1;
     public int depth = 0;
     public bool leaf = true;
@@ -23,8 +25,10 @@ public class Branch : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKey("space") && depth == 0)
-            Grow(100);
+        if (Input.GetKey("space") && depth == 0) {
+            Grow(1);
+            // AddLeaves();
+        }
 
     }
 
@@ -34,10 +38,11 @@ public class Branch : MonoBehaviour {
         this.leaf = true;
 
         this.parent = parent;
-
+        
         this.depth = parent.depth + 1;
 
-        this.length = (float)(splitSize * Math.Exp(-splitDecay * depth) / 2);
+        //this.length = (float)(splitSize * Math.Exp(-splitDecay * depth) / 2);
+        this.length = 0;
         this.radius = 0;
         this.area = 0.1f;
 
@@ -47,14 +52,16 @@ public class Branch : MonoBehaviour {
         this.splitDecay = parent.splitDecay;
     }
 
+    //  Modify the length and thickness of the branch
     public void Grow(float feed) {
+        //  Stop growing if the max depth has been reached and branch is of maximum length
         if (depth == MAX_DEPTH 
             && this.length >= splitSize * Math.Exp(-splitDecay * depth)) return;
 
         if (leaf) {
-            length += (float)Math.Sqrt(feed) / 1000;
-            feed -= (float)Math.Sqrt(feed) / 1000;
-            area += (feed / length) / 10000; 
+            length += (float)Math.Cbrt(feed) / 10;
+            feed -= (float)Math.Cbrt(feed);
+            area += (feed / length) /10 ;
 
             transform.localScale = new Vector3(radius, length, radius);
 
@@ -67,7 +74,7 @@ public class Branch : MonoBehaviour {
         else {
             float pass = (branchA.area + branchB.area) / (branchA.area + branchB.area + this.area);
 
-            area += pass * feed / length / 10000;
+            area += pass * feed / length;
             feed *= (1 - pass); 
 
             transform.localScale = new Vector3(radius, length, radius);
@@ -153,5 +160,14 @@ public class Branch : MonoBehaviour {
         Debug.Log("leaf average direction vector: " + leafAverage(ancestor));
 
         return Vector3.Normalize(leafAverage(ancestor) - rel) + rand * (1 - this.directedness); // <- REDO!
+    }
+
+    public void AddLeaves() {
+        if (this.leaf) {
+            var mesh = this.GetComponent<MeshFilter>().mesh;
+            var leaf = Instantiate(leafObj);
+            leaf.transform.position = mesh.bounds.size.y * this.transform.localScale.y * this.transform.up + this.transform.position;
+            leaf.transform.rotation = this.transform.rotation;
+        }
     }
 }
