@@ -23,9 +23,12 @@ public class Tree : MonoBehaviour
     [Range (0.0f, 1.0f)] public float lengthDecay = 0.33f;
     [Range (0.0f, 1.0f)] public float directionNoise;
 
-    public NewBranch[] branches = null;
+    [SerializeField] float maxDepth = 10;
+
+    List<GameObject> branches = new();
 
     int depth = 1;
+    float currentRotation = 0;
 
     private void Start()
     {
@@ -34,9 +37,11 @@ public class Tree : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("a")) AddBranch();
+        //Add branch if key is pressed
+        if (Input.GetKeyDown(KeyCode.A)) AddBranches();
     }
 
+    /*Returns random value between the min and max according to normal distribution*/
     float RandomNormal( float min=-1, float max=1 )
     {
         float u, v, s;
@@ -57,68 +62,113 @@ public class Tree : MonoBehaviour
         return Mathf.Clamp(std * sigma + mean, min, max);
     }
 
+    /* Wrapper for RandomNormal(min, max)*/
     float RandomNormal( float range )
     {
         return RandomNormal(-range, range);
     }
 
+    /*Initialise new tree and set the first branch*/
     void InitialiseTree()
         {
+
+        //The startitng position of the branch is the position of the tree
         var pos = this.transform.position;
+
+        //The basis vector is up
         var basis = Vector3.up * length; 
 
+        //Genarate the rotation vector by sampling a normal distribution
         var xangle = RandomNormal(directionNoise) * 90;
-        var yangle = RandomNormal(directionNoise) * 90;
+        var zangle = RandomNormal(directionNoise) * 90;
+        var rotation = new Vector3(xangle, 0, zangle);
 
-        var growth = Quaternion.Euler(xangle, yangle, 0) * basis;
+        var growth = Quaternion.Euler(rotation) * basis;
 
+        //Instantiate new branch and add it to branch list
         var root = Instantiate(branchObj);
-        var rootBranch = root.GetComponent<NewBranch>();
+        var rootBranch = root.GetComponent<Branch>();
 
         rootBranch.SetBranch(this.transform.gameObject, growth, pos);
         
-        branches.Append(rootBranch);
+        branches.Add(root);
     }
     
-    void AddBranch()
+    /*Adds a new set of branches to the tree*/
+    void AddBranches()
     {
+        //the length of the branches decay baesed on the depth
         var bLength = length * Mathf.Exp(-lengthDecay * depth);
 
-       
-        foreach (var branch in branches)
-        {
+        var newBranches = new List<GameObject>();
+
+        foreach (var br in branches)
+            {
+            var branch = br.GetComponent<Branch>();
+
+            //only fully grown leaf branches can grow new branches
             if ( !(branch.isLeaf && branch.isFullyGrown) ) continue;
 
+            branch.isLeaf = false;
+
+
+            //Set up branch A
+
+            //the position of the A branch is the top of the parent branch
             var posA = branch.position + branch.growth;
+
+            //the basis vector of the A branch is the same as the parent branch
             var basisA = Vector3.Normalize(branch.growth) * bLength;
 
-            var xangleA = RandomNormal(directionNoise);
-            var yangleA = RandomNormal(directionNoise);
+            //set up a noise vector 
+            var xangleA = RandomNormal(directionNoise) * 90;
+            var zangleA = RandomNormal(directionNoise) * 90;
+            var noiseA = new Vector3(xangleA, 0, zangleA);
 
-            var growthA = Quaternion.Euler(xangleA, yangleA, 0) * basisA;
+            var growthA = Quaternion.Euler(noiseA) * basisA;
 
-            var posB = branch.growth * RandomNormal(0, branch.growth.magnitude);
-            var basisB = Quaternion.Euler(orientation, 0, rotation) * 
+
+            //Setup branch B
+
+            //the starting position of branch B is somewhere along the parent brnach
+            var posB = branch.position + branch.growth * RandomNormal(0, 1);
+
+            //the basis vector of branch B is at an angle from the parent specified by this.orientation
+            //and is rotated around it by an angle specified by this.rotation
+            var basisB = Quaternion.Euler(this.orientation, currentRotation, 0) * 
                 Vector3.Normalize(branch.growth) * bLength;
 
-            var xangleB = RandomNormal(directionNoise);
-            var yangleB = RandomNormal(directionNoise);
+            //set up a noise vector
+            var xangleB = RandomNormal(directionNoise) * 90;
+            var zangleB = RandomNormal(directionNoise) * 90;
+            var noiseB = new Vector3(xangleB, 0, zangleB);
 
-            var growthB = Quaternion.Euler(xangleB, yangleB, 0) * basisB;
+            var growthB = Quaternion.Euler(noiseB) * basisB;
 
+
+            //Instantiate the branches
             var a = Instantiate(branchObj);
-            var branchA = a.GetComponent<NewBranch>();
+            var branchA = a.GetComponent<Branch>();
 
             var b = Instantiate(branchObj);
-            var branchB = b.GetComponent<NewBranch>();
+            var branchB = b.GetComponent<Branch>();
+
+            //Set them as the current branch's children
+            branch.SetChildren(branchA, branchB);
 
             branchA.SetBranch(this.transform.gameObject ,branch, growthA, posA);
             branchB.SetBranch(this.transform.gameObject, branch, growthB, posB);
 
-            branches.Append(branchA);
-            branches.Append(branchB);
+            newBranches.Add(a);
+            newBranches.Add(b);
+
+            //Increment the current rotation by this.rotation
+            currentRotation = (currentRotation + this.rotation) % 360;
         }
+
+        branches = branches.Concat(newBranches).ToList();
         
+        //increment the depth
         depth++;
     }
 }
