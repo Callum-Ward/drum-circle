@@ -18,16 +18,27 @@ public class Branch : MonoBehaviour
     private float length = 0.00001f;
 
     private LineRenderer lr;
+    private ScoreManager sm;
+    private float lastScore;
 
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        sm = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+
+        lastScore = sm.Score;
     }
 
     private void Update()
     {
         //grow while space is pressed
-        if (Input.GetKey(KeyCode.Space)) Grow();
+        //if (Input.GetKey(KeyCode.Space)) Grow();
+
+        if (sm.Score > lastScore)
+        {
+            Grow();
+            lastScore = sm.Score;
+        }
     }
 
     /*Set up branch parameters*/
@@ -79,7 +90,8 @@ public class Branch : MonoBehaviour
 
         if(!isFullyGrown)
         {
-            length += maxLength / 100;
+            length += maxLength / 100 * sm.ScoreMultiplier;
+
 
             if (length >= maxLength) isFullyGrown = true;
 

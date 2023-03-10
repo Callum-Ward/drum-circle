@@ -27,18 +27,29 @@ public class Tree : MonoBehaviour
 
     List<GameObject> branches = new();
 
+    ScoreManager sm;
+
     int depth = 1;
     float currentRotation = 0;
 
+    float lastScore = 0;
+
     private void Start()
     {
+        sm = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         InitialiseTree();
     }
 
     private void Update()
     {
         //Add branch if key is pressed
-        if (Input.GetKeyDown(KeyCode.A)) AddBranches();
+        //if (Input.GetKeyDown(KeyCode.A)) AddBranches();
+
+        if (sm.Score > lastScore)
+        {
+            AddBranches();
+            lastScore = sm.Score;
+        }
     }
 
     /*Returns random value between the min and max according to normal distribution*/
@@ -97,6 +108,9 @@ public class Tree : MonoBehaviour
     /*Adds a new set of branches to the tree*/
     void AddBranches()
     {
+        //cotinue if we max depth hasn't been reached yet
+        if (depth > maxDepth) return;
+
         //the length of the branches decay baesed on the depth
         var bLength = length * Mathf.Exp(-lengthDecay * depth);
 
@@ -164,11 +178,11 @@ public class Tree : MonoBehaviour
 
             //Increment the current rotation by this.rotation
             currentRotation = (currentRotation + this.rotation) % 360;
+
+            //increment the depth
+            depth++;
         }
 
         branches = branches.Concat(newBranches).ToList();
-        
-        //increment the depth
-        depth++;
     }
 }
