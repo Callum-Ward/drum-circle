@@ -9,12 +9,17 @@ public class TutorialScript : MonoBehaviour
     public GameObject[] popups;
     private float[] popupDurations = {4.0f, 4.0f, 4.0f};
     private GameObject activePopup;
+
+    private GameObject activeFeedbackMessage;
+
     private int activePopupIndex = -1;
 
     private bool spawnFlag;
     private int stage = 0;
     private int subStage = 0;
     private float currentTimeLimit = 2.0f;
+
+    private String[] feedback = {"atrocious", "bad", "good", "excellent"};
 
     public bool tutorialComplete;
 
@@ -90,6 +95,17 @@ public class TutorialScript : MonoBehaviour
         window = windowtime;
     }
 
+    private void handleFeedbackMessage(int n)
+    {
+        if(activeFeedbackMessage != null && )
+        {
+            if(activeFeedbackMessage)
+            {
+                
+            }
+        }
+    }
+
     private void handleFirstStage()
     {
         if(spawnFlag)
@@ -123,7 +139,6 @@ public class TutorialScript : MonoBehaviour
             currentTimeLimit = 2.0f;
         }
     }
-
 
     // Start is called before the first frame update
     void Start()
