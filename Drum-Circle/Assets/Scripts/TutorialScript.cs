@@ -97,7 +97,7 @@ public class TutorialScript : MonoBehaviour
 
     private void handleFeedbackMessage(int n)
     {
-        if(activeFeedbackMessage != null && )
+        if(activeFeedbackMessage != null)
         {
             if(activeFeedbackMessage)
             {

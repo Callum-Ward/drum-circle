@@ -132,7 +132,7 @@ public class BeatmapScript : MonoBehaviour
         else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+                beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
             }
 
             for(int i = 0; i < playerCount; i++)
