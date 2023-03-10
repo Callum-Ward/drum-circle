@@ -24,7 +24,7 @@ void loop() {
     Serial.println(maxVal);
     Serial.print("impulse time(ms):");
     Serial.println(millis()-delayStart);
-    maxVal =0; 
+    maxVal =0;
     hit = false;
   }
 }

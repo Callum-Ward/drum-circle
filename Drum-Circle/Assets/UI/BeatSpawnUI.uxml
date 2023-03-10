@@ -13,5 +13,4 @@
             <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:IMGUIContainer style="position: absolute; height: 220px; width: 240px; top: 98px; left: 388px; background-image: url(&apos;project://database/Assets/Materials/Images/Knot1.png?fileID=21300000&amp;guid=33f52ba1ab83bde41a3ce0c5d0a5cd35&amp;type=3#Knot1&apos;); background-color: rgb(255, 255, 255);" />
 </ui:UXML>
