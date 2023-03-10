@@ -72,9 +72,7 @@ public class BeatmapScript : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-       
+    {  
         //Opens the data stream for the connected drums
         try
         {
