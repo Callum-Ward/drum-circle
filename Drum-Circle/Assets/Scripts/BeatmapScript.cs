@@ -135,7 +135,7 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Volume("layer2", 0f);
         }
         //Drum hit functionality
-        else if(tutorialScript.tutorialComplete)
+        else if(tutorialScript.tutorialComplete == true)
         {
             beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 

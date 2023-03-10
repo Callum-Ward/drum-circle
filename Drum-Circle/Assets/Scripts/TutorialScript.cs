@@ -10,7 +10,11 @@ public class TutorialScript : MonoBehaviour
     private float[] popupDurations = {4.0f, 4.0f, 4.0f};
     private GameObject activePopup;
     private int activePopupIndex = -1;
+
     private bool spawnFlag;
+    private int stage = 0;
+    private int subStage = 0;
+    private float currentTimeLimit = 2.0f;
 
     public bool tutorialComplete;
 
@@ -51,8 +55,6 @@ public class TutorialScript : MonoBehaviour
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
 
-        tutorialComplete = false;
-
         // holdDownL = new Queue();
         // holdDownR = new Queue();
     }
@@ -88,6 +90,37 @@ public class TutorialScript : MonoBehaviour
         window = windowtime;
     }
 
+    private void handleFirstStage()
+    {
+        if(spawnFlag)
+        {
+            beatSpawner.spawn(subStage + 1, 1, 1);
+            currentTimeLimit = popupDurations[subStage];
+            spawnFlag = false;
+        }
+        else
+        {
+            if(activePopup != null)
+            {
+                Destroy(activePopup);
+            }
+            transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
+            Vector3 textPosition = transform.position + new Vector3(-1.5f, -0.5f, -0.11f);
+            subStage++;
+            activePopup = Instantiate(popups[activePopupIndex], textPosition, transform.rotation);
+
+            if(subStage < playerCount - 1)
+            {
+                currentTimeLimit = 2.0f;
+                spawnFlag = true;
+            }
+            else
+            {
+                stage++;
+            }
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -110,41 +143,19 @@ public class TutorialScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float popupDuration = 0.0f;
-        if(activePopup != null){
-            popupDuration = popupDurations[activePopupIndex];
-        }
-        if(spawnFlag){
-            popupDuration = 2.0f;
-        }
-        
-        if (timer <= popupDuration)
+        if (timer <= currentTimeLimit)
         {
             timer += Time.deltaTime;
         }
-        else if(spawnFlag){
-            beatSpawner.spawn(1, 1, 1);
+        else if(stage == 0)
+        {
+            handleFirstStage();
             timer = 0.0f;
-            spawnFlag = false;
         }
         else
         {
-            timer = 0.0f;
-
-            if(activePopup != null){
-                Destroy(activePopup);
-            }
-            
-            transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
-            Vector3 textPosition = transform.position + new Vector3(-1.5f, -0.5f, -0.11f);
-
-            if(activePopupIndex < popups.Length){
-                activePopupIndex++;
-                activePopup = Instantiate(popups[activePopupIndex], textPosition, transform.rotation);
-                spawnFlag = true;
-            }
+            tutorialComplete = true;
         }
-
     }
 
 }
