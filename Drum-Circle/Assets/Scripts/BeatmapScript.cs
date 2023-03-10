@@ -23,9 +23,9 @@ public class BeatmapScript : MonoBehaviour
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
     public MessageListener messageListener;
+    public TutorialScript tutorialScript;
     public string[] sections;
     public string receivedString;
-    private const int beatmapWidth = 10;
 
     SerialPort data_stream = new SerialPort("COM3", 19200);
 
@@ -39,47 +39,13 @@ public class BeatmapScript : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
 
         // holdDownL = new Queue();
         // holdDownR = new Queue();
-    }
-
-    //Function for spawning beats based on passed variable
-    private void spawnOnTime(float time)
-    {
-            int index = (int)(Math.Round(time, 2) * 100);
-            List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
-    
-            if(index < timestampedOnsets.Count){
-                int lb = index  < beatmapWidth ? 0 : index - beatmapWidth;
-                int ub = index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth;
-                for(int i = lb; i <= ub; i++)
-                {
-                    if(timestampedOnsets[i].isBeat)
-                    {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawner.spawn(j + 1, 1, size);
-                        }
-                        timestampedOnsets[i].isBeat = false;
-                        break;
-                    }
-                    if(timestampedOnsets[i].isOnset)
-                        {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawner.spawn(j + 1, 0, size);
-                        }
-                        timestampedOnsets[i].isOnset = false;
-                        break;
-                    }
-                }
-            } 
     }
 
     private void registerHit(int queueIndex, MoveBeat beat)
@@ -103,15 +69,6 @@ public class BeatmapScript : MonoBehaviour
             beatManager.BeatDelete(queueIndex, false);
         }
     }
-
-    //Coroutine function for delaying hit-window
-    IEnumerator WindowDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        window = windowtime;
-    }
-
 
     // Start is called before the first frame update
     void Start()
@@ -164,13 +121,13 @@ public class BeatmapScript : MonoBehaviour
         // }
 
         //Start the timer
-        if (timer <= delay && audioManager.activeSource == null)
+        if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            spawnOnTime(timer);
+            beatSpawner.spawnOnTime(timer);
             timer += Time.deltaTime;
         }
         //Play all layers of music simultaneously
-        else if(audioManager.activeSource == null)
+        else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
             audioManager.Play("drums", audioAnalyser);
             audioManager.Play("layer1", null);
@@ -178,9 +135,9 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Volume("layer2", 0f);
         }
         //Drum hit functionality
-        else
+        else if(tutorialScript.tutorialComplete)
         {
-            spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+            beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 
             for(int i = 0; i < playerCount; i++)
             {
