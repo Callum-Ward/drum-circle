@@ -46,15 +46,17 @@ public class BeatUI : MonoBehaviour
         comboTag1 = root.Q<Label>("Combo1");
         comboTag2 = root.Q<Label>("Combo2");
         comboTag3 = root.Q<Label>("Combo3");
-
-        playerTag1.style.display = DisplayStyle.None;
-        playerTag2.style.display = DisplayStyle.None;
-        playerTag3.style.display = DisplayStyle.None;
         
         playerTags = new Label[] {playerTag1, playerTag2, playerTag3};
         scoreTags = new Label[] {scoreTag1, scoreTag2, scoreTag3};
         comboTags = new Label[] {comboTag1, comboTag2, comboTag3};
         tags = new Label[][] {playerTags, scoreTags, comboTags};
+
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                tags[i][j].style.display = DisplayStyle.None;
+            }
+        }
 
     }
 
@@ -63,9 +65,6 @@ public class BeatUI : MonoBehaviour
     }
 
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal) {
-        // score[player-1] = scoreVal;
-        // combo[player-1] = comboVal;
-        // comboMulti[player-1] = multiVal;
         scoreTags[player-1].text = "Score: " + scoreVal;
         comboTags[player-1].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
     }

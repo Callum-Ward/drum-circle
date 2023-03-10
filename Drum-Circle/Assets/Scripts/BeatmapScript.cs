@@ -25,6 +25,7 @@ public class BeatmapScript : MonoBehaviour
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
+    public bool tutorial = false;
 
     SerialPort data_stream = new SerialPort("COM3", 19200);
 
@@ -109,6 +110,9 @@ public class BeatmapScript : MonoBehaviour
         window = windowtime;
     }
 
+    public void StartTutorial(bool start) {
+        tutorial = start;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -160,7 +164,9 @@ public class BeatmapScript : MonoBehaviour
         //Drum hit functionality
         else
         {
-            spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+            if(tutorial == false) {
+                spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+            }
 
             for(int i = 0; i < playerCount; i++)
             {
