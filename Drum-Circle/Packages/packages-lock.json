@@ -1,5 +1,6 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "com.unity.burst": {
       "version": "1.7.3",
       "depth": 1,
@@ -8,6 +9,13 @@
         "com.unity.mathematics": "1.2.1"
       },
       "url": "https://packages.unity.com"
+=======
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+>>>>>>> Jackdev
     },
     "com.unity.collab-proxy": {
       "version": "1.17.7",
