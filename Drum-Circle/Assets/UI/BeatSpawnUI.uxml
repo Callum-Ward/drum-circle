@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BeatSpawnUI.uss?fileID=7433441132597879392&amp;guid=d5759aa029c8ab8478300df6489bc595&amp;type=3#BeatSpawnUI" />
+    <ui:VisualElement name="ScreenContainer" style="width: 100%; height: 100%; justify-content: flex-start;">
+        <ui:VisualElement name="Scores" style="height: 100%; width: 100%; align-items: center; justify-content: flex-start; position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
+            <ui:Label text="Player1" display-tooltip-when-elided="true" name="Player1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Player2" display-tooltip-when-elided="true" name="Player2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Player3" display-tooltip-when-elided="true" name="Player3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo2" enable-rich-text="true" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 20px; left: 10%; position: absolute;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

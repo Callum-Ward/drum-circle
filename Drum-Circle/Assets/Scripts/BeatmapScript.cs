@@ -14,8 +14,6 @@ public class BeatmapScript : MonoBehaviour
     public float inputDelay = 0f;
     private bool hitL = false;
     private bool hitR = false;
-    // private Queue holdDownL;
-    // private Queue holdDownR;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -23,6 +21,7 @@ public class BeatmapScript : MonoBehaviour
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
     public MessageListener messageListener;
+    public BeatUI beatUI;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -39,12 +38,12 @@ public class BeatmapScript : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
-
-        // holdDownL = new Queue();
-        // holdDownR = new Queue();
+        beatUI.setPlayerCount(this.playerCount);
+        
     }
 
     //Function for spawning beats based on passed variable
@@ -85,7 +84,6 @@ public class BeatmapScript : MonoBehaviour
     private void registerHit(int queueIndex, MoveBeat beat)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
-        //audioManager.Volume("drums", 1f);
         beatManager.BeatDelete(queueIndex, true);
         audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
@@ -97,8 +95,7 @@ public class BeatmapScript : MonoBehaviour
         audioManager.Play("tapFail", null);
         audioManager.SetActive("drums");
         audioManager.Volume("drums", 0f);
-        //audioManager.FadeOut("drums");
-        if (beat.timer >= (delay * 0.75))
+        if (beat.timer >= (delay * 0.85))
         {
             beatManager.BeatDelete(queueIndex, false);
         }
@@ -117,17 +114,6 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-       
-        //Opens the data stream for the connected drums
-        try
-        {
-            data_stream.Open();
-            data_stream.ReadTimeout = 10;
-        }
-        catch (System.Exception ex)
-        {
-            print(ex.ToString());
-        }
     }
 
     // Update is called once per frame
@@ -155,19 +141,13 @@ public class BeatmapScript : MonoBehaviour
             }
             messageListener.message = null;
         }
-        
-        // if(hitL == false && holdDownL.Count != 0) {
-        //     holdDownL.Dequeue();
-        // }
-        // if(hitR == false && holdDownR.Count != 0) {
-        //     holdDownR.Dequeue();
-        // }
 
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null)
         {
             spawnOnTime(timer);
             timer += Time.deltaTime;
+            beatUI.startLevelUI();
         }
         //Play all layers of music simultaneously
         else if(audioManager.activeSource == null)
@@ -185,45 +165,36 @@ public class BeatmapScript : MonoBehaviour
             for(int i = 0; i < playerCount; i++)
             {
                 //Register left drum hit and perform code
-                // if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)) && holdDownL.Count == 0)
                 if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
                     if (beatManager.beatQueues[i * 2].Count > 0) {
                         {
                             var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
-                            if (beatL.window == true)
-                            {
-                                registerHit(i * 2, beatL);
-                            }
-                            else
-                            {
-                                registerMiss(i * 2, beatL);
-                            }
+                            beatHit((i*2), beatL);
                         }
-                    // holdDownL.Enqueue("1");
-                    // holdDownL.Enqueue("1");
                 }
 
                 //Register right drum hit and perform code
-                // if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)) && holdDownR.Count == 0)
                 if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
                     if (beatManager.beatQueues[i * 2 + 1].Count > 0)
                     {
                         var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
-                        if (beatR.window == true)
-                        {
-                            registerHit(i * 2 + 1, beatR);
-                        }
-                        else
-                        {
-                            registerMiss(i * 2 + 1, beatR);
-                        }
+                        beatHit((i*2+1), beatR);
                     }
-                    // holdDownR.Enqueue("1");
-                    // holdDownR.Enqueue("1");
                 }
             }
         }
+    }
+
+    void beatHit(int queueNo, MoveBeat beatSide) {
+        if (beatSide.window == true)
+            {
+                registerHit(queueNo, beatSide);
+            }
+        else
+            {
+                registerMiss(queueNo, beatSide);
+            }
     }
 }
 
