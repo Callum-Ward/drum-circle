@@ -97,27 +97,30 @@ public class TutorialScript : MonoBehaviour
             beatSpawner.spawn(subStage + 1, 1, 1);
             currentTimeLimit = popupDurations[subStage];
             spawnFlag = false;
+            subStage++;
         }
         else
         {
+            if(subStage < playerCount)
+            {
+                spawnFlag = true;
+            }
+            else
+            {
+                Destroy(activePopup);
+                stage++;
+                return;
+            }
+
             if(activePopup != null)
             {
                 Destroy(activePopup);
             }
             transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
             Vector3 textPosition = transform.position + new Vector3(-1.5f, -0.5f, -0.11f);
-            subStage++;
-            activePopup = Instantiate(popups[activePopupIndex], textPosition, transform.rotation);
+            activePopup = Instantiate(popups[subStage], textPosition, transform.rotation);
 
-            if(subStage < playerCount - 1)
-            {
-                currentTimeLimit = 2.0f;
-                spawnFlag = true;
-            }
-            else
-            {
-                stage++;
-            }
+            currentTimeLimit = 2.0f;
         }
     }
 
