@@ -15,6 +15,9 @@ public class BeatmapScript : MonoBehaviour
     private bool hitL = false;
     private bool hitR = false;
 
+    private int glowStage = 0;
+    private float glowPower = 50;
+
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
@@ -90,6 +93,31 @@ public class BeatmapScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(glowStage == 3){
+            GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
+            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
+            Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
+            newMaterial.SetFloat("Power", glowPower);
+            glowPower += 0.1f;
+            if(glowPower == 50.0f){
+                glowStage = 0;
+            }
+            renderer.material = newMaterial;
+        }
+
+        if(glowStage == 2){
+            GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
+            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
+            Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
+            newMaterial.SetFloat("Power", glowPower);
+            glowPower -= 0.1f;
+            if(glowPower == -2.0f){
+                glowStage += 1;
+            }
+            renderer.material = newMaterial;
+        }
+
         //Checks if there was an input in the data stream
         hitL = false;
         hitR = false;
@@ -143,6 +171,11 @@ public class BeatmapScript : MonoBehaviour
                         {
                             var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
                             beatHit((i*2), beatL);
+                            
+                            //Trigger start of glow process
+                            if(i == 0 && glowStage <= 1){   
+                                glowStage += 1;
+                            }
                         }
                 }
 

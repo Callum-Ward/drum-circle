@@ -26,11 +26,15 @@ public class RhythmSpawner : MonoBehaviour
     private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
     private int playerCount;
 
+    private GameObject enaTree;
+
     // Start is called before the first frame update
     void Start()
     {
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
+
+        enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
         //set beat spawner location with respect to camera position
         transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
         //transform.rotation = Camera.main.transform.rotation;
@@ -58,6 +62,7 @@ public class RhythmSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
     }
 
     //Sets the total number of players from main scene script
