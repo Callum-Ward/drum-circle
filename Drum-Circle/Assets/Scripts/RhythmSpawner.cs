@@ -10,6 +10,8 @@ public class RhythmSpawner : MonoBehaviour
     public GameObject rightTargetForeground;
     public GameObject rightTargetBase;
     public GameObject beatTrack;
+    GameObject leftBeatParent;  
+    GameObject rightBeatParent;
     public GameObject leftBeat;
     public GameObject rightBeat;
     private Vector3 startSpawn;
@@ -32,8 +34,10 @@ public class RhythmSpawner : MonoBehaviour
         for(int i = 0; i < playerCount; i++){
             GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f), -4.25f, 0f), transform.rotation);
             GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
+            
             newLeftTarget.transform.localScale *= spawnScale;
             newRightTarget.transform.localScale *= spawnScale;
+
 
             GameObject newLeftTargetBase = Instantiate(leftTargetBase, startSpawn + new Vector3((i * 2.5f) - 0.01f, -4.26f, 0.01f), transform.rotation);
             GameObject newRightTargetBase = Instantiate(rightTargetBase, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.26f, 0.01f), transform.rotation);
