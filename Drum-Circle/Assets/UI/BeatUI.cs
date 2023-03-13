@@ -110,9 +110,9 @@ public class BeatUI : MonoBehaviour
                     tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*10;
                 }
             lanes[i].visible = true;
-            lanes[i].style.left = screenWidth*(i+1) / (PlayerNo+1) - (lanes[i].resolvedStyle.width/2)
+            lanes[i].style.left = screenWidth*(i+1) / (playerNo+1) - 3* (lanes[i].resolvedStyle.width/2);
             lanes[i+3].visible = true;
-            lanes[i+3].style.left = screenWidth*(i+1) / (PlayerNo+1) - (lanes[i].resolvedStyle.width/2)
+            lanes[i+3].style.left = screenWidth*(i+1) / (playerNo+1) + (lanes[i].resolvedStyle.width/2);
             } 
         }
     }
