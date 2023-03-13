@@ -7,21 +7,30 @@
 #define NUM_PIXELS     30  // The number of LEDs (pixels) on NeoPixel
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
-const int threshold = 175;
-const int delayMs = 125;
+const int threshold = 500;
+const int delayMs = 200;
+const int peakDelay =30;
 const int drumCount = 2;
 bool hits[drumCount];
 int vals[drumCount];
+bool sent[drumCount];
 int maxVals[drumCount];
 unsigned long delayStart[drumCount];
 int hitCount =0;
 
 void setup() {
   // put your setup code here, to run once:
-  for (bool &hit : hits) hit = false;
-  for (int &maxVal : maxVals) maxVal = 0;
-  Serial.begin(19200);
+  for (int i=0;i<drumCount;i++) {
+    hits[i] = false;
+    maxVals[i] = 0;
+    sent[i] = false;
+  }
+  Serial.begin(115200);
+
   NeoPixel.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  Serial.println("Setup complete");
+
+  
   
 }
 
@@ -39,11 +48,21 @@ void changeLeds(int on,int R,int G, int B) {
       NeoPixel.show();   // send the updated pixel colors to the NeoPixel hardware.
     }
   }else {
-    NeoPixel.clean();
+    NeoPixel.clear();
     NeoPixel.show();
   }
+
 }
 
+int getHitStrength(int hitVal) {
+  if (hitVal > 920) {
+    return 3;
+  } else if (hitVal > 750) {
+    return 2;
+  } else {
+    return 1;
+  }
+}
 
 void loop() {
   NeoPixel.clear(); // set all pixel colors to 'off'. It only takes effect if pixels.show() is called
@@ -51,25 +70,34 @@ void loop() {
   //Serial.print("off:"); 
   //Serial.println(0);  
   for (auto i =0;i<drumCount;i++) {
-    vals[i] = analogRead(i);
     
+    vals[i] = analogRead(i);
     if (vals[i] > threshold && hits[i] == false) {
-      
-      Serial.print("on:"); 
-      Serial.println(i);
+      maxVals[i]=vals[i];
       hitCount++;
-      delayStart[i] = millis();
       hits[i] = true;
       changeLeds(1,0,0,0);
-  
+      delayStart[i] = millis();
     } else if (hits[i]) {
       
-      if (vals[i] > maxVals[i]) maxVals[i] = vals[i];
+      if (vals[i] > maxVals[i] && !sent[i]) maxVals[i] = vals[i];
+
+      if ( millis()-delayStart[i] >= peakDelay && !sent[i]) {
+        sent[i] = true;
+        Serial.print("on:"); 
+        Serial.print(i);
+        Serial.print(":s:");
+        Serial.println(maxVals[i]);
+        //Serial.println(getHitStrength(maxVals[i]));
+      }
+
       if (millis()-delayStart[i] >= delayMs && vals[i] < threshold) {  
         hits[i]=false;
+        sent[i]=false;
         maxVals[i]=0;
         changeLeds(0,0,0,0);
       }
     }
   }
 }
+
