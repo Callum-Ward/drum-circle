@@ -54,8 +54,8 @@ public class RhythmSpawner : MonoBehaviour
 
             colorFadeTargetComponent(newLeftTargetBase, trackColors[i], 1.0f);
             colorFadeTargetComponent(newRightTargetBase, trackColors[i], 1.0f);
-            colorFadeTargetComponent(newLeftTrack, trackColors[i], 0.7f);
-            colorFadeTargetComponent(newRightTrack, trackColors[i], 0.7f);
+            colorFadeTargetComponent(newLeftTrack, trackColors[i], 0.4f);
+            colorFadeTargetComponent(newRightTrack, trackColors[i], 0.4f);
         }
     }
 

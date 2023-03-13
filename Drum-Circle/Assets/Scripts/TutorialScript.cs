@@ -156,6 +156,9 @@ public class TutorialScript : MonoBehaviour
             print(ex.ToString());
         }
 
+        stage = 2;
+        tutorialComplete = true;
+
     }
 
     // Update is called once per frame

@@ -15,8 +15,8 @@ public class BeatmapScript : MonoBehaviour
     private bool hitL = false;
     private bool hitR = false;
 
-    private int glowStage = 0;
-    private float glowPower = 50;
+    public int glowStage = 2;
+    public float glowPower = 0.5f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -84,6 +84,35 @@ public class BeatmapScript : MonoBehaviour
         tutorial = start;
     }
 
+    private void handleGlow()
+    {
+         /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
+            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
+            MaterialPropertyBlock block = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(block);
+            block.c
+            renderer.SetPropertyBlock(block);*/
+        GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
+        MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
+        Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        renderer.material.SetFloat("_Power", glowPower);
+        
+        if(glowStage == 3)
+        {
+            glowPower += 0.02f;
+            if(glowPower >= 0.5f){
+                glowStage = 0;
+            }
+        }
+        else if(glowStage == 2)
+        {
+            glowPower -= 0.02f;
+            if(glowPower <= 0.0f){
+                glowStage += 1;
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -94,29 +123,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
 
-        if(glowStage == 3){
-            GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
-            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
-            Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
-            newMaterial.SetFloat("Power", glowPower);
-            glowPower += 0.1f;
-            if(glowPower == 50.0f){
-                glowStage = 0;
-            }
-            renderer.material = newMaterial;
-        }
-
-        if(glowStage == 2){
-            GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
-            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
-            Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
-            newMaterial.SetFloat("Power", glowPower);
-            glowPower -= 0.1f;
-            if(glowPower == -2.0f){
-                glowStage += 1;
-            }
-            renderer.material = newMaterial;
-        }
+        handleGlow();
 
         //Checks if there was an input in the data stream
         hitL = false;
