@@ -37,7 +37,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                 {
                     CameraFPS = FPS.FPS30,
                     ColorResolution = ColorResolution.Off,
-                    DepthMode = DepthMode.NFOV_Unbinned,
+                    DepthMode = DepthMode.WFOV_2x2Binned,
                     WiredSyncMode = WiredSyncMode.Standalone,
                 });
 
@@ -76,10 +76,13 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                 {
                                     currentFrameData.Bodies[i].CopyFromBodyTrackingSdk(frame.GetBody(i), deviceCalibration);
                                 }
+                                UnityEngine.Debug.Log("copy from sdk");
 
                                 // Store depth image.
                                 Capture bodyFrameCapture = frame.Capture;
+                                UnityEngine.Debug.Log("frame capture");
                                 Image depthImage = bodyFrameCapture.Depth;
+                                UnityEngine.Debug.Log("depth capture");
                                 if (!readFirstFrame)
                                 {
                                     readFirstFrame = true;
@@ -91,10 +94,12 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
 
                                 // Read image data from the SDK.
                                 var depthFrame = MemoryMarshal.Cast<byte, ushort>(depthImage.Memory.Span);
+                                UnityEngine.Debug.Log("read image data");
 
                                 // Repack data and store image data.
                                 int byteCounter = 0;
                                 currentFrameData.DepthImageSize = currentFrameData.DepthImageWidth * currentFrameData.DepthImageHeight * 3;
+                                UnityEngine.Debug.Log("repack and store image data");
 
                                 for (int it = currentFrameData.DepthImageWidth * currentFrameData.DepthImageHeight - 1; it > 0; it--)
                                 {
@@ -103,14 +108,17 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                     currentFrameData.DepthImage[byteCounter++] = b;
                                     currentFrameData.DepthImage[byteCounter++] = b;
                                 }
+                                UnityEngine.Debug.Log("bosh");
 
                                 if (RawDataLoggingFile != null && RawDataLoggingFile.CanWrite)
                                 {
                                     binaryFormatter.Serialize(RawDataLoggingFile, currentFrameData);
                                 }
+                                UnityEngine.Debug.Log("serialise");
 
                                 // Update data variable that is being read in the UI thread.
                                 SetCurrentFrameData(ref currentFrameData);
+                                UnityEngine.Debug.Log("update frame data");
                             }
 
                         }

@@ -8,7 +8,7 @@ public class TrackerHandler : MonoBehaviour
     Dictionary<JointId, Quaternion> basisJointMap;
     public Quaternion[] absoluteJointRotations = new Quaternion[(int)JointId.Count];
     public bool drawSkeletons = true;
-    Quaternion Y_180_FLIP = new Quaternion(0.0f, 1.0f, 0.0f, 0.0f);
+    Quaternion Y_180_FLIP = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Start is called before the first frame update
     void Awake()
