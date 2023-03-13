@@ -7,7 +7,7 @@
 #define NUM_PIXELS     30  // The number of LEDs (pixels) on NeoPixel
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
-const int threshold = 300;
+const int threshold = 500;
 const int delayMs = 200;
 const int peakDelay =30;
 const int drumCount = 2;
@@ -55,7 +55,7 @@ void changeLeds(int on,int R,int G, int B) {
 }
 
 int getHitStrength(int hitVal) {
-  if (hitVal > 900) {
+  if (hitVal > 920) {
     return 3;
   } else if (hitVal > 750) {
     return 2;
@@ -80,14 +80,15 @@ void loop() {
       delayStart[i] = millis();
     } else if (hits[i]) {
       
-      if (vals[i] > maxVals[i] ) maxVals[i] = vals[i];
+      if (vals[i] > maxVals[i] && !sent[i]) maxVals[i] = vals[i];
 
-      if ( millis()-delayStart[i] >= peakDelay && sent[i] == false) {
+      if ( millis()-delayStart[i] >= peakDelay && !sent[i]) {
         sent[i] = true;
         Serial.print("on:"); 
         Serial.print(i);
         Serial.print(":s:");
-        Serial.println(getHitStrength(vals[i]));
+        Serial.println(maxVals[i]);
+        //Serial.println(getHitStrength(maxVals[i]));
       }
 
       if (millis()-delayStart[i] >= delayMs && vals[i] < threshold) {  
