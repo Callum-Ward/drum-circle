@@ -7,9 +7,6 @@ public class AudioManager : MonoBehaviour {
 
     public Sound[] sounds;
     public static AudioManager instance;
-    private string fadeIn = null;
-    private string fadeOut = null;
-    private string fadeSpeed = null;
 
     public AudioSource activeSource;
 
@@ -37,21 +34,7 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    //Update is called every frame.
-    void update()
-    {
-        if (fadeIn != null)
-        {
-            FadeIn(fadeIn, fadeSpeed);
-        }
-        if (fadeOut != null)
-        {
-            FadeOut(fadeOut);
-        }
-    }
-
-    //Plays the passed track.
-    public void Play(string name, AudioAnalyser? analyser)
+    public void Play(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
 
@@ -64,7 +47,6 @@ public class AudioManager : MonoBehaviour {
         this.activeSource.Play();
     }
 
-    //Allows changing of volume for selected track
      public float Volume(string name, float volume)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
@@ -80,61 +62,19 @@ public class AudioManager : MonoBehaviour {
         return s.source.volume;
     }
 
-    //Starts a fade in based on passed speed (Fast/Slow)
-    public void FadeIn(string name, string speed)
+    public void FadeIn(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-        fadeOut = null;
+
 
         if (s == null)
         {
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
-        if (speed == "fast")
-        {
-            s.source.volume = s.source.volume + 0.5f;
-            fadeSpeed = speed;
-        }
-        else if (speed == "slow")
-        {
-            s.source.volume = s.source.volume + 0.1f;
-            fadeSpeed = speed;
-        }
-        
-        if (s.source.volume == 1f)
-        {
-            fadeIn = null;
-        }
-        else
-        {
-            fadeIn = name;
-        }
+        s.source.volume = s.source.volume + 0.01f;
     }
 
-    //Fades out music.
-    public void FadeOut(string name)
-    {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-        fadeIn = null;
-
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        s.source.volume = s.source.volume - 0.33f;
-        if (s.source.volume == 0f)
-        {
-            fadeOut = null;
-        }
-        else
-        {
-            fadeOut = name;
-        }
-    }
-
-    //Sets passed sound track as active in the source
     public void SetActive(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);

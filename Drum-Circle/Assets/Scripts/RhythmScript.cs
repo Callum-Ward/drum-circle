@@ -21,10 +21,10 @@ public class RhythmScript : MonoBehaviour
         {
             spawner.spawn(1, 1, 1);
             spawner.spawn(1, 0, 1);
-            spawner.spawn(2, 1, 1);
-            spawner.spawn(2, 0, 1);
             spawner.spawn(3, 1, 1);
             spawner.spawn(3, 0, 1);
+            spawner.spawn(5, 1, 1);
+            spawner.spawn(5, 0, 1);
             timer = 0;
         }
         else

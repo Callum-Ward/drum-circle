@@ -5,58 +5,66 @@ using UnityEngine;
 public class BeatManager : MonoBehaviour
 
 {
-    public Queue<GameObject>[] beatQueues;
+    public Queue<GameObject> beatQueueL = new Queue<GameObject>();
+    public Queue<GameObject> beatQueueR = new Queue<GameObject>();
     public float deleteDelay = 0.15f;
-    private int playerCount;
+
 
     // Start is called before the first frame update
     void Start()
         {
-            beatQueues = new Queue<GameObject>[playerCount * 2];
-            for(int i = 0; i < playerCount * 2; i++)
-            {
-                beatQueues[i] = new Queue<GameObject>();
-            }
+            //Queue<GameObject> beatQueue;
         }
-
-    //Checks if beats need to be deleted every frame.
+    // Update is called once per frame
     void Update()
-    {
-        for(int i = 0; i < playerCount * 2; i++)
         {
-            GameObject beat = beatQueues[i].Peek();
-            if (beat.GetComponent<MoveBeat>().delete == true)
+        if (beatQueueL.Count > 0)
+        {
+            GameObject beatL = beatQueueL.Peek();
+            if (beatL.GetComponent<MoveBeat>().delete == true)
             {
-                BeatDelete(i, false);
+                BeatDelete("left", false);
+            }
+
+        }
+        if (beatQueueR.Count > 0)
+        {
+            GameObject beatR = beatQueueR.Peek();
+            if (beatR.GetComponent<MoveBeat>().delete == true)
+            {
+                BeatDelete("right", false);
+            }
+        }
+    }
+    public void AddToQueueL(GameObject beat)
+        {
+            beatQueueL.Enqueue(beat);
+        }
+    public void AddToQueueR(GameObject beat)
+        {
+            beatQueueR.Enqueue(beat);
+        }
+    public void BeatDelete(string side, bool highlight)
+        {
+        if (beatQueueL.Count > 0)
+        {
+            if (side == "left")
+            {
+                GameObject lastelem = beatQueueL.Dequeue();
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
+                StartCoroutine(WindowDelay(deleteDelay, lastelem));
+            }
+            else if (side == "right")
+            {
+                GameObject lastelem = beatQueueR.Dequeue();
+                lastelem.GetComponent<MoveBeat>().fade = true;
+                lastelem.GetComponent<MoveBeat>().highlight = highlight;
+                StartCoroutine(WindowDelay(deleteDelay, lastelem));
             }
         }
     }
 
-    //Sets the total number of players from main scene script
-    public void setPlayerCount(int playerCount)
-    {
-        this.playerCount = playerCount;
-    }
-
-    //Queues for beats based on track.
-    public void AddToQueue(int queueIndex, GameObject beat)
-        {
-            beatQueues[queueIndex].Enqueue(beat);
-        }
-
-    //Deletes beat from queue if queue isn't empty is available.
-    public void BeatDelete(int queueIndex, bool highlight)
-        {
-        if (beatQueues[queueIndex].Count > 0)
-        {
-            GameObject lastelem = beatQueues[queueIndex].Dequeue();
-            lastelem.GetComponent<MoveBeat>().fade = true;
-            lastelem.GetComponent<MoveBeat>().highlight = highlight;
-            StartCoroutine(WindowDelay(deleteDelay, lastelem));
-        }
-    }
-
-    //Coroutine to delay destruction of object after specified amount of time.
     IEnumerator WindowDelay(float time, GameObject o)
     {
         yield return new WaitForSeconds(time);
