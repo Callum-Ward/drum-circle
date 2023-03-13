@@ -12,6 +12,7 @@ public class BeatUI : MonoBehaviour
     Label playerTag1, playerTag2, playerTag3;
     Label scoreTag1, scoreTag2, scoreTag3;
     Label comboTag1, comboTag2, comboTag3;
+    IMGUIContainer Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R;
     Label[] playerTags;
     Label[] scoreTags;
     Label[] comboTags;
@@ -27,9 +28,14 @@ public class BeatUI : MonoBehaviour
 
     BeatmapScript beatmapScript;
 
+    public VisualTreeAsset beatSpawnTemplate;
+    UIDocument beatSpawnUI;
+
     float test = 0;
     int ctest = 0;
     int mtest = 0;
+
+    int counter = 0;
     
 
     
@@ -46,18 +52,32 @@ public class BeatUI : MonoBehaviour
         comboTag1 = root.Q<Label>("Combo1");
         comboTag2 = root.Q<Label>("Combo2");
         comboTag3 = root.Q<Label>("Combo3");
+        Lane1L = root.Q<Label>("Lane1L");
+        Lane1R = root.Q<Label>("Lane1R");
+        Lane2L = root.Q<Label>("Lane2L");
+        Lane2R = root.Q<Label>("Lane2R");
+        Lane3L = root.Q<Label>("Lane3L");
+        Lane3R = root.Q<Label>("Lane3R");
         
         playerTags = new Label[] {playerTag1, playerTag2, playerTag3};
         scoreTags = new Label[] {scoreTag1, scoreTag2, scoreTag3};
         comboTags = new Label[] {comboTag1, comboTag2, comboTag3};
         tags = new Label[][] {playerTags, scoreTags, comboTags};
 
+        lanes = new IMGUIContainer[] {Lane1L, Lane2L, Lane3L, Lane1R, Lane2R, Lane3R};
+
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
                 tags[i][j].style.display = DisplayStyle.None;
             }
+            lanes[i].style.display = DisplayStyle.None;
+            lanes[i+3].style.display = DisplayStyle.None;
         }
 
+        beatSpawnUI = GetComponent<UIDocument>();
+
+        TemplateContainer beatSpawnContainer = beatSpawnTemplate.Instantiate();
+        beatSpawnUI.rootVisualElement.Q("Lane").Add(beatSpawnContainer);
     }
 
     public void setPlayerCount(int number) {
@@ -88,7 +108,10 @@ public class BeatUI : MonoBehaviour
                     tags[j][i].style.left = screenWidth*(i+1) /(playerNo+1) - (tags[j][i].resolvedStyle.width/2);
                     tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*10;
                 }
-            }
+            } 
+            lanes[i].style.display = DisplayStyle.Flex;
+            
+            lanes[i+3].style.display = DisplayStyle.Flex;
         }
     }
 
@@ -102,5 +125,12 @@ public class BeatUI : MonoBehaviour
             ctest++;
             mtest = Mathf.FloorToInt(ctest/100);
         }
+    
+    if(counter == 50) {
+        counter = 0;
+        // spawn(screenWidth/2, 1, 1);
+    }
+    else
+        counter++;
     }
 }
