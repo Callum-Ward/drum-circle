@@ -70,7 +70,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 02d9560873ca933499febb39601b1df1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 677f26ef658a33147af7ba3f2887260f, type: 2}
+      objectReference: {fileID: 2100000, guid: d7773bb0843e91945a002708e017ef99, type: 2}
     - target: {fileID: 919132149155446097, guid: 02d9560873ca933499febb39601b1df1, type: 3}
       propertyPath: m_Name
       value: right
@@ -95,7 +95,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
+  timer: 0
   window: 0
+  dontDelete: 0
   delete: 0
   windowScore: 0
   fade: 0
