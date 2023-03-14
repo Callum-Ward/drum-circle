@@ -17,6 +17,7 @@ public class BeatmapScript : MonoBehaviour
 
     public int glowStage = 2;
     public float glowPower = 0.5f;
+    private int treeStage = 0;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -186,8 +187,10 @@ public class BeatmapScript : MonoBehaviour
                             if(i == 0 && glowStage <= 1){   
                                 glowStage += 1;
                             }
-
-                            treeSpawner.spawnTree(i+1, 2);
+                            if(Math.Floor(scoreManager.Score / 200) > treeStage){
+                                treeStage += 1;
+                                treeSpawner.spawnTree(i+1, 2);
+                            }
                         }
                 }
 
