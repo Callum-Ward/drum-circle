@@ -1,0 +1,256 @@
+//[fire graph] [System] Update Particle,1
+//Don't delete the previous line or this one
+#pragma kernel CSMain
+#pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch opengl
+#define NB_THREADS_PER_GROUP 64
+#define HAS_VFX_ATTRIBUTES 1
+#define VFX_PASSDEPTH_ACTUAL (0)
+#define VFX_PASSDEPTH_MOTION_VECTOR (1)
+#define VFX_PASSDEPTH_SELECTION (2)
+#define VFX_PASSDEPTH_PICKING (3)
+#define VFX_PASSDEPTH_SHADOW (4)
+#define VFX_USE_VELOCITY_CURRENT 1
+#define VFX_USE_LIFETIME_CURRENT 1
+#define VFX_USE_POSITION_CURRENT 1
+#define VFX_USE_ALIVE_CURRENT 1
+#define VFX_USE_AGE_CURRENT 1
+#define VFX_HAS_INDIRECT_DRAW 1
+#define VFX_LOCAL_SPACE 1
+#include "Packages/com.unity.render-pipelines.universal/Runtime/VFXGraph/Shaders/VFXDefines.hlsl"
+
+
+
+CBUFFER_START(parameters)
+    float deltaTime_a;
+    uint3 PADDING_0;
+CBUFFER_END
+
+
+struct VFXAttributes
+{
+    float3 velocity;
+    float lifetime;
+    float3 position;
+    bool alive;
+    float age;
+};
+
+struct VFXSourceAttributes
+{
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Strips tangent computation
+
+
+
+
+
+#define USE_DEAD_LIST (VFX_USE_ALIVE_CURRENT && !HAS_STRIPS)
+
+RWByteAddressBuffer attributeBuffer;
+
+#if USE_DEAD_LIST
+RWStructuredBuffer<uint> deadListOut;
+#endif
+
+#if VFX_HAS_INDIRECT_DRAW
+RWStructuredBuffer<uint> indirectBuffer;
+#endif
+
+#if HAS_STRIPS
+RWStructuredBuffer<uint> stripDataBuffer;
+#endif
+
+#if VFX_USE_STRIPALIVE_CURRENT
+StructuredBuffer<uint> attachedStripDataBuffer;
+#endif
+
+CBUFFER_START(updateParams)
+    uint nbMax;
+	uint dispatchWidth;
+	uint systemSeed;
+CBUFFER_END
+
+#include "Packages/com.unity.visualeffectgraph/Shaders/Common/VFXCommonCompute.hlsl"
+#include "Packages/com.unity.visualeffectgraph/Shaders/VFXCommon.hlsl"
+
+
+
+void EulerIntegration(inout float3 position, float3 velocity, float deltaTime)
+{
+    position += velocity * deltaTime;
+}
+void Age(inout float age, float deltaTime)
+{
+    age += deltaTime;
+}
+void Reap(float age, float lifetime, inout bool alive)
+{
+    if(age > lifetime) { alive = false; }
+}
+
+
+
+[numthreads(NB_THREADS_PER_GROUP,1,1)]
+void CSMain(uint3 groupId          : SV_GroupID,
+            uint3 groupThreadId    : SV_GroupThreadID)
+{
+	uint id = groupThreadId.x + groupId.x * NB_THREADS_PER_GROUP + groupId.y * dispatchWidth * NB_THREADS_PER_GROUP;
+	uint index = id;
+#if VFX_COMPUTE_BOUNDS
+	uint tid = groupThreadId.x;
+#endif
+
+	if (id < nbMax)
+	{
+        VFXAttributes attributes = (VFXAttributes)0;
+		VFXSourceAttributes sourceAttributes = (VFXSourceAttributes)0;
+
+#if VFX_USE_ALIVE_CURRENT
+		attributes.alive = (attributeBuffer.Load((index * 0x2 + 0x120) << 2));
+		
+
+		if (attributes.alive)
+		{
+			attributes.velocity = asfloat(attributeBuffer.Load3((index * 0x4 + 0x0) << 2));
+			attributes.lifetime = asfloat(attributeBuffer.Load((index * 0x1 + 0x80) << 2));
+			attributes.position = asfloat(attributeBuffer.Load3((index * 0x4 + 0xA0) << 2));
+			attributes.age = asfloat(attributeBuffer.Load((index * 0x2 + 0x121) << 2));
+			
+
+
+#if HAS_STRIPS
+            const StripData stripData = GetStripDataFromParticleIndex(index, PARTICLE_PER_STRIP_COUNT);
+            InitStripAttributes(index, attributes, stripData);
+#endif
+
+#if VFX_UPDATE_SKIP_ZERO_DELTA_TIME
+			
+			if (deltaTime != 0.0f)
+#endif
+			{
+				EulerIntegration( /*inout */attributes.position, attributes.velocity, deltaTime_a);
+				Age( /*inout */attributes.age, deltaTime_a);
+				Reap(attributes.age, attributes.lifetime,  /*inout */attributes.alive);
+				
+
+			}
+
+			if (attributes.alive)
+			{
+				attributeBuffer.Store3((index * 0x4 + 0xA0) << 2,asuint(attributes.position));
+				attributeBuffer.Store((index * 0x2 + 0x121) << 2,asuint(attributes.age));
+				
+
+#if VFX_HAS_INDIRECT_DRAW
+                uint indirectIndex = indirectBuffer.IncrementCounter();
+				indirectBuffer[indirectIndex] = index;
+#endif
+
+#if HAS_STRIPS
+				uint relativeIndexInStrip = GetRelativeIndex(index, stripData);
+				InterlockedMin(STRIP_DATA(STRIP_MIN_ALIVE, stripData.stripIndex), relativeIndexInStrip);
+				InterlockedMax(STRIP_DATA(STRIP_MAX_ALIVE, stripData.stripIndex), relativeIndexInStrip);
+#endif
+			}
+			else
+			{
+				attributeBuffer.Store((index * 0x2 + 0x120) << 2,uint(attributes.alive));
+				
+
+#if USE_DEAD_LIST && !VFX_USE_STRIPALIVE_CURRENT
+				uint deadIndex = deadListOut.IncrementCounter();
+				deadListOut[deadIndex] = index;
+#endif
+			}
+		}
+#if USE_DEAD_LIST && VFX_USE_STRIPALIVE_CURRENT
+        else if (attributes.stripAlive)
+        {
+            if (STRIP_DATA_X(attachedStripDataBuffer, STRIP_MIN_ALIVE, index) == ~1) // Attached strip is no longer alive, recycle the particle
+            {
+                uint deadIndex = deadListOut.IncrementCounter();
+				deadListOut[deadIndex] = index;
+                attributes.stripAlive = false;
+                
+            }
+        }
+#endif
+#else
+		attributes.velocity = asfloat(attributeBuffer.Load3((index * 0x4 + 0x0) << 2));
+attributes.lifetime = asfloat(attributeBuffer.Load((index * 0x1 + 0x80) << 2));
+attributes.position = asfloat(attributeBuffer.Load3((index * 0x4 + 0xA0) << 2));
+attributes.alive = (attributeBuffer.Load((index * 0x2 + 0x120) << 2));
+attributes.age = asfloat(attributeBuffer.Load((index * 0x2 + 0x121) << 2));
+
+
+#if HAS_STRIPS
+        const StripData stripData = GetStripDataFromParticleIndex(index, PARTICLE_PER_STRIP_COUNT);
+        InitStripAttributes(index, attributes, stripData);
+#endif
+
+#if VFX_UPDATE_SKIP_ZERO_DELTA_TIME
+		
+		if (deltaTime != 0.0f)
+#endif
+		{
+			EulerIntegration( /*inout */attributes.position, attributes.velocity, deltaTime_a);
+			Age( /*inout */attributes.age, deltaTime_a);
+			Reap(attributes.age, attributes.lifetime,  /*inout */attributes.alive);
+			
+
+		}
+		attributeBuffer.Store3((index * 0x4 + 0xA0) << 2,asuint(attributes.position));
+		attributeBuffer.Store((index * 0x2 + 0x120) << 2,uint(attributes.alive));
+		attributeBuffer.Store((index * 0x2 + 0x121) << 2,asuint(attributes.age));
+		
+
+#if VFX_HAS_INDIRECT_DRAW
+        uint indirectIndex = indirectBuffer.IncrementCounter();
+		indirectBuffer[indirectIndex] = index;
+#endif
+#endif
+#if VFX_COMPUTE_BOUNDS
+		
+		float3 size3 = float3(attributes.size,attributes.size,attributes.size);
+		#if VFX_USE_SCALEX_CURRENT
+		size3.x *= attributes.scaleX;
+		#endif
+		#if VFX_USE_SCALEY_CURRENT
+		size3.y *= attributes.scaleY;
+		#endif
+		#if VFX_USE_SCALEZ_CURRENT
+		size3.z *= attributes.scaleZ;
+		#endif
+		
+#if VFX_WORLD_SPACE
+        
+#else
+        float4x4 worldToLocal = (float4x4)0;
+#endif
+		InitReduction(attributes, size3, tid, worldToLocal);
+#endif
+
+	}
+	#if VFX_COMPUTE_BOUNDS
+	PerformBoundsReduction(id, tid);
+	#endif
+}
