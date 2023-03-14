@@ -106,7 +106,7 @@ public class BeatmapScript : MonoBehaviour
         
         if(glowStage == 3)
         {
-            glowPower += 0.05f;
+            glowPower += 0.02f;
             if(glowPower >= 5.0f){
                 glowStage = 0;
             }
@@ -157,8 +157,8 @@ public class BeatmapScript : MonoBehaviour
                             if(i % 2 == 0 && glowStage <= 1){   
                                 glowStage += 1;
                             }
-                            
-                            treeSpawner.spawnTree(i+1, 2);
+
+                            //treeSpawner.spawnTree(i+1, 2);
                         }
                 }
 
