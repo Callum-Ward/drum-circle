@@ -23,6 +23,7 @@ public class BeatmapScript : MonoBehaviour
     public AudioManager audioManager;
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
+    public TreeSpawnerForest treeSpawner;
     public MessageListener messageListener;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
@@ -42,6 +43,7 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawnerForest>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
@@ -49,6 +51,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
         beatUI.setPlayerCount(this.playerCount);
+        treeSpawner.setPlayers(this.playerCount);
         
     }
 
@@ -123,7 +126,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
 
-        handleGlow();
+        //handleGlow();
 
         //Checks if there was an input in the data stream
         hitL = false;
@@ -183,6 +186,8 @@ public class BeatmapScript : MonoBehaviour
                             if(i == 0 && glowStage <= 1){   
                                 glowStage += 1;
                             }
+
+                            treeSpawner.spawnTree(i+1, 2);
                         }
                 }
 
