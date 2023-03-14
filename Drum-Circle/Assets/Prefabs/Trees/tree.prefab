@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda97efc2b8eca943a43f2f9c099cf4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  branchObj: {fileID: 3797358230105644876, guid: e5dc6bc2215001547944d0db13264020, type: 3}
-  length: 5
-  orientation: 42
+  branchObj: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+  length: 3
+  width: 0.07
+  orientation: 43
   rotation: 137.5
   lengthDecay: 0.35
-  directionNoise: 0.15
-  maxDepth: 20
+  directionNoise: 0.2
+  maxDepth: 8
