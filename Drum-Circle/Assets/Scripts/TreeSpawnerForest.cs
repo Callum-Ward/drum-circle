@@ -84,10 +84,8 @@ public class TreeSpawnerForest : MonoBehaviour
                 while (invalidLocation) //only place trees with a minSeperation distance
                 {
                     float random = Random.Range(-1.0f, 1.0f);
-                    Debug.Log("rand spawn at " + random);
                     Vector2 randomOffset = new Vector2(spawnRadius * Mathf.Sin(random), spawnRadius * Mathf.Cos(random));
                     Vector2 treeLocation = spawnLocations[playerCount - 1] + randomOffset;
-                    Debug.Log("pre spawn at " + treeLocation);
                     bool treeTooClose = false;
                     foreach (GameObject tree in trees[playerNo-1]) //loop through players existing trees
                     {
@@ -99,6 +97,7 @@ public class TreeSpawnerForest : MonoBehaviour
                         Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
                         trees[playerNo-1].Add(Instantiate(treeObject, treePos, transform.rotation));
                         invalidLocation = false;
+                        Debug.Log("spawned tree at " + treePos);
                     }
                 }
 

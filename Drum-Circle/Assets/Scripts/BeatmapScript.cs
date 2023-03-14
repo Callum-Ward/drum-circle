@@ -106,14 +106,14 @@ public class BeatmapScript : MonoBehaviour
         
         if(glowStage == 3)
         {
-            glowPower += 0.1f;
+            glowPower += 0.05f;
             if(glowPower >= 5.0f){
                 glowStage = 0;
             }
         }
         else if(glowStage == 2)
         {
-            glowPower -= 0.1f;
+            glowPower -= 0.05f;
             if(glowPower <= 1.0f){
                 glowStage += 1;
             }
@@ -154,13 +154,11 @@ public class BeatmapScript : MonoBehaviour
                             beatHit((i*2), beatL);
                             
                             //Trigger start of glow process
-                            if(i == 0 && glowStage <= 1){   
+                            if(i % 2 == 0 && glowStage <= 1){   
                                 glowStage += 1;
                             }
-                            if(Math.Floor(scoreManager.Score / 200) > treeStage){
-                                treeStage += 1;
-                                treeSpawner.spawnTree(i+1, 2);
-                            }
+                            
+                            treeSpawner.spawnTree(i+1, 2);
                         }
                 }
 
