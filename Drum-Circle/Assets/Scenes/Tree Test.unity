@@ -672,7 +672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8981233171844227532, guid: 126425d5ae6574a4088a83fc03fd3e74, type: 3}
       propertyPath: length
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8981233171844227532, guid: 126425d5ae6574a4088a83fc03fd3e74, type: 3}
       propertyPath: branchObj

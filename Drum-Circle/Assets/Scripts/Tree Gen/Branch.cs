@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class Branch : MonoBehaviour
 {
+    public GameObject leaves;
+
     public Branch parent = null;
     public Branch childA  = null;
     public Branch childB  = null;
@@ -39,7 +43,7 @@ public class Branch : MonoBehaviour
 
     private void Update()
     {
-
+        if ( !isLeaf ) Object.Destroy( leaves );
     }
 
     /*Set up branch parameters*/
@@ -93,6 +97,8 @@ public class Branch : MonoBehaviour
         GetComponent<MeshRenderer>().enabled = true;
 
         if (!isLeaf) return;
+
+        AddLeaves();
 
         if(!isFullyGrown)
         {
@@ -182,5 +188,12 @@ public class Branch : MonoBehaviour
         }
 
 
+    }
+
+    void AddLeaves()
+    {
+        leaves.transform.parent = this.transform;
+        leaves.transform.position = position + length / maxLength * growth;
+        leaves.transform.rotation = Quaternion.LookRotation(growth);
     }
 }
