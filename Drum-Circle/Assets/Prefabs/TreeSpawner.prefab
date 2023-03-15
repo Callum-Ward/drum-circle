@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190070b3cf31d1140a3164ea4def268c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeObject: {fileID: 0}
+  staticTreeObject: {fileID: 822394160446874061, guid: 9b59f3442a06b2c45807b276f47bcdd1, type: 3}
+  growingTreeObject: {fileID: 8981233171844227535, guid: 126425d5ae6574a4088a83fc03fd3e74, type: 3}
+  includeGrowingTrees: 0
   minSeperation: 1

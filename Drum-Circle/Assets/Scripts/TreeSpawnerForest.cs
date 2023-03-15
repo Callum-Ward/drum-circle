@@ -10,7 +10,9 @@ public class TreeSpawnerForest : MonoBehaviour
     //list containing central tree spawn locations is indexed based on player number
     //trees are stored in 2d list, first index specifies which player tree belongs to
 
-    public GameObject treeObject;
+    public GameObject staticTreeObject;
+    public GameObject growingTreeObject;
+    public bool includeGrowingTrees = false;
     public float minSeperation =1;
     private List<List<GameObject>> trees;
     private int playerCount =0;
@@ -95,7 +97,12 @@ public class TreeSpawnerForest : MonoBehaviour
                     {
                         //take randomised vector2 tree position (x,z) and find terrain height at that coordinate to form full (x,y,z) coordinate
                         Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
-                        trees[playerNo-1].Add(Instantiate(treeObject, treePos, transform.rotation));
+                        if (includeGrowingTrees)
+                        {
+                            if (Random.Range(0, 10) > 5) trees[playerNo - 1].Add(Instantiate(staticTreeObject, treePos, transform.rotation));
+                            else trees[playerNo - 1].Add(Instantiate(growingTreeObject, treePos, transform.rotation));
+                        }
+                        else trees[playerNo-1].Add(Instantiate(staticTreeObject, treePos, transform.rotation));
                         invalidLocation = false;
                         Debug.Log("spawned tree at " + treePos);
                     }
