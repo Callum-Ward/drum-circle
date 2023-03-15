@@ -15,7 +15,7 @@ public class TreeSpawnerForest : MonoBehaviour
     public GameObject staticTreeObject;
     public GameObject growingTreeObject;
     public bool includeGrowingTrees = false;
-    public float minSeperation =1;
+    public float minSeperation = 3;
     private List<List<GameObject>> trees;
     private int playerCount =0;
     private List<Vector2> spawnLocations;
@@ -43,10 +43,10 @@ public class TreeSpawnerForest : MonoBehaviour
             spawnLocations.Add(new Vector2(286, 243));
             spawnLocations.Add(new Vector2(378, 120));*/
 
-            spawnRadius = 15f;
-            spawnLocations.Add(new Vector2(295, 30));
-            spawnLocations.Add(new Vector2(302, 38));
-            spawnLocations.Add(new Vector2(309, 30));
+            spawnRadius = 10f;
+            spawnLocations.Add(new Vector2(296, 30));
+            spawnLocations.Add(new Vector2(302, 44));
+            spawnLocations.Add(new Vector2(310, 30));
 
         }
         else if (playerCount == 2)
@@ -123,7 +123,7 @@ public class TreeSpawnerForest : MonoBehaviour
                         Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
                         if (includeGrowingTrees)
                         {
-                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(6, 10) > 5);
+                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(1, 10) > 5);
                             invalidLocation = false;
                         }
                         else{

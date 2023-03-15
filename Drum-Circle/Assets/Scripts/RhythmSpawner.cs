@@ -44,14 +44,14 @@ public class RhythmSpawner : MonoBehaviour
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
 
         for(int i = 0; i < playerCount; i++){
-            GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f), -4.25f, 0f), transform.rotation);
+            GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f) + 0.25f, -4.25f, 0f), transform.rotation);
             GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
             
             newLeftTarget.transform.localScale *= spawnScale;
             newRightTarget.transform.localScale *= spawnScale;
 
 
-            GameObject newLeftTargetBase = Instantiate(leftTargetBase, startSpawn + new Vector3((i * 2.5f) - 0.01f, -4.26f, 0.01f), transform.rotation);
+            GameObject newLeftTargetBase = Instantiate(leftTargetBase, startSpawn + new Vector3((i * 2.5f) + 0.24f, -4.26f, 0.01f), transform.rotation);
             GameObject newRightTargetBase = Instantiate(rightTargetBase, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.26f, 0.01f), transform.rotation);
             //GameObject newLeftTrack = Instantiate(beatTrack, startSpawn + new Vector3((i * 2.5f) - 0.01f, -4.26f, 0.01f), transform.rotation);
             //GameObject newRightTrack = Instantiate(beatTrack, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.26f, 0.01f), transform.rotation);
@@ -87,6 +87,7 @@ public class RhythmSpawner : MonoBehaviour
    
         if (left==1)
         {
+            spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
             GameObject newBeat = Instantiate(leftBeat, spawnLoc, transform.rotation);
             newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
             beatManager.AddToQueue(2 * (pos - 1), newBeat);

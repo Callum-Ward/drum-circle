@@ -56,7 +56,7 @@ public class Branch : MonoBehaviour
         maxLength = growth.magnitude;
         maxWidth = width;
 
-        length = maxLength / 2;
+        length = maxLength / 4;
 
         isLeaf = true;
         isFullyGrown = false;
