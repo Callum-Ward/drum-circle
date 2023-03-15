@@ -10,8 +10,9 @@ public class TreeManager : MonoBehaviour
     [SerializeField] bool testing = false;
 
     ScoreManager scoreManager = null;
+    
     float lastScore = 0;
-
+    bool hitStatus = false;
 
     void Start()
     {
@@ -37,20 +38,31 @@ public class TreeManager : MonoBehaviour
 
         else
         {
-            if (scoreManager.Score > lastScore)
+            trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
+            
+            if (hitStatus == true)
             {
-                Debug.Log("Attempted growth");
-                trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
+                var modifiedScore = false;
+                if(scoreManager.Score > lastScore) 
+                {
+                    modifiedScore = true;
+                    lastScore = scoreManager.Score;
+                }
+                
                 foreach (var t in trees)
                 {
                     var tree = t.GetComponent<Tree>();
 
                     tree.Grow(scoreManager.ScoreMultiplier);
-                    tree.AddBranches();
 
-                    lastScore = scoreManager.Score;
+                    if(modifiedScore) tree.AddBranches();
                 }
             }
         }
+    }
+
+    public void SetHitStatus(bool hit) 
+    {
+        hitStatus = hit;
     }
 }

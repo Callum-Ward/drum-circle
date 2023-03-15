@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8981233171844227533}
   - component: {fileID: 8981233171844227532}
   m_Layer: 0
-  m_Name: Tree
+  m_Name: tree
   m_TagString: Procedural Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,4 +51,4 @@ MonoBehaviour:
   rotation: 137.5
   lengthDecay: 0.35
   directionNoise: 0.2
-  maxDepth: 8
+  maxDepth: 5

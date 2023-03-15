@@ -32,6 +32,7 @@ public class BeatmapScript : MonoBehaviour
     public MessageListener messageListener;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
+    public TreeManager treeManager;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -52,6 +53,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
+        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
@@ -68,6 +70,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager.BeatDelete(queueIndex, true);
         audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
+        treeManager.SetHitStatus(true);
     }
 
     private void registerMiss(int queueIndex, MoveBeat beat)
@@ -80,6 +83,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
+        treeManager.SetHitStatus(false);
     }
 
     //Coroutine function for delaying hit-window

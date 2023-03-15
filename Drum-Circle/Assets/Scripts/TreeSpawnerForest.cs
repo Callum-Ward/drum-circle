@@ -123,7 +123,7 @@ public class TreeSpawnerForest : MonoBehaviour
                         Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
                         if (includeGrowingTrees)
                         {
-                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(0, 10) > 5);
+                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(6, 10) > 5);
                             invalidLocation = false;
                         }
                         else{

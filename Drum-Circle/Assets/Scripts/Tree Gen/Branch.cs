@@ -107,7 +107,7 @@ public class Branch : MonoBehaviour
 
         if(!isFullyGrown)
         {
-            length += maxLength / 10 * scoreMul;
+            length += maxLength / 1000 * scoreMul;
             width = maxLength * maxWidth;
 
 
