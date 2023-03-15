@@ -60,8 +60,8 @@ MonoBehaviour:
   maxLength: 1000
   maxWidth: 0
   mesh: {fileID: 0}
-  faces: 10
-  segments: 3
+  faces: 8
+  segments: 2
 --- !u!120 &2915430925563637601
 LineRenderer:
   m_ObjectHideFlags: 0

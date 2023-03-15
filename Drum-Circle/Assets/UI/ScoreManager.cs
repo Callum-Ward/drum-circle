@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour
         ComboCounter = 0;
         ComboCount = 0;
         ScoreMultiplier = 1f;
-        Debug.Log("Miss registered");
+        //Debug.Log("Miss registered");
         audioManager.FadeOut("layer2");
     }
 

@@ -16,7 +16,6 @@ public class TreeManager : MonoBehaviour
     void Start()
     {
         trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
-
         if (!testing)
         {
             scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
@@ -40,6 +39,8 @@ public class TreeManager : MonoBehaviour
         {
             if (scoreManager.Score > lastScore)
             {
+                Debug.Log("Attempted growth");
+                trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
                 foreach (var t in trees)
                 {
                     var tree = t.GetComponent<Tree>();

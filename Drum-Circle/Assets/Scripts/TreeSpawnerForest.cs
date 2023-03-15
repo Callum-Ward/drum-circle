@@ -10,6 +10,8 @@ public class TreeSpawnerForest : MonoBehaviour
     //list containing central tree spawn locations is indexed based on player number
     //trees are stored in 2d list, first index specifies which player tree belongs to
 
+    public GameObject treeObject;
+    public float treeScale;
     public GameObject staticTreeObject;
     public GameObject growingTreeObject;
     public bool includeGrowingTrees = false;
@@ -18,7 +20,6 @@ public class TreeSpawnerForest : MonoBehaviour
     private int playerCount =0;
     private List<Vector2> spawnLocations;
     private float spawnRadius;
-
 
     int validatePlayerCount(int noPlayers)
     {
@@ -37,10 +38,15 @@ public class TreeSpawnerForest : MonoBehaviour
 
         if (playerCount == 3)
         {
-            spawnRadius = 76f;
+            /*spawnRadius = 76f;
             spawnLocations.Add(new Vector2(132, 243));
             spawnLocations.Add(new Vector2(286, 243));
-            spawnLocations.Add(new Vector2(378, 120));
+            spawnLocations.Add(new Vector2(378, 120));*/
+
+            spawnRadius = 15f;
+            spawnLocations.Add(new Vector2(295, 30));
+            spawnLocations.Add(new Vector2(302, 38));
+            spawnLocations.Add(new Vector2(309, 30));
 
         }
         else if (playerCount == 2)
@@ -68,6 +74,24 @@ public class TreeSpawnerForest : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    public void spawnTreeAtLocation(int playerNo, Vector2 location, bool growing)
+    {
+        Vector3 treePos = new Vector3(location.x, Terrain.activeTerrain.SampleHeight(new Vector3(location.x, 0, location.y)), location.y);
+        GameObject newTree;
+        if(growing)
+        {
+            newTree = Instantiate(growingTreeObject, treePos, transform.rotation);
+        } 
+        else
+        {
+            newTree = Instantiate(treeObject, treePos, transform.rotation);
+            newTree.transform.localScale *= treeScale;
+        }
+
+        trees[playerNo-1].Add(newTree);
+        Debug.Log("spawned tree at " + treePos);
     }
 
 
@@ -99,12 +123,13 @@ public class TreeSpawnerForest : MonoBehaviour
                         Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
                         if (includeGrowingTrees)
                         {
-                            if (Random.Range(0, 10) > 5) trees[playerNo - 1].Add(Instantiate(staticTreeObject, treePos, transform.rotation));
-                            else trees[playerNo - 1].Add(Instantiate(growingTreeObject, treePos, transform.rotation));
+                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(0, 10) > 5);
+                            invalidLocation = false;
                         }
-                        else trees[playerNo-1].Add(Instantiate(staticTreeObject, treePos, transform.rotation));
-                        invalidLocation = false;
-                        Debug.Log("spawned tree at " + treePos);
+                        else{
+                            spawnTreeAtLocation(playerNo, treeLocation, false);
+                            invalidLocation = false;
+                        }
                     }
                 }
 
