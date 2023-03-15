@@ -10,12 +10,14 @@ using Quaternion = UnityEngine.Quaternion;
 using System.Net.Security;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using UnityEngine.XR;
 
 public class Tree : MonoBehaviour
 {
     [SerializeField] GameObject branchObj;
 
     [SerializeField] float length = 0;
+    [Range(0.01f, 0.25f)] public float width = 1;
 
     [Range(0.0f, 90.0f)] public float orientation = 45.0f;
     [Range(0.0f, 180.0f)] public float rotation = 137.5f;
@@ -26,30 +28,24 @@ public class Tree : MonoBehaviour
     [SerializeField] float maxDepth = 10;
 
     List<GameObject> branches = new();
-
-    ScoreManager sm;
+    Branch root = null;
 
     int depth = 1;
     float currentRotation = 0;
 
-    float lastScore = 0;
+    Mesh mesh = null;
 
     private void Start()
     {
-        sm = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        //mesh = GetComponent<MeshFilter>().mesh;
+        currentRotation = Random.Range(0, 360);
+
         InitialiseTree();
     }
 
     private void Update()
     {
-        //Add branch if key is pressed
-        //if (Input.GetKeyDown(KeyCode.A)) AddBranches();
 
-        if (sm.Score > lastScore)
-        {
-            AddBranches();
-            lastScore = sm.Score;
-        }
     }
 
     /*Returns random value between the min and max according to normal distribution*/
@@ -82,7 +78,6 @@ public class Tree : MonoBehaviour
     /*Initialise new tree and set the first branch*/
     void InitialiseTree()
         {
-
         //The startitng position of the branch is the position of the tree
         var pos = this.transform.position;
 
@@ -100,21 +95,40 @@ public class Tree : MonoBehaviour
         var root = Instantiate(branchObj);
         var rootBranch = root.GetComponent<Branch>();
 
-        rootBranch.SetBranch(this.transform.gameObject, growth, pos);
-        
+        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width);
+
+        this.root = rootBranch;
         branches.Add(root);
+    }
+
+    public void Grow(float scoreMul)
+    {
+        foreach( var br in branches )
+        {
+            var branch = br.GetComponent<Branch>();
+            branch.Grow(scoreMul);
+        }
+
+        /*var treeMesh = GenerateMesh(root);
+        
+        mesh.vertices = treeMesh.vertices;
+        mesh.triangles = treeMesh.triangles;
+        mesh.RecalculateNormals();*/
     }
     
     /*Adds a new set of branches to the tree*/
-    void AddBranches()
+    public void AddBranches()
     {
         //cotinue if we max depth hasn't been reached yet
         if (depth > maxDepth) return;
 
         //the length of the branches decay baesed on the depth
+        //var bLength = length * Mathf.Pow( (1 - lengthDecay), depth);
         var bLength = length * Mathf.Exp(-lengthDecay * depth);
 
         var newBranches = new List<GameObject>();
+
+        var addedBranches = false;
 
         foreach (var br in branches)
             {
@@ -162,16 +176,18 @@ public class Tree : MonoBehaviour
 
             //Instantiate the branches
             var a = Instantiate(branchObj);
+            a.GetComponent<MeshRenderer>().enabled = false;
             var branchA = a.GetComponent<Branch>();
 
             var b = Instantiate(branchObj);
+            b.GetComponent<MeshRenderer>().enabled = false;
             var branchB = b.GetComponent<Branch>();
 
             //Set them as the current branch's children
             branch.SetChildren(branchA, branchB);
 
-            branchA.SetBranch(this.transform.gameObject ,branch, growthA, posA);
-            branchB.SetBranch(this.transform.gameObject, branch, growthB, posB);
+            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width);
+            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width);
 
             newBranches.Add(a);
             newBranches.Add(b);
@@ -179,10 +195,48 @@ public class Tree : MonoBehaviour
             //Increment the current rotation by this.rotation
             currentRotation = (currentRotation + this.rotation) % 360;
 
-            //increment the depth
-            depth++;
+            addedBranches = true;
         }
+        //increment the depth
+        if(addedBranches) depth++;
 
         branches = branches.Concat(newBranches).ToList();
     }
+
+    /*Mesh GenerateMesh(Branch branch)
+    {
+        var mesh = branch.mesh;
+
+        var vertices = mesh.vertices;
+
+        var triangles = mesh.triangles;
+
+        if (!branch.isLeaf)
+        {
+            var meshA = GenerateMesh(branch.childA);
+            var meshB = GenerateMesh(branch.childB);
+
+            var verticesA = meshA.vertices;
+            //verticesA = verticesA.Select(x => x + branch.growth).ToArray();
+
+            var trianglesA = meshA.triangles;
+            trianglesA = trianglesA.Select(x => x + mesh.vertices.Length).ToArray();
+
+            var verticesB = meshB.vertices;
+            //verticesB = verticesB.Select(x => x + branch.childB.position).ToArray();
+
+            var trianglesB = meshB.triangles;
+            trianglesB = trianglesB.Select(x => x + mesh.vertices.Length + meshA.vertices.Length).ToArray();
+
+            vertices = vertices.Concat(verticesA).Concat(verticesB).ToArray();
+            triangles = triangles.Concat(trianglesA).Concat(trianglesB).ToArray();
+        }
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+
+        return mesh;
+    }*/
+
+
 }

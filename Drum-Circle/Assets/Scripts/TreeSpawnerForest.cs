@@ -12,6 +12,9 @@ public class TreeSpawnerForest : MonoBehaviour
 
     public GameObject treeObject;
     public float treeScale;
+    public GameObject staticTreeObject;
+    public GameObject growingTreeObject;
+    public bool includeGrowingTrees = false;
     public float minSeperation =1;
     private List<List<GameObject>> trees;
     private int playerCount =0;
@@ -73,11 +76,20 @@ public class TreeSpawnerForest : MonoBehaviour
         else return false;
     }
 
-    public void spawnTreeAtLocation(int playerNo, Vector2 location)
+    public void spawnTreeAtLocation(int playerNo, Vector2 location, bool growing)
     {
         Vector3 treePos = new Vector3(location.x, Terrain.activeTerrain.SampleHeight(new Vector3(location.x, 0, location.y)), location.y);
-        GameObject newTree = Instantiate(treeObject, treePos, transform.rotation);
-        newTree.transform.localScale *= treeScale;
+        GameObject newTree;
+        if(growing)
+        {
+            newTree = Instantiate(growingTreeObject, treePos, transform.rotation);
+        } 
+        else
+        {
+            newTree = Instantiate(treeObject, treePos, transform.rotation);
+            newTree.transform.localScale *= treeScale;
+        }
+
         trees[playerNo-1].Add(newTree);
         Debug.Log("spawned tree at " + treePos);
     }
@@ -108,8 +120,16 @@ public class TreeSpawnerForest : MonoBehaviour
                     if (!treeTooClose)
                     {
                         //take randomised vector2 tree position (x,z) and find terrain height at that coordinate to form full (x,y,z) coordinate
-                        spawnTreeAtLocation(playerNo, treeLocation);
-                        invalidLocation = false;
+                        Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
+                        if (includeGrowingTrees)
+                        {
+                            spawnTreeAtLocation(playerNo, treeLocation, Random.Range(0, 10) > 5);
+                            invalidLocation = false;
+                        }
+                        else{
+                            spawnTreeAtLocation(playerNo, treeLocation, false);
+                            invalidLocation = false;
+                        }
                     }
                 }
 

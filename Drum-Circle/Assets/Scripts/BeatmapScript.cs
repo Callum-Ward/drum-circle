@@ -176,7 +176,7 @@ public class BeatmapScript : MonoBehaviour
                             
                             if(treeStage == 0)
                             {
-                                treeSpawner.spawnTreeAtLocation(1, new Vector2(298, 38));
+                                treeSpawner.spawnTreeAtLocation(1, new Vector2(298, 38), true);
                                 treeStage += 1;
                             }
                             else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
