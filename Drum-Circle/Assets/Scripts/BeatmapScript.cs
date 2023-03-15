@@ -19,9 +19,9 @@ public class BeatmapScript : MonoBehaviour
 
     public int glowStage = 0;
     public float glowPower = 5.0f;
-    private float glowRate = 0.4f;
+    private float glowRate = 0.1f;
     private int treeStage = 0;
-    private int treeScoreRatio = 2000;
+    private int treeScoreRatio = 1500;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -32,6 +32,7 @@ public class BeatmapScript : MonoBehaviour
     public MessageListener messageListener;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
+    public TreeManager treeManager;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -52,6 +53,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
+        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
@@ -68,6 +70,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager.BeatDelete(queueIndex, true);
         audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
+        treeManager.SetHitStatus(true);
     }
 
     private void registerMiss(int queueIndex, MoveBeat beat)
@@ -80,6 +83,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
+        treeManager.SetHitStatus(false);
     }
 
     //Coroutine function for delaying hit-window
@@ -104,8 +108,16 @@ public class BeatmapScript : MonoBehaviour
             renderer.SetPropertyBlock(block);*/
         try{
             MeshRenderer renderer;
+
             //Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
-            //Shader.Find("Shader Graphs/glowing shader").SetGobalFloat("_Power", glowPower);
+            //newMaterial.SetFloat("_Power", glowPower);
+
+           /* IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "branch");
+            foreach(GameObject obj in glowingLayers)
+            {
+                renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.SetFloat("_Power", glowPower);
+            }*/
 
             IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "glowingLayer");
             foreach(GameObject obj in glowingLayers)
@@ -176,7 +188,7 @@ public class BeatmapScript : MonoBehaviour
                             
                             if(treeStage == 0)
                             {
-                                treeSpawner.spawnTreeAtLocation(1, new Vector2(298, 38), true);
+                                treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
                                 treeStage += 1;
                             }
                             else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
