@@ -528,6 +528,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.08519113
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.022281647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.949525
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.3136915
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1116833479919123615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -36.564
+      objectReference: {fileID: 0}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: mesh
       value: 

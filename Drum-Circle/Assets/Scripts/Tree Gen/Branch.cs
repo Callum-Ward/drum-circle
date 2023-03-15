@@ -43,7 +43,7 @@ public class Branch : MonoBehaviour
 
     private void Update()
     {
-        if ( !isLeaf ) Object.Destroy( leaves );
+        if ( !isLeaf ) leaves.SetActive(false);
     }
 
     /*Set up branch parameters*/
@@ -58,6 +58,9 @@ public class Branch : MonoBehaviour
 
         isLeaf = true;
         isFullyGrown = false;
+
+        //SetLeaves();
+        leaves.transform.rotation = Quaternion.LookRotation(growth);
 
         Place(tree);
     }
@@ -98,7 +101,7 @@ public class Branch : MonoBehaviour
 
         if (!isLeaf) return;
 
-        AddLeaves();
+        SetLeaves();
 
         if(!isFullyGrown)
         {
@@ -190,7 +193,7 @@ public class Branch : MonoBehaviour
 
     }
 
-    void AddLeaves()
+    void SetLeaves()
     {
         leaves.transform.parent = this.transform;
         leaves.transform.position = position + length / maxLength * growth;
