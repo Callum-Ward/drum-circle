@@ -35,10 +35,15 @@ public class TreeSpawnerForest : MonoBehaviour
 
         if (playerCount == 3)
         {
-            spawnRadius = 76f;
+            /*spawnRadius = 76f;
             spawnLocations.Add(new Vector2(132, 243));
             spawnLocations.Add(new Vector2(286, 243));
-            spawnLocations.Add(new Vector2(378, 120));
+            spawnLocations.Add(new Vector2(378, 120));*/
+
+            spawnRadius = 15f;
+            spawnLocations.Add(new Vector2(295, 30));
+            spawnLocations.Add(new Vector2(302, 38));
+            spawnLocations.Add(new Vector2(309, 30));
 
         }
         else if (playerCount == 2)
@@ -68,6 +73,15 @@ public class TreeSpawnerForest : MonoBehaviour
         else return false;
     }
 
+    public void spawnTreeAtLocation(int playerNo, Vector2 location)
+    {
+        Vector3 treePos = new Vector3(location.x, Terrain.activeTerrain.SampleHeight(new Vector3(location.x, 0, location.y)), location.y);
+        GameObject newTree = Instantiate(treeObject, treePos, transform.rotation);
+        newTree.transform.localScale *= treeScale;
+        trees[playerNo-1].Add(newTree);
+        Debug.Log("spawned tree at " + treePos);
+    }
+
 
     public void spawnTree(int playerNo, int treeCount)
     {
@@ -94,12 +108,8 @@ public class TreeSpawnerForest : MonoBehaviour
                     if (!treeTooClose)
                     {
                         //take randomised vector2 tree position (x,z) and find terrain height at that coordinate to form full (x,y,z) coordinate
-                        Vector3 treePos = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)), treeLocation.y);
-                        GameObject newTree = Instantiate(treeObject, treePos, transform.rotation);
-                        newTree.transform.localScale *= treeScale;
-                        trees[playerNo-1].Add(newTree);
+                        spawnTreeAtLocation(playerNo, treeLocation);
                         invalidLocation = false;
-                        Debug.Log("spawned tree at " + treePos);
                     }
                 }
 

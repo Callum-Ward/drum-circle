@@ -24,10 +24,14 @@ public class BeatManager : MonoBehaviour
     {
         for(int i = 0; i < playerCount * 2; i++)
         {
-            GameObject beat = beatQueues[i].Peek();
-            if (beat.GetComponent<MoveBeat>().delete == true)
-            {
-                BeatDelete(i, false);
+            try{
+                GameObject beat = beatQueues[i].Peek();
+                if (beat.GetComponent<MoveBeat>().delete == true)
+                {
+                    BeatDelete(i, false);
+                }
+            } catch {
+                
             }
         }
     }
