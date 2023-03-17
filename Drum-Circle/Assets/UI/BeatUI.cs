@@ -71,14 +71,14 @@ public class BeatUI : MonoBehaviour
             for(int j = 0; j < 3; j++) {
                 tags[i][j].visible = false;
             }
-            lanes[i].visible = false;
-            lanes[i+3].visible = false;
+            // lanes[i].visible = false;
+            // lanes[i+3].visible = false;
         }
 
         beatSpawnUI = GetComponent<UIDocument>();
 
         TemplateContainer beatSpawnContainer = beatSpawnTemplate.Instantiate();
-        beatSpawnUI.rootVisualElement.Q("Lane").Add(beatSpawnContainer);
+        beatSpawnUI.rootVisualElement.Q("Lane1L").Add(beatSpawnContainer);
     }
 
     public void setPlayerCount(int number) {
@@ -107,12 +107,16 @@ public class BeatUI : MonoBehaviour
                 for (int j = 0; j < 3; j++) {
                     tags[j][i].visible = true;
                     tags[j][i].style.left = screenWidth*(i+1) /(playerNo+1) - (tags[j][i].resolvedStyle.width/2);
-                    tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*10;
+                    tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*5;
                 }
             lanes[i].visible = true;
-            lanes[i].style.left = screenWidth*(i+1) / (playerNo+1) - 3* (lanes[i].resolvedStyle.width/2);
+            lanes[i].style.left = screenWidth*(i+1) / (playerNo+1) - 3*(lanes[i].resolvedStyle.width/2);
+            lanes[i].style.height = screenHeight;
+            lanes[i].style.top = 0;
             lanes[i+3].visible = true;
-            lanes[i+3].style.left = screenWidth*(i+1) / (playerNo+1) + (lanes[i].resolvedStyle.width/2);
+            lanes[i+3].style.left = screenWidth*(i+1) / (playerNo+1) + (lanes[i+3].resolvedStyle.width/2);
+            lanes[i+3].style.height = screenHeight;
+            lanes[i+3].style.top = 0;
             } 
         }
     }
@@ -127,12 +131,13 @@ public class BeatUI : MonoBehaviour
             ctest++;
             mtest = Mathf.FloorToInt(ctest/100);
         }
+        
+        Debug.Log(lanes[0].resolvedStyle.width);
     
-    if(counter == 50) {
-        counter = 0;
-        // spawn(screenWidth/2, 1, 1);
-    }
-    else
-        counter++;
-    }
+        if(counter == 50) {
+            counter = 0;
+        }
+        else
+            counter++;
+        }
 }
