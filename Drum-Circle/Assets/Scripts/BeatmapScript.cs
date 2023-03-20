@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System;
 using UnityEngine;
 
@@ -12,22 +13,32 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
+    private int[] drumInputStrengths;
     private bool hitL = false;
     private bool hitR = false;
+
+    public int glowStage = 0;
+    public float glowPower = 5.0f;
+    private float glowRate = 0.1f;
+    private int treeStage = 0;
+    private int treeScoreRatio = 1500;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
+    public TreeSpawnerForest treeSpawner;
     public MessageListener messageListener;
+    public TutorialScript tutorialScript;
     public BeatUI beatUI;
+    public TreeManager treeManager;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
     public bool tutorial = false;
 
-    SerialPort data_stream = new SerialPort("COM3", 19200);
+    SerialPort data_stream = new SerialPort("COM3", 9600);
 
     public int playerCount = 3;
 
@@ -38,48 +49,19 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawnerForest>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
+        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
         beatUI.setPlayerCount(this.playerCount);
-        
-    }
+        treeSpawner.setPlayers(this.playerCount);
 
-    //Function for spawning beats based on passed variable
-    private void spawnOnTime(float time)
-    {
-            int index = (int)(Math.Round(time, 2) * 100);
-            List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
-    
-            if(index < timestampedOnsets.Count){
-                int lb = index  < beatmapWidth ? 0 : index - beatmapWidth;
-                int ub = index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth;
-                for(int i = lb; i <= ub; i++)
-                {
-                    if(timestampedOnsets[i].isBeat)
-                    {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawner.spawn(j + 1, 1, size);
-                        }
-                        timestampedOnsets[i].isBeat = false;
-                        break;
-                    }
-                    if(timestampedOnsets[i].isOnset)
-                        {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawner.spawn(j + 1, 0, size);
-                        }
-                        timestampedOnsets[i].isOnset = false;
-                        break;
-                    }
-                }
-            } 
+        drumInputStrengths = new int[this.playerCount*2];
+        
     }
 
     private void registerHit(int queueIndex, MoveBeat beat)
@@ -88,6 +70,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager.BeatDelete(queueIndex, true);
         audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
+        treeManager.SetHitStatus(true);
     }
 
     private void registerMiss(int queueIndex, MoveBeat beat)
@@ -100,6 +83,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
+        treeManager.SetHitStatus(false);
     }
 
     //Coroutine function for delaying hit-window
@@ -114,6 +98,122 @@ public class BeatmapScript : MonoBehaviour
         tutorial = start;
     }
 
+    private void handleGlow()
+    {
+         /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
+            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
+            MaterialPropertyBlock block = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(block);
+            block.c
+            renderer.SetPropertyBlock(block);*/
+        try{
+            MeshRenderer renderer;
+
+            //Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
+            //newMaterial.SetFloat("_Power", glowPower);
+
+           /* IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "branch");
+            foreach(GameObject obj in glowingLayers)
+            {
+                renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.SetFloat("_Power", glowPower);
+            }*/
+
+            IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "glowingLayer");
+            foreach(GameObject obj in glowingLayers)
+            {
+                renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.SetFloat("_Power", glowPower);
+            }
+        } catch {
+
+        }
+        
+        if(glowStage == 3)
+        {
+            glowPower += glowRate * 0.5f;
+            if(glowPower >= 5.0f){
+                glowStage = 1;
+            }
+        }
+        else if(glowStage == 2)
+        {
+            glowPower -= glowRate;
+            if(glowPower <= 1.0f){
+                glowStage += 1;
+            }
+        }
+    }
+
+    private void handleDrumInput()
+    {
+        
+        //Checks if there was an input in the data stream
+        for(int i = 0; i < playerCount*2; i++)
+        {
+            drumInputStrengths[i] = 0;
+        }
+        
+        string message = messageListener.message;
+        if (message != null)
+        {
+            sections = message.Split(":");
+            //Debug.Log(message);
+            if (sections[0] == "on")
+            {
+                drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
+            }
+            messageListener.message = null;
+        }
+    }
+
+    private void checkCorrectDrumHit()
+    {
+        for(int i = 0; i < playerCount; i++)
+            {
+                //Register left drum hit and perform code
+                if ((drumInputStrengths[i*2] > 0 || Input.GetKeyDown(KeyCode.LeftArrow)))
+                    if (beatManager.beatQueues[i * 2].Count > 0) {
+                        {
+                            try{
+                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
+                                beatHit((i*2), beatL);
+                            } catch {
+
+                            }            
+                            //Trigger start of glow process
+                            if(i % 2 == 0 && glowStage <= 1){   
+                                glowStage += 1;
+                            }
+                            
+                            if(treeStage == 0)
+                            {
+                                treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
+                                treeStage += 1;
+                            }
+                            else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
+                                treeStage += 1;
+                                treeSpawner.spawnTree(i+1, 2);
+                            }
+                        }
+                }
+
+                //Register right drum hit and perform code
+                if ((drumInputStrengths[i*2 + 1] > 0 || Input.GetKeyDown(KeyCode.RightArrow)))
+                {
+                    if (beatManager.beatQueues[i * 2 + 1].Count > 0)
+                    {
+                        try{
+                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
+                            beatHit((i*2+1), beatR);
+                        } catch {
+
+                        }
+                    }
+                }
+            }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -123,38 +223,19 @@ public class BeatmapScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Checks if there was an input in the data stream
-        hitL = false;
-        hitR = false;
-        
-        string message = messageListener.message;
-        if (message != null)
-        {
-            sections = message.Split(":");
-            if (sections[0] == "on")
-            {
-                if (sections[1] == "1")
-                {
-                    hitL = true;
-                }
-                else if (sections[1] == "0")
-                {
-                    hitR= true;
-                }
-                
-            }
-            messageListener.message = null;
-        }
+        //13
+        handleGlow();
+        handleDrumInput();
 
         //Start the timer
-        if (timer <= delay && audioManager.activeSource == null)
+        if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            spawnOnTime(timer);
+            beatSpawner.spawnOnTime(timer);
             timer += Time.deltaTime;
             beatUI.startLevelUI();
         }
         //Play all layers of music simultaneously
-        else if(audioManager.activeSource == null)
+        else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
             audioManager.Play("drums", audioAnalyser);
             audioManager.Play("layer1", null);
@@ -162,33 +243,13 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Volume("layer2", 0f);
         }
         //Drum hit functionality
-        else
+        else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+                beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
             }
 
-            for(int i = 0; i < playerCount; i++)
-            {
-                //Register left drum hit and perform code
-                if ((hitL == true || Input.GetKeyDown(KeyCode.LeftArrow)))
-                    if (beatManager.beatQueues[i * 2].Count > 0) {
-                        {
-                            var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
-                            beatHit((i*2), beatL);
-                        }
-                }
-
-                //Register right drum hit and perform code
-                if ((hitR == true || Input.GetKeyDown(KeyCode.RightArrow)))
-                {
-                    if (beatManager.beatQueues[i * 2 + 1].Count > 0)
-                    {
-                        var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
-                        beatHit((i*2+1), beatR);
-                    }
-                }
-            }
+            checkCorrectDrumHit();
         }
     }
 

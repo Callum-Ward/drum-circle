@@ -82,7 +82,6 @@ public class drumBall : MonoBehaviour
             print(e.ToString());
 
         }
-        
 
 
 
