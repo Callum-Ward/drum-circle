@@ -60,8 +60,8 @@ MonoBehaviour:
   maxLength: 1000
   maxWidth: 0
   mesh: {fileID: 0}
-  faces: 10
-  segments: 3
+  faces: 4
+  segments: 4
 --- !u!120 &2915430925563637601
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -281,6 +281,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: fd8b0a1d1552145e487e1c1c097c4d48, type: 3}
       propertyPath: m_Name
       value: complete cluster
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fd8b0a1d1552145e487e1c1c097c4d48, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8b0a1d1552145e487e1c1c097c4d48, type: 3}

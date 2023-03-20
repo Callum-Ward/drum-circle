@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8981233171844227533}
   - component: {fileID: 8981233171844227532}
   m_Layer: 0
-  m_Name: Tree
+  m_Name: tree
   m_TagString: Procedural Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,8 +47,8 @@ MonoBehaviour:
   branchObj: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
   length: 3
   width: 0.07
-  orientation: 43
+  orientation: 51.4
   rotation: 137.5
   lengthDecay: 0.35
-  directionNoise: 0.2
+  directionNoise: 0.433
   maxDepth: 8
