@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Drum-Circle/Assets/Terrain Assets.meta
+guid: 8e058ffd882279b4782ec6138e9431a9
+========
 guid: 5b58ac0e202d449bdb01c04b67614b54
+>>>>>>>> terrain:Drum-Circle/Assets/leaves for procedural tree growth.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

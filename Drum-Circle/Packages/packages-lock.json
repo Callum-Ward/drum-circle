@@ -16,6 +16,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "1.17.7",
       "depth": 0,
@@ -155,7 +161,7 @@
       }
     },
     "com.unity.terrain-tools": {
-      "version": "4.0.3",
+      "version": "4.0.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
