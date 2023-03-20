@@ -11,6 +11,8 @@ using System.Net.Security;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
+using UnityEngine.Splines;
+using static UnityEditor.PlayerSettings;
 
 public class Tree : MonoBehaviour
 {
@@ -74,6 +76,21 @@ public class Tree : MonoBehaviour
     {
         return RandomNormal(-range, range);
     }
+    
+    BezierCurve GetBranchCurve(Vector3 position, Vector3 growth)
+    {
+        var cp1_xangle = RandomNormal(directionNoise) * 45;
+        var cp1_zangle = RandomNormal(directionNoise) * 45;
+        var cp1 = (position + growth) * RandomNormal(0f, 0.66f);
+        cp1 = Quaternion.Euler(cp1_xangle, 0, cp1_zangle) * cp1;
+
+        var cp2_xangle = RandomNormal(directionNoise) * 45;
+        var cp2_zangle = RandomNormal(directionNoise) * 45;
+        var cp2 = (growth - position) * RandomNormal(0f, 0.66f);
+        cp2 = Quaternion.Euler(cp2_xangle, 0, cp2_zangle) * cp2;
+
+        return new BezierCurve(position, cp1, cp2, growth);
+    }
 
     /*Initialise new tree and set the first branch*/
     void InitialiseTree()
@@ -95,7 +112,9 @@ public class Tree : MonoBehaviour
         var root = Instantiate(branchObj);
         var rootBranch = root.GetComponent<Branch>();
 
-        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width);
+        var curve = GetBranchCurve(pos, growth);
+
+        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve);
 
         this.root = rootBranch;
         branches.Add(root);
@@ -155,6 +174,7 @@ public class Tree : MonoBehaviour
 
             var growthA = Quaternion.Euler(noiseA) * basisA;
 
+            var curveA = GetBranchCurve(posA, growthA);
 
             //Setup branch B
 
@@ -173,6 +193,8 @@ public class Tree : MonoBehaviour
 
             var growthB = Quaternion.Euler(noiseB) * basisB;
 
+            var curveB = GetBranchCurve(posB, growthB);
+
 
             //Instantiate the branches
             var a = Instantiate(branchObj);
@@ -186,8 +208,8 @@ public class Tree : MonoBehaviour
             //Set them as the current branch's children
             branch.SetChildren(branchA, branchB);
 
-            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width);
-            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width);
+            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width, curveA);
+            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width, curveB);
 
             newBranches.Add(a);
             newBranches.Add(b);
