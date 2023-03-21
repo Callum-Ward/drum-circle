@@ -17,11 +17,15 @@ public class BeatmapScript : MonoBehaviour
     private bool hitL = false;
     private bool hitR = false;
 
-    public int glowStage = 0;
+    public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
-    private float glowRate = 0.1f;
+    private float glowRate = 1.1f;
     private int treeStage = 0;
     private int treeScoreRatio = 1500;
+
+    private float windIncreaseRate = 0.05f;
+    private float windDecreaseRate = 0.001f;
+    public float windFactor = 0.1f;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -30,6 +34,7 @@ public class BeatmapScript : MonoBehaviour
     public RhythmSpawner beatSpawner;
     public TreeSpawnerForest treeSpawner;
     public MessageListener messageListener;
+    public Terrain terrain;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
     public TreeManager treeManager;
@@ -49,6 +54,7 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawnerForest>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
@@ -61,6 +67,10 @@ public class BeatmapScript : MonoBehaviour
         treeSpawner.setPlayers(this.playerCount);
 
         drumInputStrengths = new int[this.playerCount*2];
+
+        terrain.terrainData.wavingGrassSpeed = 0.5f;
+        terrain.terrainData.wavingGrassStrength = 0.5f;
+        terrain.terrainData.wavingGrassAmount = 0.5f;
         
     }
 
@@ -98,7 +108,7 @@ public class BeatmapScript : MonoBehaviour
         tutorial = start;
     }
 
-    private void handleGlow()
+    private void handleTerrainBeatResponse()
     {
          /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
             MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
@@ -128,19 +138,24 @@ public class BeatmapScript : MonoBehaviour
         } catch {
 
         }
+
+        terrain.terrainData.wavingGrassStrength = windFactor;
+        terrain.terrainData.wavingGrassSpeed = windFactor;
+        //terrain.terrainData.wavingGrassAmount = windFactor;
         
-        if(glowStage == 3)
+        if(terrainBeatStage == 3)
         {
-            glowPower += glowRate * 0.5f;
-            if(glowPower >= 5.0f){
-                glowStage = 1;
+            glowPower += glowRate * 1.5f;
+            windFactor -= windDecreaseRate;
+            if(windFactor <= 0.1f){
+                terrainBeatStage = 1;
             }
         }
-        else if(glowStage == 2)
+        else if(terrainBeatStage == 2)
         {
-            glowPower -= glowRate;
-            if(glowPower <= 1.0f){
-                glowStage += 1;
+            windFactor += windIncreaseRate;
+            if(windFactor >= 0.8f){
+                terrainBeatStage += 1;
             }
         }
     }
@@ -182,8 +197,8 @@ public class BeatmapScript : MonoBehaviour
 
                             }            
                             //Trigger start of glow process
-                            if(i % 2 == 0 && glowStage <= 1){   
-                                glowStage += 1;
+                            if(i % 2 == 0 && terrainBeatStage <= 1){   
+                                terrainBeatStage += 1;
                             }
                             
                             if(treeStage == 0)
@@ -224,7 +239,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
         //13
-        handleGlow();
+        handleTerrainBeatResponse();
         handleDrumInput();
 
         //Start the timer
