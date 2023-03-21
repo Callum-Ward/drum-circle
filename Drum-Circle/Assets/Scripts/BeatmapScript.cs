@@ -31,6 +31,8 @@ public class BeatmapScript : MonoBehaviour
     private float windDecreaseRate = 0.001f;
     public float windFactor = 0.1f;
 
+    private BeatTransfer beatTransfer;
+
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
     public AudioManager audioManager;
@@ -76,6 +78,8 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassSpeed = 0.5f;
         terrain.terrainData.wavingGrassStrength = 0.5f;
         terrain.terrainData.wavingGrassAmount = 0.5f;
+
+        beatTransfer = new BeatTransfer(0, 1);
         
     }
 
@@ -111,6 +115,25 @@ public class BeatmapScript : MonoBehaviour
 
     public void StartTutorial(bool start) {
         tutorial = start;
+    }
+
+    private void setEnvironmentTriggers(int drumIndex)
+    {
+        if(drumIndex % 2 == 0 && terrainBeatStage <= 1)
+        {   
+            terrainBeatStage += 1;
+        }
+                            
+        if(treeStage == 0)
+        {
+            treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
+            treeStage += 1;
+        }
+        else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage)
+        {
+            treeStage += 1;
+            treeSpawner.spawnTree(drumIndex + 1, 2);
+        }
     }
 
     private void handleTerrainBeatResponse()
@@ -228,61 +251,50 @@ public class BeatmapScript : MonoBehaviour
         };
     }
 
-    private void checkCorrectDrumHit()
+    private bool checkCorrectDrumHit(int drumIndex)
+    {
+        if (beatManager.beatQueues[drumIndex].Count > 0) 
+        {
+            try{
+                var beatL = beatManager.beatQueues[drumIndex].Peek().GetComponent<MoveBeat>();
+                beatHit((drumIndex), beatL);
+                return true;
+            } catch {
+            }
+        }
+        return false;
+    }
+
+    private void checkDrumHit()
     {
         for(int i = 0; i < playerCount; i++)
             {
                 //Register left drum hit and perform code
-                if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow))){
-                    if (beatManager.beatQueues[i * 2].Count > 0) 
-                        {
-                            try{
-                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
-                                beatHit((i*2), beatL);
-                            } catch {
-
-                            }            
-                            //Trigger start of glow process
-                            if(i % 2 == 0 && terrainBeatStage <= 1){   
-                                terrainBeatStage += 1;
-                            }
-                            
-                            if(treeStage == 0)
-                            {
-                                treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
-                                treeStage += 1;
-                            }
-                            else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
-                                treeStage += 1;
-                                treeSpawner.spawnTree(i+1, 2);
-                            }
-                        }
-
-                    if(midiInputVelocities[i*2] > 0.0f)
+                if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
+                {
+                    if (checkCorrectDrumHit(i*2))
                     {
-                        midiInputVelocities[i*2] = 0.0f;
+                        setEnvironmentTriggers(i*2);
                     }
-
-
+                    if (beatTransfer != null)
+                    {
+                        beatTransfer.TransferBeat(beatSpawner, i, 0, 0.0f);
+                    }
+                    midiInputVelocities[i * 2] = 0.0f;
                 }
 
                 //Register right drum hit and perform code
                 if ((drumInputStrengths[i*2 + 1] > 0 || midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
-                    if (beatManager.beatQueues[i * 2 + 1].Count > 0)
+                    if (checkCorrectDrumHit(i*2 + 1))
                     {
-                        try{
-                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
-                            beatHit((i*2+1), beatR);
-                        } catch {
-
-                        }
+                        // Enviroment triggers etc. right drum hit on target
                     }
-
-                    if(midiInputVelocities[i*2 + 1] > 0.0f)
+                    if (beatTransfer != null)
                     {
-                        midiInputVelocities[i*2 + 1] = 0.0f;
+                        beatTransfer.TransferBeat(beatSpawner, i, 1, 0.0f);
                     }
+                    midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
             }
     }
@@ -320,22 +332,34 @@ public class BeatmapScript : MonoBehaviour
         else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+                bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+
+                if(hasSpawned && beatTransfer != null)
+                {
+                    beatTransfer = null;
+                }
             }
 
-            checkCorrectDrumHit();
+            checkDrumHit();
         }
     }
 
     void beatHit(int queueNo, MoveBeat beatSide) {
         if (beatSide.window == true)
-            {
-                registerHit(queueNo, beatSide);
-            }
-        else
+        {
+            registerHit(queueNo, beatSide);
+        }
+        else if (beatTransfer != null)
+        {
+            if(beatTransfer.getProvider() != queueNo / 2)
             {
                 registerMiss(queueNo, beatSide);
             }
+        }
+        else
+        {
+            registerMiss(queueNo, beatSide);
+        }
     }
 }
 

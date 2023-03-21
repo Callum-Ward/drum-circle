@@ -103,7 +103,7 @@ public class RhythmSpawner : MonoBehaviour
     }
 
         //Function for spawning beats based on passed variable
-    public void spawnOnTime(float time)
+    public bool spawnOnTime(float time)
     {
             int index = (int)(Math.Round(time, 2) * 100);
             List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
@@ -121,7 +121,7 @@ public class RhythmSpawner : MonoBehaviour
                             spawn(j + 1, 1, size);
                         }
                         timestampedOnsets[i].isBeat = false;
-                        break;
+                        return true;
                     }
                     if(timestampedOnsets[i].isOnset)
                         {
@@ -131,10 +131,11 @@ public class RhythmSpawner : MonoBehaviour
                             spawn(j + 1, 0, size);
                         }
                         timestampedOnsets[i].isOnset = false;
-                        break;
+                        return true;
                     }
                 }
             } 
+            return false;
     }
 
     //Coroutine function for delaying hit-window
