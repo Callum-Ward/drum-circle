@@ -4,6 +4,8 @@ using System.IO.Ports;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Layouts;
 
 public class BeatmapScript : MonoBehaviour
 {
@@ -13,7 +15,9 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
+    private int noteNumberOffset = 44;
     private int[] drumInputStrengths;
+    private float[] midiInputVelocities;
     private bool hitL = false;
     private bool hitR = false;
 
@@ -67,6 +71,7 @@ public class BeatmapScript : MonoBehaviour
         treeSpawner.setPlayers(this.playerCount);
 
         drumInputStrengths = new int[this.playerCount*2];
+        midiInputVelocities = new float[this.playerCount*2];
 
         terrain.terrainData.wavingGrassSpeed = 0.5f;
         terrain.terrainData.wavingGrassStrength = 0.5f;
@@ -182,13 +187,54 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
+    private void addMidiHandler()
+    {
+        InputSystem.onDeviceChange += (device, change) =>
+        {
+            if (change != InputDeviceChange.Added) return;
+
+            var midiDevice = device as Minis.MidiDevice;
+            if (midiDevice == null) return;
+
+            midiDevice.onWillNoteOn += (note, velocity) => {
+                // Note that you can't use note.velocity because the state
+                // hasn't been updated yet (as this is "will" event). The note
+                // object is only useful to specify the target note (note
+                // number, channel number, device name, etc.) Use the velocity
+                // argument as an input note velocity.
+                /* Debug.Log(string.Format(
+                    "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
+                    note.noteNumber,
+                    note.shortDisplayName,
+                    velocity,
+                    (note.device as Minis.MidiDevice)?.channel,
+                    note.device.description.product
+                )); */
+
+                midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
+            };
+
+            midiDevice.onWillNoteOff += (note) => {
+                /*Debug.Log(string.Format(
+                    "Note Off #{0} ({1}) ch:{2} dev:'{3}'",
+                    note.noteNumber,
+                    note.shortDisplayName,
+                    (note.device as Minis.MidiDevice)?.channel,
+                    note.device.description.product
+                ));
+
+                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];*/
+            };
+        };
+    }
+
     private void checkCorrectDrumHit()
     {
         for(int i = 0; i < playerCount; i++)
             {
                 //Register left drum hit and perform code
-                if ((drumInputStrengths[i*2] > 0 || Input.GetKeyDown(KeyCode.LeftArrow)))
-                    if (beatManager.beatQueues[i * 2].Count > 0) {
+                if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow))){
+                    if (beatManager.beatQueues[i * 2].Count > 0) 
                         {
                             try{
                                 var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
@@ -211,10 +257,17 @@ public class BeatmapScript : MonoBehaviour
                                 treeSpawner.spawnTree(i+1, 2);
                             }
                         }
+
+                    if(midiInputVelocities[i*2] > 0.0f)
+                    {
+                        midiInputVelocities[i*2] = 0.0f;
+                    }
+
+
                 }
 
                 //Register right drum hit and perform code
-                if ((drumInputStrengths[i*2 + 1] > 0 || Input.GetKeyDown(KeyCode.RightArrow)))
+                if ((drumInputStrengths[i*2 + 1] > 0 || midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
                     if (beatManager.beatQueues[i * 2 + 1].Count > 0)
                     {
@@ -225,6 +278,11 @@ public class BeatmapScript : MonoBehaviour
 
                         }
                     }
+
+                    if(midiInputVelocities[i*2 + 1] > 0.0f)
+                    {
+                        midiInputVelocities[i*2 + 1] = 0.0f;
+                    }
                 }
             }
     }
@@ -233,6 +291,7 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
+        addMidiHandler();
     }
 
     // Update is called once per frame
