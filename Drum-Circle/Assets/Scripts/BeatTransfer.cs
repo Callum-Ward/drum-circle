@@ -23,11 +23,19 @@ public class BeatTransfer {
         return this.provider;
     }
 
-    public void TransferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity)
+    public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity)
     {
         if(playerIndex == this.provider)
         {
             spawner.spawn(this.recipient + 1, 1 - drumIndex, 1);
         }
+    }
+
+    
+    public IEnumerator TransferWithDelay(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        this.transferBeat(spawner, playerIndex, drumIndex, velocity);
     }
 }

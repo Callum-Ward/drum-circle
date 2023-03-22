@@ -278,7 +278,7 @@ public class BeatmapScript : MonoBehaviour
                     }
                     if (beatTransfer != null)
                     {
-                        beatTransfer.TransferBeat(beatSpawner, i, 0, 0.0f);
+                        StartCoroutine(beatTransfer.TransferWithDelay(beatSpawner, i, 0, 0.0f, 1.0f));
                     }
                     midiInputVelocities[i * 2] = 0.0f;
                 }
@@ -292,7 +292,7 @@ public class BeatmapScript : MonoBehaviour
                     }
                     if (beatTransfer != null)
                     {
-                        beatTransfer.TransferBeat(beatSpawner, i, 1, 0.0f);
+                        StartCoroutine(beatTransfer.TransferWithDelay(beatSpawner, i, 1, 0.0f, 1.0f));
                     }
                     midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
@@ -332,7 +332,7 @@ public class BeatmapScript : MonoBehaviour
         else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+                bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, false);
 
                 if(hasSpawned && beatTransfer != null)
                 {

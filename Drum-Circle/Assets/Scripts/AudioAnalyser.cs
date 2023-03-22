@@ -6,6 +6,9 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
+using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
+
 public class AudioTimestamp {
     public bool isOnset;
     public bool isBeat;
@@ -18,12 +21,18 @@ public class TrackAnalysis {
     public List<AudioTimestamp> timestampedOnsets;
 }
 
+public class TrackMidi {
+    public MidiFile midiFile;
+    public TempoMap tempoMap;
+}
+
 public class AudioAnalyser : MonoBehaviour {
 
     public static AudioAnalyser instance;
 
     public string analysisFile;
     public TrackAnalysis activeAnalysis;
+    public TrackMidi activeMidi;
 
     public void loadTrackAnalysis(string name)
     {
@@ -41,6 +50,14 @@ public class AudioAnalyser : MonoBehaviour {
         this.activeAnalysis.timestampedOnsets = timestamps;
     }
 
+    public void loadMidiFile(string name)
+    {
+        string path = "../Audio/" + name + ".mid";
+        this.activeMidi = new TrackMidi();
+        this.activeMidi.midiFile = MidiFile.Read(path);
+        this.activeMidi.tempoMap = this.activeMidi.midiFile.GetTempoMap();
+    }
+
     // Awake is called before the Start method
     void Awake()
     {
@@ -54,5 +71,6 @@ public class AudioAnalyser : MonoBehaviour {
 
         DontDestroyOnLoad(gameObject);
         loadTrackAnalysis(this.analysisFile);
+        loadMidiFile("midi-test");
     }
 }
