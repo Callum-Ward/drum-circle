@@ -77,19 +77,19 @@ public class Tree : MonoBehaviour
         return RandomNormal(-range, range);
     }
     
-    BezierCurve GetBranchCurve(Vector3 position, Vector3 growth)
+    Curve GetBranchCurve(Vector3 start, Vector3 end)
     {
         var cp1_xangle = RandomNormal(directionNoise) * 45;
         var cp1_zangle = RandomNormal(directionNoise) * 45;
-        var cp1 = (position + growth) * RandomNormal(0f, 0.66f);
+        var cp1 = start + (start + end) * RandomNormal(0f, 0.66f);
         cp1 = Quaternion.Euler(cp1_xangle, 0, cp1_zangle) * cp1;
 
         var cp2_xangle = RandomNormal(directionNoise) * 45;
         var cp2_zangle = RandomNormal(directionNoise) * 45;
-        var cp2 = (growth - position) * RandomNormal(0f, 0.66f);
+        var cp2 = end + (start - end) * RandomNormal(0f, 0.66f);
         cp2 = Quaternion.Euler(cp2_xangle, 0, cp2_zangle) * cp2;
 
-        return new BezierCurve(position, cp1, cp2, growth);
+        return new Curve(start, cp1, cp2, end);
     }
 
     /*Initialise new tree and set the first branch*/
@@ -112,7 +112,11 @@ public class Tree : MonoBehaviour
         var root = Instantiate(branchObj);
         var rootBranch = root.GetComponent<Branch>();
 
-        var curve = GetBranchCurve(pos, growth);
+        var curve = GetBranchCurve(Vector3.zero, growth);
+        Debug.Log(curve.P0);
+        Debug.Log(curve.P1);
+        Debug.Log(curve.P2);
+        Debug.Log(curve.P3);
 
         rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve);
 
@@ -174,12 +178,14 @@ public class Tree : MonoBehaviour
 
             var growthA = Quaternion.Euler(noiseA) * basisA;
 
-            var curveA = GetBranchCurve(posA, growthA);
+            var curveA = GetBranchCurve(Vector3.zero, growthA);
+            var cp1 = (branch.growth - branch.curve.P2) * curveA.P1.magnitude;
+            curveA.P1 = cp1;
 
             //Setup branch B
 
             //the starting position of branch B is somewhere along the parent brnach
-            var posB = branch.position + branch.growth * RandomNormal(0, 1);
+            var posB = branch.position + branch.curve.GetPointAlongCurve(RandomNormal(0, 1));
 
             //the basis vector of branch B is at an angle from the parent specified by this.orientation
             //and is rotated around it by an angle specified by this.rotation
@@ -192,8 +198,8 @@ public class Tree : MonoBehaviour
             var noiseB = new Vector3(xangleB, 0, zangleB);
 
             var growthB = Quaternion.Euler(noiseB) * basisB;
-
-            var curveB = GetBranchCurve(posB, growthB);
+           
+            var curveB = GetBranchCurve(Vector3.zero, growthB);
 
 
             //Instantiate the branches

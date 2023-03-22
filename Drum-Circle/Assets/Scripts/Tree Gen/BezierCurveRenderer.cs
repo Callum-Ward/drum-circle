@@ -1,15 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class BezierCurveRenderer : MonoBehaviour
 {
     LineRenderer lr;
     float directionNoise = 1f;
+
+    Mesh mesh;
+    int[] triangles;
+    Vector3[] vertices;
 
     /*Returns random value between the min and max according to normal distribution*/
     float RandomNormal(float min = -1, float max = 1)
@@ -92,26 +100,23 @@ public class BezierCurveRenderer : MonoBehaviour
 
         float dSinceLastPoint = 0;
 
-        for (int i = 1; i < n; i++)
+        float t = 0;
+        while ( t <= 1)
         {
-            float t = 0;
-            while ( t <= 1)
-            {
-                t += (float)1 / n;
-                var pointOnCurve = EvaluateCurve(curve, t);
-                dSinceLastPoint += Vector3.Distance(lastPoint, pointOnCurve);
+            t += (float)1 / n;
+            var pointOnCurve = EvaluateCurve(curve, t);
+            dSinceLastPoint += Vector3.Distance(lastPoint, pointOnCurve);
                 
-                while ( dSinceLastPoint > spacing)
-                {
-                    float overshootD = dSinceLastPoint - spacing;
-                    Vector3 newEvenlySpacedPoint = pointOnCurve + (lastPoint - pointOnCurve).normalized * overshootD;
-                    points = points.Concat(new Vector3[] { newEvenlySpacedPoint }).ToArray();
-                    dSinceLastPoint = overshootD;
-                    lastPoint = newEvenlySpacedPoint;
-                }
-
-                lastPoint = pointOnCurve;
+            while ( dSinceLastPoint > spacing)
+            {
+                float overshootD = dSinceLastPoint - spacing;
+                Vector3 newEvenlySpacedPoint = pointOnCurve + (lastPoint - pointOnCurve).normalized * overshootD;
+                points = points.Concat(new Vector3[] { newEvenlySpacedPoint }).ToArray();
+                dSinceLastPoint = overshootD;
+                lastPoint = newEvenlySpacedPoint;
             }
+
+            lastPoint = pointOnCurve;
         }
 
         return points;
@@ -139,22 +144,118 @@ public class BezierCurveRenderer : MonoBehaviour
 
         return points[0];
     }
+
+    void GenerateMesh(Vector3[] points)
+    {
+        vertices = new Vector3[] { };
+        triangles = new int[] { };
+
+        int faces = 100;
+        float width = 0.2f;
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            var newVertices = new Vector3[faces];
+
+            Vector3 tangent;
+            Vector3 norm;
+
+            if (i == points.Length - 1)
+            {
+                tangent = points[i] - points[i - 1];
+                tangent = tangent.normalized;
+            }
+
+            else
+            {
+                tangent = points[i + 1] - points[i];
+                tangent = tangent.normalized;
+            }
+
+            norm = Vector3.Normalize(tangent - Vector3.up);
+
+            for (int j = 0; j < faces; j++)
+            {
+                var angle = (2 * Mathf.PI * j) / faces;
+                angle *= Mathf.Rad2Deg;
+
+                var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
+                vertex *= width;
+                Debug.Log(vertex.magnitude);
+                vertex += points[i];
+
+                newVertices[j] = vertex;
+            }
+
+            if (i > 0)
+            {
+                var rotatedNewVertices = new Vector3[faces];
+                var lastLayer = new Vector3[faces];
+                Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
+
+                int vertexMinD = 0;
+                float minD = Vector3.Distance(lastLayer[0], newVertices[0]);
+                for (int j = 1; j < faces; j++)
+                {
+                    if (Vector3.Distance(lastLayer[j], newVertices[0]) < minD)
+                    {
+                        minD = Vector3.Distance(lastLayer[j], newVertices[0]);
+                        vertexMinD = j;
+                    }
+                }
+                for (int j = 0; j < faces; j++)
+                {
+                    rotatedNewVertices[(j + vertexMinD) % faces] = newVertices[j];
+                }
+                vertices = vertices.Concat(rotatedNewVertices).ToArray();
+            }
+            else vertices = newVertices;
+        }
+
+
+
+        for (int i = 0; i< points.Length - 1; i++)
+        {
+            for (int j = 0; j < faces; j++)
+            {
+                var quad = new int[]
+                {
+                    i * faces + j,
+                    (j + 1) % faces + i * faces,
+                    (i + 1) * faces + j,
+
+                    (i + 1) * faces + j,
+                    (j + 1) % faces + i * faces,
+                    (j + 1) % faces + (i + 1) * faces
+                };
+
+                triangles = triangles.Concat(quad).ToArray();
+            }
+        }
+    }
+
         // Start is called before the first frame update
     void Start()
     {
         lr = GetComponent<LineRenderer>();
         lr.positionCount = 5;
 
+        mesh = GetComponent<MeshFilter>().mesh;
+
         var position = Vector3.zero;
         var growth = Vector3.up * 3;
         var curve = GetBranchCurve(position, growth);
 
-        var points = GetPointsAlongCurve(curve, 4);
+        var points = GetPointsAlongCurve(curve, 100);
+
+        GenerateMesh(points);
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
 
         for (int i = 0; i < 4; i++)
         {
             var p = points[i];
-            Debug.Log(p);
             lr.SetPosition(i, p);
         }
 
