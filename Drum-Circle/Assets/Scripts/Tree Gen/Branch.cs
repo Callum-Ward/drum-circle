@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
+using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
 
 public class Branch : MonoBehaviour
@@ -26,9 +27,10 @@ public class Branch : MonoBehaviour
     private float length;
     public float maxWidth;
     private float width;
-    private BezierCurve curve;
+    public Curve curve;
 
-    private Vector3[] pointsAlongCurve;
+    public Vector3[] controllPoints;
+    public Vector3[] pointsAlongCurve;
 
     private LineRenderer lr;
 
@@ -52,18 +54,24 @@ public class Branch : MonoBehaviour
 
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Vector3 growth, Vector3 basis, Vector3 position, 
-        float width, BezierCurve curve)
+        float width, Curve curve)
     {
         this.growth = growth;
         this.basis = basis;
         this.position = position;
 
-        maxLength = GetCurveLength(curve, segments);
+        maxLength = curve.GetCurveLength(segments);
         maxWidth = width;
 
         this.curve = curve;
-
-        pointsAlongCurve = GetPointsAlongCurve(segments);
+        controllPoints = new Vector3[]
+        {
+            curve.P0,
+            curve.P1,
+            curve.P2,
+            curve.P3
+        };
+        pointsAlongCurve = curve.GetPointsAlongCurve(segments);
 
         isLeaf = true;
         isFullyGrown = false;
@@ -76,7 +84,7 @@ public class Branch : MonoBehaviour
 
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Branch parent, Vector3 growth, Vector3 basis, Vector3 position,
-        float width, BezierCurve curve)
+        float width, Curve curve)
     {
         this.parent = parent;
 
@@ -132,120 +140,81 @@ public class Branch : MonoBehaviour
         }
     }
 
-    Vector3 EvaluateCubicCurve(Vector3 a, Vector3 b, Vector3 c, float t)
-    {
-        var p0 = Vector3.Lerp(a, b, t);
-        var p1 = Vector3.Lerp(b, c, t);
-        return Vector3.Lerp(p0, p1, t);
-    }
-
-    Vector3 EvaluateCurve(BezierCurve curve, float t)
-    {
-        var p0 = EvaluateCubicCurve(curve.P0, curve.P1, curve.P2, t);
-        var p1 = EvaluateCubicCurve(curve.P1, curve.P2, curve.P3, t);
-        return Vector3.Lerp(p0, p1, t);
-    }
-
-    float GetCurveLength(BezierCurve curve, int resolution)
-    {
-        float length = 0;
-        var lastPoint = curve.P0;
-        for (int i = 1; i <= resolution; i++)
-        {
-            float step = (float)i / (float)resolution;
-            var newPoint = EvaluateCurve(curve, step);
-            length += Vector3.Distance(lastPoint, newPoint);
-            lastPoint = newPoint;
-        }
-        return length;
-    }
-
-    Vector3[] GetPointsAlongCurve(int n)
-    {
-        float spacing = GetCurveLength(curve, n) / n;
-
-        var points = new Vector3[] { };
-        points = points.Concat(new Vector3[] { curve.P0 }).ToArray();
-
-        Vector3 lastPoint = points[0];
-
-        float dSinceLastPoint = 0;
-
-        float t = 0;
-        while (t <= 1)
-        {
-            var pointOnCurve = EvaluateCurve(curve, t);
-            t += (float)1 / n;
-            dSinceLastPoint += Vector3.Distance(lastPoint, pointOnCurve);
-
-            while (dSinceLastPoint > spacing)
-            {
-                float overshootD = dSinceLastPoint - spacing;
-                Vector3 newEvenlySpacedPoint = pointOnCurve + (lastPoint - pointOnCurve).normalized * overshootD;
-                points = points.Concat(new Vector3[] { newEvenlySpacedPoint }).ToArray();
-                dSinceLastPoint = overshootD;
-                lastPoint = newEvenlySpacedPoint;
-            }
-
-            lastPoint = pointOnCurve;
-        }
-  
-        if (points.Length < n + 1) points = points.Concat(new Vector3[] { curve.P3 }).ToArray();
-
-        if (points.Last().x != curve.P3.x || points.Last().y != curve.P3.y
-            || points.Last().z != curve.P3.z) points[points.Length - 1] = curve.P3;
-
-        return points;
-    }
-
     void GenerateMesh()
     {
         vertices = new Vector3[] { };
         triangles = new int[] { };
 
-        float endpoint = 0;
-        int meshSegments = 0;
-
-        while ( endpoint < length )
+        for (int i = 0; i < pointsAlongCurve.Length; i++)
         {
-            var tangent = pointsAlongCurve[meshSegments + 1] - pointsAlongCurve[meshSegments];
-            var orth = Vector3.Cross(tangent, basis).normalized;
+            var newVertices = new Vector3[faces];
+
+            Vector3 tangent;
+
+            if(i == pointsAlongCurve.Length - 1)
+            {
+                tangent = pointsAlongCurve[i] - pointsAlongCurve[i - 1];
+                tangent = tangent.normalized;
+            }
+            else
+            {
+                tangent = pointsAlongCurve[i + 1] - pointsAlongCurve[i];
+                tangent = tangent.normalized;
+            }
+
+            Vector3 norm = Vector3.Normalize(tangent - growth.normalized);
 
             for (int j = 0; j < faces; j++)
             {
-                var ang = (2 * Mathf.PI * j) / (faces - 1);
-                ang *= Mathf.Rad2Deg;
+                var angle = (2 * Mathf.PI * j) / faces;
+                angle *= Mathf.Rad2Deg;
 
-                var vertex = Quaternion.AngleAxis(ang, growth) * orth * width + pointsAlongCurve[meshSegments];
+                var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
+                vertex *= width;
+                vertex += pointsAlongCurve[i];
 
-                vertices = vertices.Concat(new Vector3[] {vertex}).ToArray();
+                newVertices[j] = vertex;
             }
 
-            endpoint += Vector3.Distance(pointsAlongCurve[meshSegments + 1], pointsAlongCurve[meshSegments]);
-            meshSegments++;
-        }
-
-        if (endpoint > length)
-        {
-            var tangent = pointsAlongCurve[meshSegments] - pointsAlongCurve[meshSegments + 1];
-            var orth = Vector3.Cross(tangent, basis).normalized;
-
-            float scale = 1 - ( (endpoint - length) / 
-                Vector3.Distance(pointsAlongCurve[meshSegments], pointsAlongCurve[meshSegments + 1]) );
-
-            for (int j = 0; j < faces; j++)
+            if ( i == 0 && (parent == null || 
+                (parent != null && parent.childB ==this) ) )
             {
-                var ang = (2 * Mathf.PI * j) / (faces - 1);
-                ang *= Mathf.Rad2Deg;
+                vertices = newVertices;
+            }
 
-                var vertex = Quaternion.AngleAxis(ang, pointsAlongCurve[meshSegments + 1]) * orth * width + 
-                        pointsAlongCurve[meshSegments + 1] * scale;
+            else
+            {
 
-                vertices = vertices.Concat(new Vector3[] { vertex }).ToArray();
+                var rotatedNewVertices = new Vector3[faces];
+                var lastLayer = new Vector3[faces];
+
+                if (i == 0 && parent != null && parent.childA == this)
+                {
+                    Array.Copy(parent.vertices, parent.vertices.Length - faces, newVertices, 0, faces);
+                    newVertices = newVertices.Select(x => x - parent.growth).ToArray();
+                }
+
+                else Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
+
+                int vertexMinD = 0;
+                float minD = Vector3.Distance(lastLayer[0], newVertices[0]);
+                for (int j = 1; j < faces; j++)
+                {
+                    if (Vector3.Distance(lastLayer[j], newVertices[0]) < minD)
+                    {
+                        minD = Vector3.Distance(lastLayer[j], newVertices[0]);
+                        vertexMinD = j;
+                    }
+                }
+                for(int j =0; j < faces; j++)
+                {
+                    rotatedNewVertices[(j + vertexMinD) % faces] = newVertices[j];
+                }
+                vertices = vertices.Concat(rotatedNewVertices).ToArray();
             }
         }
 
-        if (parent != null && parent.childA == this)
+        /*if (parent != null && parent.childA == this)
         {
             var lastPreviousLayer = new Vector3[faces];
 
@@ -267,11 +236,10 @@ public class Branch : MonoBehaviour
             {
                 vertices[j] = lastPreviousLayer[(j + vertexMinD) % faces];
             }
-        }
+        }*/
 
 
-        int i = 0;
-        do
+        for(int i = 0; i < segments; i++)
         {
             for (int j = 0; j < faces; j++)
             {
@@ -288,8 +256,7 @@ public class Branch : MonoBehaviour
 
                 triangles = triangles.Concat(quad).ToArray();
             }
-            i++;
-        } while (endpoint < length);
+        } 
     }
 
     void SetLeaves()
