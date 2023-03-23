@@ -52,7 +52,7 @@ public class Curve
 
     public Vector3[] GetPointsAlongCurve(int n)
     {
-        float spacing = GetCurveLength(n) / n;
+        float spacing = GetCurveLength(2 * n) / n;
 
         var points = new Vector3[] { };
         points = points.Concat(new Vector3[] { P0 }).ToArray();
@@ -80,7 +80,10 @@ public class Curve
             lastPoint = pointOnCurve;
         }
 
-        if (points.Length < n + 1) points = points.Concat(new Vector3[] { P3 }).ToArray();
+        while (points.Length < n + 1)
+        {
+            points = points.Concat(new Vector3[] { P3 }).ToArray();
+        }
         if (points.Last().x != P3.x || points.Last().y != P3.y
         || points.Last().z != P3.z) points[points.Length - 1] = P3;
         return points;

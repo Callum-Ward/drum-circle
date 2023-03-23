@@ -13,6 +13,7 @@ using UnityEngine.UIElements;
 using UnityEngine.XR;
 using UnityEngine.Splines;
 using static UnityEditor.PlayerSettings;
+using System.Security.Policy;
 
 public class Tree : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class Tree : MonoBehaviour
 
     [SerializeField] float length = 0;
     [Range(0.01f, 0.25f)] public float width = 1;
+
+    [HideInInspector] public float totalLength;
 
     [Range(0.0f, 90.0f)] public float orientation = 45.0f;
     [Range(0.0f, 180.0f)] public float rotation = 137.5f;
@@ -35,11 +38,14 @@ public class Tree : MonoBehaviour
     int depth = 1;
     float currentRotation = 0;
 
+    public int lod;
+
     Mesh mesh = null;
 
     private void Start()
     {
         //mesh = GetComponent<MeshFilter>().mesh;
+        lod = GetComponent<LOD>().lod;
         currentRotation = Random.Range(0, 360);
 
         InitialiseTree();
@@ -47,7 +53,7 @@ public class Tree : MonoBehaviour
 
     private void Update()
     {
-
+        lod = GetComponent<LOD>().lod;
     }
 
     /*Returns random value between the min and max according to normal distribution*/
@@ -113,10 +119,6 @@ public class Tree : MonoBehaviour
         var rootBranch = root.GetComponent<Branch>();
 
         var curve = GetBranchCurve(Vector3.zero, growth);
-        Debug.Log(curve.P0);
-        Debug.Log(curve.P1);
-        Debug.Log(curve.P2);
-        Debug.Log(curve.P3);
 
         rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve);
 
@@ -129,8 +131,11 @@ public class Tree : MonoBehaviour
         foreach( var br in branches )
         {
             var branch = br.GetComponent<Branch>();
+
             branch.Grow(scoreMul);
         }
+
+       //   CalculateTreeLength();
 
         /*var treeMesh = GenerateMesh(root);
         
@@ -159,8 +164,6 @@ public class Tree : MonoBehaviour
 
             //only fully grown leaf branches can grow new branches
             if ( !(branch.isLeaf && branch.isFullyGrown) ) continue;
-
-            branch.isLeaf = false;
 
 
             //Set up branch A
@@ -220,6 +223,8 @@ public class Tree : MonoBehaviour
             newBranches.Add(a);
             newBranches.Add(b);
 
+            branch.isLeaf = false;
+
             //Increment the current rotation by this.rotation
             currentRotation = (currentRotation + this.rotation) % 360;
 
@@ -229,6 +234,20 @@ public class Tree : MonoBehaviour
         if(addedBranches) depth++;
 
         branches = branches.Concat(newBranches).ToList();
+    }
+
+    void CalculateTreeLength()
+    {
+        var branch = root;
+        var length = root.length;
+
+        while(branch.childA != null)
+        {
+            branch = branch.childA;
+            length += branch.length;
+        }
+
+        totalLength = length;
     }
 
     /*Mesh GenerateMesh(Branch branch)
