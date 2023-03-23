@@ -31,8 +31,8 @@ public class TreeManager : MonoBehaviour
             {
                 var tree = t.GetComponent<Tree>();
 
-                if (Input.GetKey(KeyCode.Space)) tree.Grow(1);
                 if (Input.GetKeyDown(KeyCode.A)) tree.AddBranches();
+                if (Input.GetKey(KeyCode.Space)) tree.Grow(1);
             }
         }
 

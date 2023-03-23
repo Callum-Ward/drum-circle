@@ -679,11 +679,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: faces
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: segments
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2915430925563637601, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: m_Enabled
@@ -833,7 +833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8981233171844227532, guid: 126425d5ae6574a4088a83fc03fd3e74, type: 3}
       propertyPath: directionNoise
-      value: 0.241
+      value: 0.96
       objectReference: {fileID: 0}
     - target: {fileID: 8981233171844227533, guid: 126425d5ae6574a4088a83fc03fd3e74, type: 3}
       propertyPath: m_RootOrder

@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.Splines;
 using static UnityEngine.GraphicsBuffer;
@@ -11,67 +13,61 @@ using Object = UnityEngine.Object;
 
 public class Branch : MonoBehaviour
 {
+    private Tree tree;
     public GameObject leaves;
 
     public Branch parent = null;
     public Branch childA  = null;
     public Branch childB  = null;
-    public Vector3 growth;
-    public Vector3 basis;
-    public Vector3 position;
 
-    public bool isLeaf = true;
-    public bool isFullyGrown = false;
+    [HideInInspector] public Vector3 growth;
+    [HideInInspector] public Vector3 basis;
+    [HideInInspector] public Vector3 position;
 
-    public float maxLength;
-    private float length;
-    public float maxWidth;
-    private float width;
-    public Curve curve;
+    [HideInInspector] public bool isLeaf = true;
+    [HideInInspector] public bool isFullyGrown = false;
 
-    public Vector3[] controllPoints;
-    public Vector3[] pointsAlongCurve;
+    [HideInInspector] public float maxLength;
+    [HideInInspector] public float length;
+    [HideInInspector] private float widthMul;
+    [HideInInspector] public float maxWidth;
+    [HideInInspector] public float width;
+    [HideInInspector] public Curve curve;
 
-    private LineRenderer lr;
+    private Vector3[] pointsAlongCurve;
 
     public Mesh mesh;
-    public int faces;
-    public int segments;
+    //public int faces;
+    //public int segments;
 
     protected Vector3[] vertices = new Vector3[] { };
     private int[] triangles = new int[] { };
 
     private void Awake()
     {
-        lr = GetComponent<LineRenderer>();
         mesh = GetComponent<MeshFilter>().mesh;
+        //lod = GetComponent<LOD>();
     }
 
     private void Update()
     {
         if ( !isLeaf ) leaves.SetActive(false);
     }
-
+    
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Vector3 growth, Vector3 basis, Vector3 position, 
         float width, Curve curve)
     {
+        this.tree = tree.GetComponent<Tree>();
+
         this.growth = growth;
         this.basis = basis;
         this.position = position;
 
-        maxLength = curve.GetCurveLength(segments);
-        maxWidth = width;
+        maxLength = curve.GetCurveLength(100);
+        widthMul = width;
 
         this.curve = curve;
-        controllPoints = new Vector3[]
-        {
-            curve.P0,
-            curve.P1,
-            curve.P2,
-            curve.P3
-        };
-        pointsAlongCurve = curve.GetPointsAlongCurve(segments);
 
         isLeaf = true;
         isFullyGrown = false;
@@ -98,11 +94,6 @@ public class Branch : MonoBehaviour
         this.transform.position = position;
 
         length = 0;
-
-        lr.positionCount = 2;
-
-        lr.SetPosition(0, position);
-        lr.SetPosition(1, position);
     }
 
     /*Set the children of a brnach*/
@@ -117,33 +108,76 @@ public class Branch : MonoBehaviour
     {
         GetComponent<MeshRenderer>().enabled = true;
 
-        if (!isLeaf) return;
+        maxWidth = widthMul * LengthToEnd();
 
         SetLeaves();
 
         if(!isFullyGrown)
         {
-            length += maxLength / 1000 * scoreMul;
-            width = maxLength * maxWidth;
+            length += maxLength / 100 * scoreMul;
+            
+            width = length * maxWidth;
 
 
             if (length >= maxLength) isFullyGrown = true;
-
-            var endpoint = position + length / maxLength * growth;
-
-            lr.SetPosition(1, endpoint );
-
-            GenerateMesh();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.RecalculateNormals();
         }
+
+        int segments = 0;
+        int faces = 0;
+
+        switch (tree.lod)
+        {
+            case 0:
+                segments = 10;
+                faces = 16; 
+                break;
+            case 1:
+                segments = 6;
+                faces = 10;
+                break;
+            case 2:
+                segments = 3;
+                faces = 6;
+                break;
+            case 3:
+                segments = 2;
+                faces = 4;
+                break;
+        }
+
+        GenerateMesh(segments, faces);
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
     }
 
-    void GenerateMesh()
+    float LengthToEnd()
+    {
+        float lengthToEnd = length;
+        var branch = this;
+
+        while (branch.childA != null)
+        {
+            branch = branch.childA;
+            lengthToEnd += branch.length;
+        }
+
+        return lengthToEnd;
+    }
+
+    void GenerateMesh(int segments, int faces)
     {
         vertices = new Vector3[] { };
-        triangles = new int[] { };
+
+        pointsAlongCurve = curve.GetPointsAlongCurve(segments);
+
+        float minWidth = 0;
+        if (!isLeaf)
+        {
+            minWidth = childA.width;
+        }
+
+        if (pointsAlongCurve.Length != segments + 1) Debug.Log("not enough points");
 
         for (int i = 0; i < pointsAlongCurve.Length; i++)
         {
@@ -162,18 +196,29 @@ public class Branch : MonoBehaviour
                 tangent = tangent.normalized;
             }
 
+            float segmentWidth = width - i * (width - minWidth) / segments;
+
             Vector3 norm = Vector3.Normalize(tangent - growth.normalized);
 
-            for (int j = 0; j < faces; j++)
+            if (i == 0 && parent != null && parent.childA == this)
             {
-                var angle = (2 * Mathf.PI * j) / faces;
-                angle *= Mathf.Rad2Deg;
+                Array.Copy(parent.vertices, parent.vertices.Length - faces, newVertices, 0, faces);
+                newVertices = newVertices.Select(x => x - parent.growth).ToArray();
+            }
 
-                var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
-                vertex *= width;
-                vertex += pointsAlongCurve[i];
+            else
+            {
+                for (int j = 0; j < faces; j++)
+                {
+                    var angle = (2 * Mathf.PI * j) / faces;
+                    angle *= Mathf.Rad2Deg;
 
-                newVertices[j] = vertex;
+                    var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
+                    vertex *= segmentWidth;
+                    vertex += (length/maxLength) *  pointsAlongCurve[i];
+
+                    newVertices[j] = vertex;
+                }
             }
 
             if ( i == 0 && (parent == null || 
@@ -184,14 +229,13 @@ public class Branch : MonoBehaviour
 
             else
             {
-
                 var rotatedNewVertices = new Vector3[faces];
                 var lastLayer = new Vector3[faces];
 
                 if (i == 0 && parent != null && parent.childA == this)
                 {
-                    Array.Copy(parent.vertices, parent.vertices.Length - faces, newVertices, 0, faces);
-                    newVertices = newVertices.Select(x => x - parent.growth).ToArray();
+                    Array.Copy(parent.vertices, parent.vertices.Length - faces, lastLayer, 0, faces);
+                    lastLayer = lastLayer.Select(x => x - parent.growth).ToArray();
                 }
 
                 else Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
@@ -214,32 +258,9 @@ public class Branch : MonoBehaviour
             }
         }
 
-        /*if (parent != null && parent.childA == this)
-        {
-            var lastPreviousLayer = new Vector3[faces];
+        triangles = new int[] { };
 
-            Array.Copy(parent.vertices, parent.vertices.Length - faces, lastPreviousLayer, 0, faces);
-            lastPreviousLayer = lastPreviousLayer.Select(x => x - parent.growth).ToArray();
-
-            var vertexMinD = 0;
-            float minD = Vector3.Distance(lastPreviousLayer[0], vertices[0]);
-            for (int j = 0; j < faces; j++)
-            {
-                if (Vector3.Distance(lastPreviousLayer[j], vertices[0]) < minD)
-                {
-                    minD = Vector3.Distance(lastPreviousLayer[j], vertices[0]);
-                    vertexMinD = j;
-                }
-            }
-
-            for (int j = 0; j < faces; j++)
-            {
-                vertices[j] = lastPreviousLayer[(j + vertexMinD) % faces];
-            }
-        }*/
-
-
-        for(int i = 0; i < segments; i++)
+        for (int i = 0; i < segments; i++)
         {
             for (int j = 0; j < faces; j++)
             {
@@ -256,7 +277,7 @@ public class Branch : MonoBehaviour
 
                 triangles = triangles.Concat(quad).ToArray();
             }
-        } 
+        }
     }
 
     void SetLeaves()
