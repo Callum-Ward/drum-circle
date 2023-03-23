@@ -136,10 +136,13 @@ public class BeatUI : MonoBehaviour
         container2.Add(beatSpawnContainer2);
         Lane1L.Add(container1);
         Lane1R.Add(container2);
+            
+        float targetSize = Lane1L.resolvedStyle.width/4;
+
         container1.style.position = Position.Absolute;
         container2.style.position = Position.Absolute;
-        container1.style.top = new StyleLength(Mathf.RoundToInt(screenHeight*(1-beatTargetLocation)));
-        container2.style.top = new StyleLength(Mathf.RoundToInt(screenHeight*(1-beatTargetLocation)));
+        container2.style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
+        container1.style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
     }
 
     void Update() {
