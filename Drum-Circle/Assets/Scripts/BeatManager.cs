@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BeatManager : MonoBehaviour
 
@@ -26,7 +27,7 @@ public class BeatManager : MonoBehaviour
         {
             try{
                 GameObject beat = beatQueues[i].Peek();
-                if (beat.GetComponent<MoveBeat>().delete == true)
+                if (beat.GetComponent<MoveBeatUI>().delete == true)
                 {
                     BeatDelete(i, false);
                 }
@@ -54,8 +55,8 @@ public class BeatManager : MonoBehaviour
         if (beatQueues[queueIndex].Count > 0)
         {
             GameObject lastelem = beatQueues[queueIndex].Dequeue();
-            lastelem.GetComponent<MoveBeat>().fade = true;
-            lastelem.GetComponent<MoveBeat>().highlight = highlight;
+            lastelem.GetComponent<MoveBeatUI>().fade = true;
+            lastelem.GetComponent<MoveBeatUI>().highlight = highlight;
             StartCoroutine(WindowDelay(deleteDelay, lastelem));
         }
     }
@@ -64,6 +65,10 @@ public class BeatManager : MonoBehaviour
     IEnumerator WindowDelay(float time, GameObject o)
     {
         yield return new WaitForSeconds(time);
+        
+        VisualElement beat = o.GetComponent<MoveBeatUI>().beatSpawnContainer;
+        VisualElement parent = beat.parent;
+        parent.Remove(beat);
 
         Destroy(o);
     }

@@ -13,6 +13,7 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
+    public float beatTargetLocation = 0.3f;
     private int[] drumInputStrengths;
     private bool hitL = false;
     private bool hitR = false;
@@ -38,8 +39,6 @@ public class BeatmapScript : MonoBehaviour
     private const int beatmapWidth = 10;
     public bool tutorial = false;
 
-    SerialPort data_stream = new SerialPort("COM3", 9600);
-
     public int playerCount = 3;
 
     void Awake()
@@ -53,7 +52,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
-        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
+        treeManager = GameObject.Find("Tree Manager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
@@ -64,7 +63,7 @@ public class BeatmapScript : MonoBehaviour
         
     }
 
-    private void registerHit(int queueIndex, MoveBeat beat)
+    private void registerHit(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
         beatManager.BeatDelete(queueIndex, true);
@@ -73,7 +72,7 @@ public class BeatmapScript : MonoBehaviour
         treeManager.SetHitStatus(true);
     }
 
-    private void registerMiss(int queueIndex, MoveBeat beat)
+    private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Miss();
         audioManager.Play("tapFail", null);
@@ -175,8 +174,9 @@ public class BeatmapScript : MonoBehaviour
                 if ((drumInputStrengths[i*2] > 0 || Input.GetKeyDown(KeyCode.LeftArrow)))
                     if (beatManager.beatQueues[i * 2].Count > 0) {
                         {
+                Debug.Log("HIT DETECTED");
                             try{
-                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
+                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeatUI>();
                                 beatHit((i*2), beatL);
                             } catch {
 
@@ -204,7 +204,7 @@ public class BeatmapScript : MonoBehaviour
                     if (beatManager.beatQueues[i * 2 + 1].Count > 0)
                     {
                         try{
-                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
+                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeatUI>();
                             beatHit((i*2+1), beatR);
                         } catch {
 
@@ -253,7 +253,7 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-    void beatHit(int queueNo, MoveBeat beatSide) {
+    void beatHit(int queueNo, MoveBeatUI beatSide) {
         if (beatSide.window == true)
             {
                 registerHit(queueNo, beatSide);
