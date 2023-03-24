@@ -37,7 +37,6 @@ public class BeatmapScript : MonoBehaviour
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
-    public bool tutorial = false;
 
     public int playerCount = 3;
 
@@ -91,10 +90,6 @@ public class BeatmapScript : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         window = windowtime;
-    }
-
-    public void StartTutorial(bool start) {
-        tutorial = start;
     }
 
     private void handleGlow()
@@ -241,13 +236,17 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Play("layer1", null);
             audioManager.Play("layer2", null);
             audioManager.Volume("layer2", 0f);
+            // audioManager.Play("layer3", null);
+            // audioManager.Volume("layer3", 0f);
+            // audioManager.Play("layer4", null);
+            // audioManager.Volume("layer4", 0f);
+            // audioManager.Play("layer5", null);
+            // audioManager.Volume("layer5", 0f);
         }
         //Drum hit functionality
         else if(tutorialScript.tutorialComplete == true)
         {
-            if(tutorial == false) {
-                beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
-            }
+            beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
 
             checkCorrectDrumHit();
         }
