@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System;
 using UnityEngine;
+
+using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
 
 public class RhythmSpawner : MonoBehaviour
 
@@ -21,9 +25,12 @@ public class RhythmSpawner : MonoBehaviour
     private const float spawnScale = 1.25f;
 
     private const int beatmapWidth = 10;
+    private const int midiGridOffset = 10;
     public float windowtime = 0.3f;
     public float window = 0f;
     public float delay = 2.0f;
+    private long ticks = 123;
+    private int prevTimeInMillis = 0;
 
     private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
     private int playerCount;
@@ -104,39 +111,64 @@ public class RhythmSpawner : MonoBehaviour
 
     }
 
+
         //Function for spawning beats based on passed variable
-    public void spawnOnTime(float time)
+    public bool spawnOnTime(float time, bool useMidi = false)
     {
             int index = (int)(Math.Round(time, 2) * 100);
             List<AudioTimestamp> timestampedOnsets = audioAnalyser.activeAnalysis.timestampedOnsets;
+
+            int timeInMills = (int)Math.Ceiling(time * 1000);
+            if(useMidi && timeInMills <= prevTimeInMillis)
+            {
+                return false;
+            }
     
             if(index < timestampedOnsets.Count){
-                int lb = index  < beatmapWidth ? 0 : index - beatmapWidth;
-                int ub = index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth;
+                int lb = useMidi ? (timeInMills > prevTimeInMillis + midiGridOffset ? timeInMills - midiGridOffset : prevTimeInMillis + 1) : (index  < beatmapWidth ? 0 : index - beatmapWidth);
+                int ub =  useMidi ? (timeInMills + midiGridOffset) : (index  >= timestampedOnsets.Count - beatmapWidth ? timestampedOnsets.Count - 1 : index + beatmapWidth);
                 for(int i = lb; i <= ub; i++)
                 {
-                    if(timestampedOnsets[i].isBeat)
+                    if(useMidi)
                     {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawn(j + 1, 1, size);
-                        }
-                        timestampedOnsets[i].isBeat = false;
-                        break;
-                    }
-                    if(timestampedOnsets[i].isOnset)
+                        MetricTimeSpan metricTime = TimeConverter.ConvertTo<MetricTimeSpan>(ticks, audioAnalyser.activeMidi.tempoMap);
+                        IEnumerable<Note> notes = audioAnalyser.activeMidi.midiFile.GetNotes().AtTime(new MetricTimeSpan(0, 0, 0, i), audioAnalyser.activeMidi.tempoMap);
+                        Note? note = notes.FirstOrDefault();
+                        if(note != null)
                         {
-                        int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
-                        StartCoroutine(WindowDelay(delay - windowtime/2));
-                        for(int j = 0; j < playerCount; j++){
-                            spawn(j + 1, 0, size);
+                            for(int j = 0; j < playerCount; j++){
+                                spawn(j + 1, note.NoteNumber == 44 ? 1 : 0, 1);
+                            }
+                            prevTimeInMillis = i + midiGridOffset / 2;
+                            return true;
                         }
-                        timestampedOnsets[i].isOnset = false;
-                        break;
+                    }
+                    else
+                    {
+                        if(timestampedOnsets[i].isBeat)
+                        {
+                            int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;
+                            StartCoroutine(WindowDelay(delay - windowtime/2));
+                            for(int j = 0; j < playerCount; j++){
+                                spawn(j + 1, 1, size);
+                            }
+                            timestampedOnsets[i].isBeat = false;
+                            return true;
+                        }
+                        if(timestampedOnsets[i].isOnset)
+                            {
+                            int size = Convert.ToDouble(timestampedOnsets[i].strength) > 0.0 ? 2 : 1;    
+                            StartCoroutine(WindowDelay(delay - windowtime/2));
+                            for(int j = 0; j < playerCount; j++){
+                                spawn(j + 1, 0, size);
+                            }
+                            timestampedOnsets[i].isOnset = false;
+                            return true;
+                        }
                     }
                 }
             } 
+            return false;
     }
 
     //Coroutine function for delaying hit-window
