@@ -4,6 +4,8 @@ using System.IO.Ports;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Layouts;
 
 public class BeatmapScript : MonoBehaviour
 {
@@ -13,15 +15,23 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
+    private int noteNumberOffset = 44;
     private int[] drumInputStrengths;
+    private float[] midiInputVelocities;
     private bool hitL = false;
     private bool hitR = false;
 
-    public int glowStage = 0;
+    public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
-    private float glowRate = 0.1f;
+    private float glowRate = 1.1f;
     private int treeStage = 0;
     private int treeScoreRatio = 1500;
+
+    private float windIncreaseRate = 0.05f;
+    private float windDecreaseRate = 0.001f;
+    public float windFactor = 0.1f;
+
+    private BeatTransfer beatTransfer;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -30,6 +40,7 @@ public class BeatmapScript : MonoBehaviour
     public RhythmSpawner beatSpawner;
     public TreeSpawnerForest treeSpawner;
     public MessageListener messageListener;
+    public Terrain terrain;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
     public TreeManager treeManager;
@@ -49,6 +60,7 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawnerForest>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
@@ -61,6 +73,13 @@ public class BeatmapScript : MonoBehaviour
         treeSpawner.setPlayers(this.playerCount);
 
         drumInputStrengths = new int[this.playerCount*2];
+        midiInputVelocities = new float[this.playerCount*2];
+
+        terrain.terrainData.wavingGrassSpeed = 0.5f;
+        terrain.terrainData.wavingGrassStrength = 0.5f;
+        terrain.terrainData.wavingGrassAmount = 0.5f;
+
+        beatTransfer = new BeatTransfer(0, 1);
         
     }
 
@@ -98,7 +117,26 @@ public class BeatmapScript : MonoBehaviour
         tutorial = start;
     }
 
-    private void handleGlow()
+    private void setEnvironmentTriggers(int drumIndex)
+    {
+        if(drumIndex % 2 == 0 && terrainBeatStage <= 1)
+        {   
+            terrainBeatStage += 1;
+        }
+                            
+        if(treeStage == 0)
+        {
+            treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
+            treeStage += 1;
+        }
+        else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage)
+        {
+            treeStage += 1;
+            treeSpawner.spawnTree(drumIndex + 1, 2);
+        }
+    }
+
+    private void handleTerrainBeatResponse()
     {
          /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
             MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
@@ -128,19 +166,24 @@ public class BeatmapScript : MonoBehaviour
         } catch {
 
         }
+
+        terrain.terrainData.wavingGrassStrength = windFactor;
+        terrain.terrainData.wavingGrassSpeed = windFactor;
+        //terrain.terrainData.wavingGrassAmount = windFactor;
         
-        if(glowStage == 3)
+        if(terrainBeatStage == 3)
         {
-            glowPower += glowRate * 0.5f;
-            if(glowPower >= 5.0f){
-                glowStage = 1;
+            glowPower += glowRate * 1.5f;
+            windFactor -= windDecreaseRate;
+            if(windFactor <= 0.1f){
+                terrainBeatStage = 1;
             }
         }
-        else if(glowStage == 2)
+        else if(terrainBeatStage == 2)
         {
-            glowPower -= glowRate;
-            if(glowPower <= 1.0f){
-                glowStage += 1;
+            windFactor += windIncreaseRate;
+            if(windFactor >= 0.8f){
+                terrainBeatStage += 1;
             }
         }
     }
@@ -167,49 +210,91 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-    private void checkCorrectDrumHit()
+    private void addMidiHandler()
+    {
+        InputSystem.onDeviceChange += (device, change) =>
+        {
+            if (change != InputDeviceChange.Added) return;
+
+            var midiDevice = device as Minis.MidiDevice;
+            if (midiDevice == null) return;
+
+            midiDevice.onWillNoteOn += (note, velocity) => {
+                // Note that you can't use note.velocity because the state
+                // hasn't been updated yet (as this is "will" event). The note
+                // object is only useful to specify the target note (note
+                // number, channel number, device name, etc.) Use the velocity
+                // argument as an input note velocity.
+                /* Debug.Log(string.Format(
+                    "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
+                    note.noteNumber,
+                    note.shortDisplayName,
+                    velocity,
+                    (note.device as Minis.MidiDevice)?.channel,
+                    note.device.description.product
+                )); */
+
+                midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
+            };
+
+            midiDevice.onWillNoteOff += (note) => {
+                /*Debug.Log(string.Format(
+                    "Note Off #{0} ({1}) ch:{2} dev:'{3}'",
+                    note.noteNumber,
+                    note.shortDisplayName,
+                    (note.device as Minis.MidiDevice)?.channel,
+                    note.device.description.product
+                ));
+
+                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];*/
+            };
+        };
+    }
+
+    private bool checkCorrectDrumHit(int drumIndex)
+    {
+        if (beatManager.beatQueues[drumIndex].Count > 0) 
+        {
+            try{
+                var beatL = beatManager.beatQueues[drumIndex].Peek().GetComponent<MoveBeat>();
+                beatHit((drumIndex), beatL);
+                return true;
+            } catch {
+            }
+        }
+        return false;
+    }
+
+    private void checkDrumHit()
     {
         for(int i = 0; i < playerCount; i++)
             {
                 //Register left drum hit and perform code
-                if ((drumInputStrengths[i*2] > 0 || Input.GetKeyDown(KeyCode.LeftArrow)))
-                    if (beatManager.beatQueues[i * 2].Count > 0) {
-                        {
-                            try{
-                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
-                                beatHit((i*2), beatL);
-                            } catch {
-
-                            }            
-                            //Trigger start of glow process
-                            if(i % 2 == 0 && glowStage <= 1){   
-                                glowStage += 1;
-                            }
-                            
-                            if(treeStage == 0)
-                            {
-                                treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
-                                treeStage += 1;
-                            }
-                            else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
-                                treeStage += 1;
-                                treeSpawner.spawnTree(i+1, 2);
-                            }
-                        }
+                if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
+                {
+                    if (checkCorrectDrumHit(i*2))
+                    {
+                        setEnvironmentTriggers(i*2);
+                    }
+                    if (beatTransfer != null)
+                    {
+                        StartCoroutine(beatTransfer.TransferWithDelay(beatSpawner, i, 0, 0.0f, 1.0f));
+                    }
+                    midiInputVelocities[i * 2] = 0.0f;
                 }
 
                 //Register right drum hit and perform code
-                if ((drumInputStrengths[i*2 + 1] > 0 || Input.GetKeyDown(KeyCode.RightArrow)))
+                if ((drumInputStrengths[i*2 + 1] > 0 || midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
-                    if (beatManager.beatQueues[i * 2 + 1].Count > 0)
+                    if (checkCorrectDrumHit(i*2 + 1))
                     {
-                        try{
-                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
-                            beatHit((i*2+1), beatR);
-                        } catch {
-
-                        }
+                        // Enviroment triggers etc. right drum hit on target
                     }
+                    if (beatTransfer != null)
+                    {
+                        StartCoroutine(beatTransfer.TransferWithDelay(beatSpawner, i, 1, 0.0f, 1.0f));
+                    }
+                    midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
             }
     }
@@ -218,13 +303,14 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
+        addMidiHandler();
     }
 
     // Update is called once per frame
     void Update()
     {
         //13
-        handleGlow();
+        handleTerrainBeatResponse();
         handleDrumInput();
 
         //Start the timer
@@ -246,22 +332,34 @@ public class BeatmapScript : MonoBehaviour
         else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay);
+                bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, true);
+
+                if(hasSpawned && beatTransfer != null)
+                {
+                    beatTransfer = null;
+                }
             }
 
-            checkCorrectDrumHit();
+            checkDrumHit();
         }
     }
 
     void beatHit(int queueNo, MoveBeat beatSide) {
         if (beatSide.window == true)
-            {
-                registerHit(queueNo, beatSide);
-            }
-        else
+        {
+            registerHit(queueNo, beatSide);
+        }
+        else if (beatTransfer != null)
+        {
+            if(beatTransfer.getProvider() != queueNo / 2)
             {
                 registerMiss(queueNo, beatSide);
             }
+        }
+        else
+        {
+            registerMiss(queueNo, beatSide);
+        }
     }
 }
 

@@ -1,0 +1,34 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "gameplay",
+            "id": "f83906bd-a4b7-4045-a338-acf23d588450",
+            "actions": [
+                {
+                    "name": "Hit",
+                    "type": "Button",
+                    "id": "e42c11f4-4ffc-418e-b639-7746adbf41e9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2ac341a8-aaa2-4552-9262-b4fb60e182d3",
+                    "path": "<MidiDevice>/note000",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
