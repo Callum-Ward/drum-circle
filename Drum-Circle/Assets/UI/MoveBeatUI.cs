@@ -34,12 +34,12 @@ public class MoveBeatUI : MonoBehaviour
     UIDocument beatSpawnUI;
     MeshRenderer beatRenderer;
     public TemplateContainer beatSpawnContainer;
-    // public VisualElement beatSpawnContainer;
     public VisualTreeAsset beatSpawnTemplate;
     public VisualElement container;
     VisualElement element;
     
     public VisualElement Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R;
+    public VisualElement[] Lanes;
 
     private Vector3 baseScale;
 
@@ -67,11 +67,12 @@ public class MoveBeatUI : MonoBehaviour
         Lane2R = beatUI.Q<VisualElement>("Lane2R");
         Lane3L = beatUI.Q<VisualElement>("Lane3L");
         Lane3R = beatUI.Q<VisualElement>("Lane3R");
+        Lanes = new VisualElement[] {Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R};
         beatTargetLocation = beatmapScript.beatTargetLocation;
         
     }
 
-    public void Startup(bool left) {
+    public void Startup(bool left, int drumNo) {
         if (start == false) {
             beatSpawnContainer = beatSpawnTemplate.Instantiate();
             container = new VisualElement();    //Create seperate container for the beat icon so that we can set absolute height, 
@@ -80,11 +81,13 @@ public class MoveBeatUI : MonoBehaviour
             container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
             element = beatSpawnContainer.Q<VisualElement>("beat");
 
+            Debug.Log("DrumNo: " + drumNo);
+            
             if(left == true) {
-            Lane1L.Add(container);
+                Lanes[drumNo].Add(container);
             }
             else {
-            Lane1R.Q("Lane1R").Add(container);
+                Lanes[drumNo].Add(container);
             }
 
             start = true;
