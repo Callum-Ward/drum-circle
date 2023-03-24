@@ -134,7 +134,6 @@ public class RhythmSpawner : MonoBehaviour
                         Note? note = notes.FirstOrDefault();
                         if(note != null)
                         {
-                            Debug.Log("NOTARY " + note.NoteNumber);
                             for(int j = 0; j < playerCount; j++){
                                 spawn(j + 1, note.NoteNumber == 44 ? 1 : 0, 1);
                             }

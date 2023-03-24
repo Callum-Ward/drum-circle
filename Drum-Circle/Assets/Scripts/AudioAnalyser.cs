@@ -71,6 +71,6 @@ public class AudioAnalyser : MonoBehaviour {
 
         DontDestroyOnLoad(gameObject);
         loadTrackAnalysis(this.analysisFile);
-        loadMidiFile("midi-test");
+        loadMidiFile("ddc-oriental-taiko-midi");
     }
 }
