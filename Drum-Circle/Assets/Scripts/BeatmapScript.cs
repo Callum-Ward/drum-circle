@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System;
 using UnityEngine;
 
@@ -16,9 +17,11 @@ public class BeatmapScript : MonoBehaviour
     private bool hitL = false;
     private bool hitR = false;
 
-    public int glowStage = 2;
+    public int glowStage = 0;
     public float glowPower = 5.0f;
+    private float glowRate = 0.1f;
     private int treeStage = 0;
+    private int treeScoreRatio = 1500;
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -29,6 +32,7 @@ public class BeatmapScript : MonoBehaviour
     public MessageListener messageListener;
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
+    public TreeManager treeManager;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -49,6 +53,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
+        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
@@ -65,6 +70,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager.BeatDelete(queueIndex, true);
         audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
+        treeManager.SetHitStatus(true);
     }
 
     private void registerMiss(int queueIndex, MoveBeat beat)
@@ -77,6 +83,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
+        treeManager.SetHitStatus(false);
     }
 
     //Coroutine function for delaying hit-window
@@ -99,21 +106,39 @@ public class BeatmapScript : MonoBehaviour
             renderer.GetPropertyBlock(block);
             block.c
             renderer.SetPropertyBlock(block);*/
-        GameObject glowingLayer = GameObject.Find("glowingLayer");
-        MeshRenderer renderer = glowingLayer.GetComponent<MeshRenderer>();
-        Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
-        renderer.material.SetFloat("_Power", glowPower);
+        try{
+            MeshRenderer renderer;
+
+            //Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
+            //newMaterial.SetFloat("_Power", glowPower);
+
+           /* IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "branch");
+            foreach(GameObject obj in glowingLayers)
+            {
+                renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.SetFloat("_Power", glowPower);
+            }*/
+
+            IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "glowingLayer");
+            foreach(GameObject obj in glowingLayers)
+            {
+                renderer = obj.GetComponent<MeshRenderer>();
+                renderer.material.SetFloat("_Power", glowPower);
+            }
+        } catch {
+
+        }
         
         if(glowStage == 3)
         {
-            glowPower += 0.05f;
+            glowPower += glowRate * 0.5f;
             if(glowPower >= 5.0f){
-                glowStage = 0;
+                glowStage = 1;
             }
         }
         else if(glowStage == 2)
         {
-            glowPower -= 0.05f;
+            glowPower -= glowRate;
             if(glowPower <= 1.0f){
                 glowStage += 1;
             }
@@ -150,15 +175,26 @@ public class BeatmapScript : MonoBehaviour
                 if ((drumInputStrengths[i*2] > 0 || Input.GetKeyDown(KeyCode.LeftArrow)))
                     if (beatManager.beatQueues[i * 2].Count > 0) {
                         {
-                            var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
-                            beatHit((i*2), beatL);
-                            
+                            try{
+                                var beatL = beatManager.beatQueues[i * 2].Peek().GetComponent<MoveBeat>();
+                                beatHit((i*2), beatL);
+                            } catch {
+
+                            }            
                             //Trigger start of glow process
                             if(i % 2 == 0 && glowStage <= 1){   
                                 glowStage += 1;
                             }
                             
-                            treeSpawner.spawnTree(i+1, 2);
+                            if(treeStage == 0)
+                            {
+                                treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
+                                treeStage += 1;
+                            }
+                            else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage){
+                                treeStage += 1;
+                                treeSpawner.spawnTree(i+1, 2);
+                            }
                         }
                 }
 
@@ -167,8 +203,12 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (beatManager.beatQueues[i * 2 + 1].Count > 0)
                     {
-                        var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
-                        beatHit((i*2+1), beatR);
+                        try{
+                            var beatR = beatManager.beatQueues[i * 2 + 1].Peek().GetComponent<MoveBeat>();
+                            beatHit((i*2+1), beatR);
+                        } catch {
+
+                        }
                     }
                 }
             }
