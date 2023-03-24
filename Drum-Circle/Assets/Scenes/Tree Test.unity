@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071380, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 20
+      value: 16.2
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071380, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: branchObj
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
     - target: {fileID: 3693536449023071382, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: m_Name
       value: Tree (4)
@@ -872,9 +872,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: width
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: length
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: branchObj
       value: 
       objectReference: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: lengthDecay
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: orientation
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: directionNoise
+      value: 0.12
+      objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071382, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: m_Name
       value: Tree (1)
@@ -1097,6 +1117,10 @@ PrefabInstance:
     - target: {fileID: 3693536449023071382, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: m_Name
       value: Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071382, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
