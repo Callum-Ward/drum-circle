@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (ScoreMultiplier > 2)
         {
-            //audioManager.Volume("layer2", 1f);
+            audioManager.Volume("layer2", 1f);
         }
 
     }
@@ -31,7 +31,6 @@ public class ScoreManager : MonoBehaviour
         ComboCounter = 0;
         ComboCount = 0;
         ScoreMultiplier = 1f;
-        //Debug.Log("Miss registered");
         audioManager.FadeOut("layer2");
     }
 

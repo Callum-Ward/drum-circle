@@ -125,6 +125,8 @@ public class BeatUI : MonoBehaviour
             playerLanes[i].style.display = DisplayStyle.Flex;
             } 
         }
+        
+        // int targetOffset = Mathf.RoundToInt(screenHeight*beatmapScript.inputDelay);
 
         
 

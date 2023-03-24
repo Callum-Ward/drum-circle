@@ -104,7 +104,7 @@ public class MoveBeatUI : MonoBehaviour
             windowtime = beatmapScript.windowtime;
             beatSpawnContainer.style.top = new StyleLength(Mathf.RoundToInt(beatHeight));
 
-            if (timer > (beatmapScript.delay + (beatmapScript.windowtime)) && dontDelete == false)
+            if (timer > (beatmapScript.delay + (windowtime/2)) && dontDelete == false)
             {
                 delete = true;
                 audioManager.FadeOut("drums");
@@ -140,14 +140,14 @@ public class MoveBeatUI : MonoBehaviour
         float incrementW = (endW - startW)/deleteTime;
         float incrementH = (endH - startH)/deleteTime;
         long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
-        Color color = Color.grey;
+        Color color = Color.red;
         if (highlight) {
             color = Color.green;
         }
 
         element.schedule.Execute(() =>
         {
-            element.style.unityBackgroundImageTintColor = new Color(0, 1, 0);
+            element.style.unityBackgroundImageTintColor = color;
         }).StartingIn(0).Every(intervalInTicks).Until(() => CancelAnimation());
 
 
