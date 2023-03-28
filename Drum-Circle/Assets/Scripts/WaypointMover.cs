@@ -8,6 +8,7 @@ public class WaypointMover : MonoBehaviour
     [SerializeField] private float movespeed = 5f;
     [SerializeField] private float switchDistance = 0.1f;
     private Transform currentWaypoint;
+    private Transform nextWaypoint;
 
     // Start is called before the first frame update
     void Start()
@@ -17,16 +18,20 @@ public class WaypointMover : MonoBehaviour
         //Move to first waypoint
         transform.position = currentWaypoint.position;
         //Find next waypoint to move to
-        currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint); 
+        currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
+        //nextWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
+
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, movespeed * Time.deltaTime);
+
         if (Vector3.Distance(transform.position,currentWaypoint.position) < switchDistance)
         {
             currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
+            //nextWaypoint = waypoints.GetNextWaypoint(nextWaypoint);
         }
         
     }
