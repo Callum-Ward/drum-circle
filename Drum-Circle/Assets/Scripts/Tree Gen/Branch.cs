@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
@@ -14,7 +15,7 @@ using Object = UnityEngine.Object;
 public class Branch : MonoBehaviour
 {
     private Tree tree;
-    public GameObject leaves;
+    public GameObject leafObj;
 
     public Branch parent = null;
     public Branch childA  = null;
@@ -37,21 +38,31 @@ public class Branch : MonoBehaviour
     private Vector3[] pointsAlongCurve;
 
     public Mesh mesh;
-    //public int faces;
-    //public int segments;
 
     protected Vector3[] vertices = new Vector3[] { };
     private int[] triangles = new int[] { };
 
+    struct leaf
+    {
+        public GameObject leafObj;
+        public Vector3 position;
+    }
+    private leaf[] leaves = new leaf[] { };
+
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
-        //lod = GetComponent<LOD>();
     }
 
     private void Update()
     {
-        if ( !isLeaf ) leaves.SetActive(false);
+        if (!isLeaf)
+        {
+            foreach(leaf leaf in leaves)
+            {
+                leaf.leafObj.SetActive(false);
+            }
+        }
     }
     
     /*Set up branch parameters*/
@@ -72,8 +83,7 @@ public class Branch : MonoBehaviour
         isLeaf = true;
         isFullyGrown = false;
 
-        //SetLeaves();
-        leaves.transform.rotation = Quaternion.LookRotation(growth);
+        SetLeaves();
 
         Place(tree);
     }
@@ -110,7 +120,7 @@ public class Branch : MonoBehaviour
 
         maxWidth = widthMul * LengthToEnd();
 
-        SetLeaves();
+        //SetLeaves();
 
         if(!isFullyGrown)
         {
@@ -149,6 +159,8 @@ public class Branch : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+
+        UpdateLeavesPosition();
     }
 
     float LengthToEnd()
@@ -165,26 +177,30 @@ public class Branch : MonoBehaviour
         return lengthToEnd;
     }
 
+    /* Generate the branch's mesh */
     void GenerateMesh(int segments, int faces)
     {
         vertices = new Vector3[] { };
 
         pointsAlongCurve = curve.GetPointsAlongCurve(segments);
 
-        float minWidth = 0;
+        //the minimum widtht of the graph is the width of its children 
+        float minWidth = 0.001f;
         if (!isLeaf)
         {
             minWidth = childA.width;
         }
 
-        if (pointsAlongCurve.Length != segments + 1) Debug.Log("not enough points");
-
+        //for each sampled point of the curve
         for (int i = 0; i < pointsAlongCurve.Length; i++)
         {
             var newVertices = new Vector3[faces];
 
+            //the tangent vector conects 2 points aling the curve
             Vector3 tangent;
 
+            //special case for the last point since it has no points ahead to
+            //calculate the tangent
             if(i == pointsAlongCurve.Length - 1)
             {
                 tangent = pointsAlongCurve[i] - pointsAlongCurve[i - 1];
@@ -196,10 +212,15 @@ public class Branch : MonoBehaviour
                 tangent = tangent.normalized;
             }
 
+            //the width of the segment falls beween the minimum width and
+            //the width of the branch
             float segmentWidth = width - i * (width - minWidth) / segments;
 
+            //the normal vector is perpendicular to the tangent vector
             Vector3 norm = Vector3.Normalize(tangent - growth.normalized);
 
+            //if it is the first layer of the mesh, then it is the same as the last layer 
+            //of the parent
             if (i == 0 && parent != null && parent.childA == this)
             {
                 Array.Copy(parent.vertices, parent.vertices.Length - faces, newVertices, 0, faces);
@@ -208,11 +229,15 @@ public class Branch : MonoBehaviour
 
             else
             {
+                //for each face
                 for (int j = 0; j < faces; j++)
                 {
+                    //calculate the angle around the cebter
                     var angle = (2 * Mathf.PI * j) / faces;
                     angle *= Mathf.Rad2Deg;
 
+                    //the vertex is the normal vector rotated by an angle around the
+                    //tangent vector with a magnitude equal to the width of the segment
                     var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
                     vertex *= segmentWidth;
                     vertex += (length/maxLength) *  pointsAlongCurve[i];
@@ -221,8 +246,10 @@ public class Branch : MonoBehaviour
                 }
             }
 
-            if ( i == 0 && (parent == null || 
-                (parent != null && parent.childB ==this) ) )
+            // new layers need to be rotated so that the don't 'pinch' the mesh
+
+            //the first layer does not need to be rotated
+            if ( i == 0 )
             {
                 vertices = newVertices;
             }
@@ -230,17 +257,17 @@ public class Branch : MonoBehaviour
             else
             {
                 var rotatedNewVertices = new Vector3[faces];
+                
                 var lastLayer = new Vector3[faces];
+                Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
+                
 
-                if (i == 0 && parent != null && parent.childA == this)
-                {
-                    Array.Copy(parent.vertices, parent.vertices.Length - faces, lastLayer, 0, faces);
-                    lastLayer = lastLayer.Select(x => x - parent.growth).ToArray();
-                }
+                //we need to find the 2 vertecies that are closest between the new layer
+                //and the last layer of the mesh
 
-                else Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
-
+                //the index of the vertex that has the minimum distance
                 int vertexMinD = 0;
+                //the minimum distance between a vertex of the last layer
                 float minD = Vector3.Distance(lastLayer[0], newVertices[0]);
                 for (int j = 1; j < faces; j++)
                 {
@@ -250,20 +277,27 @@ public class Branch : MonoBehaviour
                         vertexMinD = j;
                     }
                 }
-                for(int j =0; j < faces; j++)
+
+                //displace the new layer by the index of the vertex that is closest
+                //to the first vertex of the last layer
+                for (int j = 0; j < faces; j++)
                 {
                     rotatedNewVertices[(j + vertexMinD) % faces] = newVertices[j];
                 }
+
                 vertices = vertices.Concat(rotatedNewVertices).ToArray();
+
             }
         }
 
         triangles = new int[] { };
-
+        
+        //each segment has a number of faces
         for (int i = 0; i < segments; i++)
         {
             for (int j = 0; j < faces; j++)
             {
+                //the side of a segment is a quadrilateral polygon
                 var quad = new int[]
                 {
                     i * faces + j,
@@ -282,8 +316,39 @@ public class Branch : MonoBehaviour
 
     void SetLeaves()
     {
-        leaves.transform.parent = this.transform;
-        leaves.transform.position = position + length / maxLength * growth;
-        leaves.transform.rotation = Quaternion.LookRotation(growth);
+        int leavesNo = UnityEngine.Random.Range(2, 10);
+
+        for (int i = 0; i < leavesNo; i++)
+        {
+            var leaf = Instantiate(leafObj);
+            var l = new leaf();
+            l.leafObj = leaf;
+                
+            leaves = leaves.Concat(new leaf[] { l }).ToArray();
+        }
+
+        var leafPoints = curve.GetPointsAlongCurve(100);
+
+        for (int i = 0; i < leavesNo - 1; i++)
+        {
+            var rand = UnityEngine.Random.Range(0, 100);
+            leaves[i].position = leafPoints[rand];
+            leaves[i].leafObj.transform.parent = this.gameObject.transform;
+            leaves[i].leafObj.transform.localScale = Vector3.one * 5;
+            leaves[i].leafObj.transform.position = position + leafPoints[rand] * length / maxLength;
+        }
+
+        leaves[leavesNo - 1].position = leafPoints.Last();
+        leaves[leavesNo - 1].leafObj.transform.parent = this.gameObject.transform;
+        leaves[leavesNo - 1].leafObj.transform.localScale = Vector3.one * 5;
+        leaves[leavesNo - 1].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
+    }
+
+    void UpdateLeavesPosition()
+    {
+        foreach( var leaf in leaves )
+        {
+            leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
+        }
     }
 }
