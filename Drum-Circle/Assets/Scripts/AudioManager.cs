@@ -80,6 +80,27 @@ public class AudioManager : MonoBehaviour {
         return s.source.volume;
     }
 
+    public void Toggle(string name) {
+        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
+        var volume = s.source.volume;
+        Debug.Log("Volume ="+volume);
+        if (name == "layer4") {
+            if(volume <= 0f)
+                volume = 0.75f;
+            else
+                volume = 0f;
+        }
+        else if(name == null) {
+            Debug.Log("Toggle error");
+        }
+        else {
+            if(volume <= 0f)
+                volume = 1f;
+            else
+                volume = 0f;
+        }
+    }
+
     //Starts a fade in based on passed speed (Fast/Slow)
     public void FadeIn(string name, string speed)
     {

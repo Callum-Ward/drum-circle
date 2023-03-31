@@ -63,7 +63,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
-        treeManager = GameObject.Find("Tree Manager").GetComponent<TreeManager>();
+        // treeManager = GameObject.Find("Tree Manager").GetComponent<TreeManager>();
 
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
@@ -109,10 +109,6 @@ public class BeatmapScript : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         window = windowtime;
-    }
-
-    public void StartTutorial(bool start) {
-        tutorial = start;
     }
 
     private void setEnvironmentTriggers(int drumIndex)
@@ -314,6 +310,7 @@ public class BeatmapScript : MonoBehaviour
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
+            Debug.Log("timer starts");
             beatSpawner.spawnOnTime(timer);
             timer += Time.deltaTime;
             beatUI.startLevelUI();
@@ -322,30 +319,75 @@ public class BeatmapScript : MonoBehaviour
         else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
             audioManager.Play("drums", audioAnalyser);
+            audioManager.Play("drums2", null);
+            audioManager.Play("drums3", null);
             audioManager.Play("layer1", null);
             audioManager.Play("layer2", null);
-            audioManager.Volume("layer2", 0f);
-            // audioManager.Play("layer3", null);
-            // audioManager.Volume("layer3", 0f);
-            // audioManager.Play("layer4", null);
-            // audioManager.Volume("layer4", 0f);
-            // audioManager.Play("layer5", null);
-            // audioManager.Volume("layer5", 0f);
+            audioManager.Volume("layer2", 1f);
+            audioManager.Play("layer3", null);
+            audioManager.Volume("layer3", 1f);
+            audioManager.Play("layer4", null);
+            audioManager.Volume("layer4", 0.75f);
+            Debug.Log("Activating all layers");
         }
         //Drum hit functionality
         else if(tutorialScript.tutorialComplete == true)
         {
-            if(tutorial == false) {
                 bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, true);
 
                 if(hasSpawned && beatTransfer != null)
                 {
                     beatTransfer = null;
                 }
-            }
 
             checkDrumHit();
         }
+
+//////////////TESTING SECTION////////////////////////////////
+        if(Input.GetKey(KeyCode.Alpha1) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("drums", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha1)) {
+            audioManager.Volume("drums", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha2) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("drums2", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha2)) {
+            audioManager.Volume("drums2", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha3) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("drums3", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha3)) {
+            audioManager.Volume("drums3", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha4) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("layer1", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha4)) {
+            audioManager.Volume("layer1", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha5) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("layer2", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha5)) {
+            audioManager.Volume("layer2", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha6) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("layer3", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha6)) {
+            audioManager.Volume("layer3", 1f);
+        };
+        if(Input.GetKey(KeyCode.Alpha7) && Input.GetKey(KeyCode.LeftShift)) {
+            audioManager.Volume("layer4", 0f);
+        };
+        if(Input.GetKeyDown(KeyCode.Alpha7)) {
+            audioManager.Volume("layer4", 0.6f);
+        };
+//////////////TESTING SECTION////////////////////////////////
+
     }
 
     void beatHit(int queueNo, MoveBeatUI beatSide) {
