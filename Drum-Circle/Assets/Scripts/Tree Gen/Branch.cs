@@ -160,7 +160,11 @@ public class Branch : MonoBehaviour
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
 
-        UpdateLeavesPosition();
+        
+        if (isLeaf)
+        {
+            UpdateLeavesPosition();
+        }
     }
 
     float LengthToEnd()
@@ -316,14 +320,14 @@ public class Branch : MonoBehaviour
 
     void SetLeaves()
     {
-        int leavesNo = UnityEngine.Random.Range(2, 10);
+        int leavesNo = UnityEngine.Random.Range(2, 6);
 
         for (int i = 0; i < leavesNo; i++)
         {
             var leaf = Instantiate(leafObj);
             var l = new leaf();
             l.leafObj = leaf;
-                
+
             leaves = leaves.Concat(new leaf[] { l }).ToArray();
         }
 
@@ -336,12 +340,16 @@ public class Branch : MonoBehaviour
             leaves[i].leafObj.transform.parent = this.gameObject.transform;
             leaves[i].leafObj.transform.localScale = Vector3.one * 5;
             leaves[i].leafObj.transform.position = position + leafPoints[rand] * length / maxLength;
+            leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
+            leaves[i].leafObj.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0);
         }
 
         leaves[leavesNo - 1].position = leafPoints.Last();
         leaves[leavesNo - 1].leafObj.transform.parent = this.gameObject.transform;
         leaves[leavesNo - 1].leafObj.transform.localScale = Vector3.one * 5;
         leaves[leavesNo - 1].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
+        leaves[leavesNo - 1].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
+        leaves[leavesNo - 1].leafObj.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0);
     }
 
     void UpdateLeavesPosition()
