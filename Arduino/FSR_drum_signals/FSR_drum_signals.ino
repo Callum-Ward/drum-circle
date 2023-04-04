@@ -8,20 +8,23 @@
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
 const int threshold = 920;
-const int delayMs = 175;
 const int peakDelay =35;
+const int bounceDelay=30;
 const int drumCount = 6;
 bool hits[drumCount];
+bool bounceReset[drumCount];
 int vals[drumCount];
 bool sent[drumCount];
 int maxVals[drumCount];
 unsigned long delayStart[drumCount];
+unsigned long bounceStart[drumCount];
 int hitCount =0;
 
 void setup() {
   // put your setup code here, to run once:
   for (int i=0;i<drumCount;i++) {
     hits[i] = false;
+    bounceReset[i]=false;
     maxVals[i] = 0;
     sent[i] = false;
   }
@@ -76,24 +79,29 @@ void loop() {
       hits[i] = true;
       changeLeds(1,0,0,0);
       delayStart[i] = millis();
+      //Serial.println("hit");
     } else if (hits[i]) {
       
       if (vals[i] > maxVals[i] && !sent[i]) maxVals[i] = vals[i];
 
       if ( millis()-delayStart[i] >= peakDelay && !sent[i]) {
         sent[i] = true;
-        Serial.print("on:"); 
         Serial.print(i);
-        Serial.print(":s:");
+        Serial.print(":");
         Serial.println(maxVals[i]);
         maxVals[i]=0;
-
-        //Serial.println(getHitStrength(maxVals[i]));
+      }
+      if (sent[i] && vals[i] < threshold && bounceReset[i]==false) {
+        //Serial.println("bounce start");
+        bounceStart[i]= millis();
+        bounceReset[i]=true;
       }
 
-      if (millis()-delayStart[i] >= delayMs && vals[i] < threshold) {  
+      if (bounceReset[i] && millis()-bounceStart[i] >= bounceDelay && vals[i] < threshold) {  
+        //Serial.println("reset");
         hits[i]=false;
         sent[i]=false;
+        bounceReset[i]=false;
         maxVals[i]=0;
         changeLeds(0,0,0,0);
       }
