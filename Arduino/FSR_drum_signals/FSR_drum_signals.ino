@@ -7,8 +7,8 @@
 #define NUM_PIXELS     30  // The number of LEDs (pixels) on NeoPixel
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
-const int threshold = 500;
-const int delayMs = 200;
+const int threshold = 920;
+const int delayMs = 175;
 const int peakDelay =35;
 const int drumCount = 6;
 bool hits[drumCount];
@@ -100,4 +100,3 @@ void loop() {
     }
   }
 }
-
