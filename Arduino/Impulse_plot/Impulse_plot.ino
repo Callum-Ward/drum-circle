@@ -1,4 +1,4 @@
-
+int threshold = 2;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -10,16 +10,20 @@ void loop() {
   int val3 = analogRead(2);  
   int val4 = analogRead(3);  
   
-  if (val1 > 200) {
+  if (val1 > threshold) {
+    Serial.print("Serial 0: ");
     Serial.println(val1);
   }
-  if (val2 > 200) {
+  if (val2 > threshold) {
+    Serial.print("Serial 1: ");
     Serial.println(val2);
   }
-  if (val3 > 200) {
+  if (val3 > threshold) {
+    Serial.print("Serial 2: ");
     Serial.println(val3);
   }
-    if (val4 > 200) {
+    if (val4 > threshold) {
+      Serial.print("Serial 3: ");
     Serial.println(val4);
   }
 
