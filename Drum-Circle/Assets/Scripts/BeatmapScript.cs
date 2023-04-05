@@ -387,7 +387,6 @@ public class BeatmapScript : MonoBehaviour
             audioManager.Volume("layer4", 0.6f);
         };
 //////////////TESTING SECTION////////////////////////////////
-
     }
 
     void beatHit(int queueNo, MoveBeatUI beatSide) {
