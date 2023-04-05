@@ -67,6 +67,7 @@ public class BeatmapScript : MonoBehaviour
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
         treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
 
+        audioAnalyser.setPlayerCount(this.playerCount);
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
         beatUI.setPlayerCount(this.playerCount);
@@ -316,7 +317,7 @@ public class BeatmapScript : MonoBehaviour
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            beatSpawner.spawnOnTime(timer);
+            beatSpawner.spawnOnTime(timer, false);
             timer += Time.deltaTime;
             beatUI.startLevelUI();
         }
@@ -332,9 +333,9 @@ public class BeatmapScript : MonoBehaviour
         else if(tutorialScript.tutorialComplete == true)
         {
             if(tutorial == false) {
-                bool hasSpawned = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, true);
+                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, false);
 
-                if(hasSpawned && beatTransfer != null)
+                if(queueIndex >= 0 && beatTransfer != null)
                 {
                     beatTransfer = null;
                 }
