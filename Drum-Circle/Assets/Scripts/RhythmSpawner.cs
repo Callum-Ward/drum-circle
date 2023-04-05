@@ -36,9 +36,13 @@ public class RhythmSpawner : MonoBehaviour
     private int[] prevTimesInIndices;
 
     private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
+    private Color colorFreestyleMode = new Color(1f, 1f, 1f);
+
     private int playerCount;
 
     private GameObject enaTree;
+
+    private GameObject[] targetAreas;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,8 @@ public class RhythmSpawner : MonoBehaviour
         //transform.rotation = Camera.main.transform.rotation;
         //set left most spawn location with respect to spawner postion
         startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
+
+        targetAreas = new GameObject[playerCount * 2];
 
         for(int i = 0; i < playerCount; i++){
             GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f) + 0.25f, -4.25f, 0f), transform.rotation);
@@ -70,6 +76,9 @@ public class RhythmSpawner : MonoBehaviour
             colorFadeTargetComponent(newRightTargetBase, trackColors[i], 1.0f);
             //colorFadeTargetComponent(newLeftTrack, trackColors[i], 0.4f);
             //colorFadeTargetComponent(newRightTrack, trackColors[i], 0.4f);
+
+            targetAreas[i * 2] = newLeftTargetBase;
+            targetAreas[i * 2 + 1] = newRightTargetBase;
         }
     }
 
@@ -91,6 +100,12 @@ public class RhythmSpawner : MonoBehaviour
             this.prevTimesInMillis[i] = 0;
             this.prevTimesInIndices[i] = 0;
         }
+    }
+
+    public void setFreestyleMode(int pos, bool freestyle)
+    {
+        colorFadeTargetComponent(targetAreas[(pos - 1) * 2], freestyle ? colorFreestyleMode : trackColors[pos - 1], 1.0f);
+        colorFadeTargetComponent(targetAreas[(pos - 1) * 2 + 1], freestyle ? colorFreestyleMode : trackColors[pos - 1], 1.0f);
     }
 
     public void spawn(int pos, int left, int size)

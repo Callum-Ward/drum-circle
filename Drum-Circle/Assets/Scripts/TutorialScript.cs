@@ -77,7 +77,7 @@ public class TutorialScript : MonoBehaviour
     private void registerMiss(int queueIndex, MoveBeat beat)
     {
         scoreManager.Miss();
-        audioManager.Play("tapFail", null);
+        audioManager.Play("tapFail");
         audioManager.SetActive("drums");
         audioManager.Volume("drums", 0f);
         //audioManager.FadeOut("drums");

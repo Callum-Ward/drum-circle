@@ -47,7 +47,13 @@ public class BeatmapScript : MonoBehaviour
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
+
+
     public bool tutorial = false;
+    private bool running = false;
+
+    private float beatShareDuration = 10f;
+    private float beatShareOnset = 30f;
 
     SerialPort data_stream = new SerialPort("COM3", 9600);
 
@@ -79,16 +85,13 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassSpeed = 0.5f;
         terrain.terrainData.wavingGrassStrength = 0.5f;
         terrain.terrainData.wavingGrassAmount = 0.5f;
-
-        beatTransfer = new BeatTransfer(0, 1);
-        
     }
 
     private void registerHit(int queueIndex, MoveBeat beat)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
         beatManager.BeatDelete(queueIndex, true);
-        audioManager.FadeIn("drums", "fast");
+        audioManager.FadeIn("drums_player" + ((queueIndex / 2) + 1).ToString(), "fast");
         beat.dontDelete = true;
         treeManager.SetHitStatus(true);
     }
@@ -96,9 +99,9 @@ public class BeatmapScript : MonoBehaviour
     private void registerMiss(int queueIndex, MoveBeat beat)
     {
         scoreManager.Miss();
-        audioManager.Play("tapFail", null);
-        audioManager.SetActive("drums");
-        audioManager.Volume("drums", 0f);
+        audioManager.Play("tapFail");
+        audioManager.SetActive("drums_player" + ((queueIndex / 2) + 1).ToString());
+        audioManager.Volume("drums_player" + ((queueIndex / 2) + 1).ToString(), 0f);
         if (beat.timer >= (delay * 0.85))
         {
             beatManager.BeatDelete(queueIndex, false);
@@ -314,23 +317,39 @@ public class BeatmapScript : MonoBehaviour
         handleTerrainBeatResponse();
         handleDrumInput();
 
+        timer += Time.deltaTime;
+
         //Start the timer
-        if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
+        if (timer <= delay && audioManager.activeSource == null && !running && tutorialScript.tutorialComplete == true)
         {
             beatSpawner.spawnOnTime(timer, false);
-            timer += Time.deltaTime;
             beatUI.startLevelUI();
         }
         //Play all layers of music simultaneously
         else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            audioManager.Play("drums", audioAnalyser);
-            audioManager.Play("layer1", null);
-            audioManager.Play("layer2", null);
-            audioManager.Volume("layer2", 0f);
+            for(int i = 0; i < this.playerCount; i++)
+            {
+                audioManager.Play("drums_player" + (i + 1).ToString());
+            }
+            audioManager.Play("layer_underscore");
+            timer = 0f;
+            running = true;
+        }
+        else if(timer >= beatShareOnset && beatTransfer == null)
+        {
+            beatTransfer = new BeatTransfer(0, 1);
+            beatSpawner.setFreestyleMode(1, true);
+            timer = 0f;
+        }
+        else if(timer >= beatShareDuration && beatTransfer != null)
+        {
+            beatTransfer = null;
+            beatSpawner.setFreestyleMode(1, false);
+            timer = 0f;
         }
         //Drum hit functionality
-        else if(tutorialScript.tutorialComplete == true)
+        else if(tutorialScript.tutorialComplete == true && beatTransfer == null)
         {
             if(tutorial == false) {
                 int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, false);

@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour {
     }
 
     //Plays the passed track.
-    public void Play(string name, AudioAnalyser? analyser)
+    public void Play(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.Name == name);
 
