@@ -20,6 +20,7 @@ public class BeatmapScript : MonoBehaviour
     private float[] midiInputVelocities;
     private bool hitL = false;
     private bool hitR = false;
+    private bool useMidiFile = true;
 
     public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
@@ -229,7 +230,7 @@ public class BeatmapScript : MonoBehaviour
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                /* Debug.Log(string.Format(
+                /*  Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,
@@ -271,7 +272,7 @@ public class BeatmapScript : MonoBehaviour
 
     private void checkDrumHit()
     {
-        for(int i = 0; i < playerCount; i++)
+        for(int i = 0; i < this.playerCount; i++)
             {
                 //Register left drum hit and perform code
                 if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
@@ -317,18 +318,19 @@ public class BeatmapScript : MonoBehaviour
         handleTerrainBeatResponse();
         handleDrumInput();
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
 
         //Start the timer
-        if (timer <= delay && audioManager.activeSource == null && !running && tutorialScript.tutorialComplete == true)
+        if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            beatSpawner.spawnOnTime(timer, false);
+            timer += Time.deltaTime;
+            beatSpawner.spawnOnTime(timer, useMidiFile);
             beatUI.startLevelUI();
         }
         //Play all layers of music simultaneously
         else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            for(int i = 0; i < this.playerCount; i++)
+            for(int i = 0; i < 1; i++)
             {
                 audioManager.Play("drums_player" + (i + 1).ToString());
             }
@@ -336,23 +338,23 @@ public class BeatmapScript : MonoBehaviour
             timer = 0f;
             running = true;
         }
-        else if(timer >= beatShareOnset && beatTransfer == null)
+        /*else if(timer >= beatShareOnset && beatTransfer == null && false)
         {
             beatTransfer = new BeatTransfer(0, 1);
             beatSpawner.setFreestyleMode(1, true);
             timer = 0f;
         }
-        else if(timer >= beatShareDuration && beatTransfer != null)
+        else if(timer >= beatShareDuration && beatTransfer != null && false)
         {
             beatTransfer = null;
             beatSpawner.setFreestyleMode(1, false);
             timer = 0f;
-        }
+        }*/
         //Drum hit functionality
         else if(tutorialScript.tutorialComplete == true && beatTransfer == null)
         {
             if(tutorial == false) {
-                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, false);
+                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSource.time + delay + inputDelay, useMidiFile);
 
                 if(queueIndex >= 0 && beatTransfer != null)
                 {

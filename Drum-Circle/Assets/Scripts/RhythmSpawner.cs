@@ -24,7 +24,7 @@ public class RhythmSpawner : MonoBehaviour
     private BeatManager beatManager;
     private const float spawnScale = 1.25f;
 
-    private const int beatmapWidth = 10;
+    private const int beatmapWidth = 5;
     private const int midiGridOffset = 10;
     public float windowtime = 0.3f;
     public float window = 0f;
