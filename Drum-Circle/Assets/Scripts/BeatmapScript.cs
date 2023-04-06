@@ -32,7 +32,7 @@ public class BeatmapScript : MonoBehaviour
     private float windDecreaseRate = 0.001f;
     public float windFactor = 0.1f;
 
-    private BeatTransfer beatTransfer;
+    private FreestyleHandler freestyleHandler
 
     public ScoreManager scoreManager;
     public AudioAnalyser audioAnalyser;
@@ -323,14 +323,14 @@ public class BeatmapScript : MonoBehaviour
         //Start the timer
         if (timer <= delay && audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            timer += Time.deltaTime;
+            //timer += Time.deltaTime;
             beatSpawner.spawnOnTime(timer, useMidiFile);
             beatUI.startLevelUI();
         }
         //Play all layers of music simultaneously
         else if(audioManager.activeSource == null && tutorialScript.tutorialComplete == true)
         {
-            for(int i = 0; i < 1; i++)
+            for(int i = 0; i < this.playerCount; i++)
             {
                 audioManager.Play("drums_player" + (i + 1).ToString());
             }

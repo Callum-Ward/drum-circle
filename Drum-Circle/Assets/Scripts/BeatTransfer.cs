@@ -23,6 +23,11 @@ public class BeatTransfer {
         return this.provider;
     }
 
+    public int nextPlayer(int playerCount)
+    {
+        return playerCount - (this.provider + this.recipient);
+    }
+
     public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity)
     {
         if(playerIndex == this.provider)
