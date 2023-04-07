@@ -42,6 +42,7 @@ public class Branch : MonoBehaviour
     protected Vector3[] vertices = new Vector3[] { };
     private int[] triangles = new int[] { };
 
+    [SerializeField] int leavesNo = 5;
     struct leaf
     {
         public GameObject leafObj;
@@ -159,7 +160,6 @@ public class Branch : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-
         
         if (isLeaf)
         {
@@ -320,7 +320,7 @@ public class Branch : MonoBehaviour
 
     void SetLeaves()
     {
-        int leavesNo = UnityEngine.Random.Range(2, 6);
+        int leavesNo = UnityEngine.Random.Range(1, this.leavesNo + 1);
 
         for (int i = 0; i < leavesNo; i++)
         {
