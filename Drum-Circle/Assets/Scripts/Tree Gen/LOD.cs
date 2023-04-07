@@ -7,11 +7,15 @@ using UnityEngine;
 
 public class LOD : MonoBehaviour
 {
-    float distance;
-
-    Camera camera;
+    [SerializeField] float lod_0 = 10;
+    [SerializeField] float lod_1 = 20;
+    [SerializeField] float lod_2 = 30;
+    [SerializeField] float lod_3 = 60;
 
     public int lod;
+
+    float distance;
+    Camera camera;
 
     private void Awake()
     {
@@ -24,12 +28,12 @@ public class LOD : MonoBehaviour
 
         lod = 0;
 
-        if (distance > 10) lod = 1;
+        if (distance > lod_0) lod = 1;
 
-        if (distance > 20) lod = 2;
+        if (distance > lod_1) lod = 2;
 
-        if (distance > 30) lod = 3;
+        if (distance > lod_2) lod = 3;
 
-        if (distance > 60) lod = -1;
+        if (distance > lod_3) lod = -1;
     }
 }
