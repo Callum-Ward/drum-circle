@@ -282,7 +282,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         setEnvironmentTriggers(i*2);
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, i, 0, 0.0f, 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 0, 0.0f, 1.0f);
                     midiInputVelocities[i * 2] = 0.0f;
                 }
 
@@ -293,7 +293,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         // Enviroment triggers etc. right drum hit on target
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, i, 1, 0.0f, 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 1, 0.0f, 1.0f);
                     midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
             }

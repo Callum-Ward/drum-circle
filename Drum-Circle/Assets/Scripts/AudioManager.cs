@@ -22,6 +22,8 @@ public class AudioManager : MonoBehaviour {
 
     public List<AudioSource> activeSources;
 
+    private System.Random random;
+
     void initialiseSound(Sound s)
     {
         s.source = gameObject.AddComponent<AudioSource>();
@@ -62,6 +64,7 @@ public class AudioManager : MonoBehaviour {
         }
 
         activeSources = new List<AudioSource>();
+        random = new System.Random();
     }
 
     //Update is called every frame.
@@ -172,6 +175,14 @@ public class AudioManager : MonoBehaviour {
         }
 
         s.source.PlayOneShot(s.source.clip, 0.7F);
+    }
+
+    public int PlayRandomOneShot()
+    {
+        int index = random.Next(1, oneShots.Length - 1);
+        AudioSource source = oneShots[index].source;
+        source.PlayOneShot(source.clip, 0.7f);
+        return index;
     }
 
 

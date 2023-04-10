@@ -36,10 +36,12 @@ public class FreestyleHandler  {
         return false;
     }
 
-    public void handleDrumHitFreestyle(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity, float delay)
+    public void handleDrumHitFreestyle(RhythmSpawner spawner, AudioManager audioManager, int playerIndex, int drumIndex, float velocity, float delay)
     {
         if(this.beatTransfer != null)
         {
+            int oneShot = audioManager.PlayRandomOneShot();
+            Debug.Log("RET " + oneShot.ToString());
             this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, velocity);
         }
     }
