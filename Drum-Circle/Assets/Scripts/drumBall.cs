@@ -39,18 +39,18 @@ public class drumBall : MonoBehaviour
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("layer1");
+            /*FindObjectOfType<AudioManager>().Play("layer1");
             FindObjectOfType<AudioManager>().Play("layer2");
             FindObjectOfType<AudioManager>().Volume("layer2", 0f);
             FindObjectOfType<AudioManager>().Play("layer3");
-            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
+            FindObjectOfType<AudioManager>().Volume("layer3", 0f);*/
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("drumTap");
+            /*FindObjectOfType<AudioManager>().Play("drumTap");*/
 
             streakCombo++;
         }
@@ -59,7 +59,7 @@ public class drumBall : MonoBehaviour
         {
             rb.velocity = new Vector3(0, 5f, 0);
 
-            FindObjectOfType<AudioManager>().Play("tapFail");
+            /*FindObjectOfType<AudioManager>().Play("tapFail");*/
             if (streak > 0)
                 streak--;
             else
@@ -105,16 +105,16 @@ public class drumBall : MonoBehaviour
         }
 
         if (streak == 0)
-            FindObjectOfType<AudioManager>().Volume("layer2", 0f);
+            //FindObjectOfType<AudioManager>().Volume("layer2", 0f);
 
         if (streak == 1)
-            FindObjectOfType<AudioManager>().Volume("layer3", 0f);
+           // FindObjectOfType<AudioManager>().Volume("layer3", 0f);
 
         if (streak >= 1)
-            FindObjectOfType<AudioManager>().FadeIn("layer2", "fast");
+            //FindObjectOfType<AudioManager>().FadeIn("layer2", "fast");
 
         if (streak >= 2)
-            FindObjectOfType<AudioManager>().FadeIn("layer3", "fast");
+            //FindObjectOfType<AudioManager>().FadeIn("layer3", "fast");
 
         if (streak > 2)
             streak = 2;

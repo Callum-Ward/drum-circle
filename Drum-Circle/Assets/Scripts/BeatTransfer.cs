@@ -32,15 +32,7 @@ public class BeatTransfer {
     {
         if(playerIndex == this.provider)
         {
-            spawner.spawn(this.recipient + 1, 1 - drumIndex, 1);
+            spawner.spawnWithDelay(this.recipient + 1, 1 - drumIndex, 1, 1.0f);
         }
-    }
-
-    
-    public IEnumerator TransferWithDelay(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        this.transferBeat(spawner, playerIndex, drumIndex, velocity);
     }
 }

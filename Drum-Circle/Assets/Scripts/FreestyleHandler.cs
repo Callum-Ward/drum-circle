@@ -2,14 +2,14 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class FreestyleHandler {
+public class FreestyleHandler  {
 
     private BeatTransfer beatTransfer;
     private int playerCount;
 
     private float[] schedule = {20f, 40f, 60f};
     private float[] durations = {10f, 10f, 10f};
-    private float scheduleIndex = 0;
+    private int scheduleIndex = 0;
 
     public FreestyleHandler(int playerCount)
     {
@@ -17,27 +17,50 @@ public class FreestyleHandler {
         this.beatTransfer = null;
     }
 
+    public bool active()
+    {
+        return this.beatTransfer != null;
+    }
+
     public int nextPlayerIndex()
     {
         return this.beatTransfer.nextPlayer(this.playerCount);
+    }
+
+    public bool checkMiss(int queueNo)
+    {
+        if(this.beatTransfer != null)
+        {
+            return beatTransfer.getProvider() != queueNo / 2;
+        }
+        return false;
     }
 
     public void handleDrumHitFreestyle(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity, float delay)
     {
         if(this.beatTransfer != null)
         {
-            this.beatTransfer.TransferWithDelay(spawner, playerIndex, drumIndex, velocity, delay);
+            this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, velocity);
         }
     }
 
-    public void handleFreestyle(float time)
+    public void handleFreestyle(RhythmSpawner spawner, AudioManager audioManager, float time)
     {
         if(time >= schedule[scheduleIndex] && this.beatTransfer == null)
         {
             this.beatTransfer = new BeatTransfer(0, 1);
+            spawner.setFreestyleMode(this.beatTransfer, true);
+
+            audioManager.FadeOutDrumTrack(0);
+            audioManager.FadeOutDrumTrack(1);
         }
         else if(time >= schedule[scheduleIndex] + durations[scheduleIndex] && this.beatTransfer != null)
         {
+            spawner.setFreestyleMode(null, false);
+
+            audioManager.FadeInDrumTrack(this.beatTransfer.getProvider(), "slow");
+            audioManager.FadeInDrumTrack(this.beatTransfer.getRecipient(), "slow");
+
             this.beatTransfer = null;
             this.scheduleIndex += 1;
         }

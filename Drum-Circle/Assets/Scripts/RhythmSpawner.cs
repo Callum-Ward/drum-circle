@@ -36,13 +36,15 @@ public class RhythmSpawner : MonoBehaviour
     private int[] prevTimesInIndices;
 
     private Color[] trackColors = {new Color(0f,0f,0f), new Color(0.27f,0.08f,0.38f), new Color(0.04f,0.21f,0.10f)};
-    private Color colorFreestyleMode = new Color(1f, 1f, 1f);
+    private Color colorFreestyleMode = new Color(0.5f, 0.5f, 0.5f);
 
     private int playerCount;
 
     private GameObject enaTree;
 
     private GameObject[] targetAreas;
+
+    private BeatTransfer beatTransfer;
 
     // Start is called before the first frame update
     void Start()
@@ -102,10 +104,14 @@ public class RhythmSpawner : MonoBehaviour
         }
     }
 
-    public void setFreestyleMode(int pos, bool freestyle)
+    public void setFreestyleMode(BeatTransfer? newBeatTransfer, bool freestyle)
     {
-        colorFadeTargetComponent(targetAreas[(pos - 1) * 2], freestyle ? colorFreestyleMode : trackColors[pos - 1], 1.0f);
-        colorFadeTargetComponent(targetAreas[(pos - 1) * 2 + 1], freestyle ? colorFreestyleMode : trackColors[pos - 1], 1.0f);
+        int index = newBeatTransfer != null ? newBeatTransfer.getProvider() : this.beatTransfer.getProvider();
+
+        colorFadeTargetComponent(targetAreas[index * 2], freestyle ? colorFreestyleMode : trackColors[index], 1.0f);
+        colorFadeTargetComponent(targetAreas[index * 2 + 1], freestyle ? colorFreestyleMode : trackColors[index], 1.0f);
+
+        this.beatTransfer = newBeatTransfer;
     }
 
     public void spawn(int pos, int left, int size)
@@ -131,8 +137,17 @@ public class RhythmSpawner : MonoBehaviour
             newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
             beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat);
         }
+    }
 
+    public IEnumerator spawnWithDelayCoroutine(int pos, int left, int size, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        spawn(pos, left, size);
+    }
 
+    public void spawnWithDelay(int pos, int left, int size, float delay)
+    {
+        StartCoroutine(spawnWithDelayCoroutine(pos, left, size, delay));
     }
 
     private int spawnFromMidi(int timeInMills, int playerIndex)
@@ -193,6 +208,14 @@ public class RhythmSpawner : MonoBehaviour
         
         for(int i = 0; i < this.playerCount; i++)
         {
+
+            if(this.beatTransfer != null)
+            {
+                if(this.beatTransfer.nextPlayer(this.playerCount) != i)
+                {
+                    continue;
+                }
+            }
 
             if(useMidi)
             {

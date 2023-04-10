@@ -1,17 +1,37 @@
 using UnityEngine.Audio;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
 public class AudioManager : MonoBehaviour {
 
+    public Sound[] drumTracks;
+    public Sound[] additiveLayers;
+    public Sound[] oneShots;
+
     public Sound[] sounds;
+
     public static AudioManager instance;
-    private string fadeIn = null;
-    private string fadeOut = null;
+    private Sound fadeIn = null;
+    private Sound fadeOut = null;
     private string fadeSpeed = null;
 
     public AudioSource activeSource;
+
+    public List<AudioSource> activeSources;
+
+    void initialiseSound(Sound s)
+    {
+        s.source = gameObject.AddComponent<AudioSource>();
+        s.source.clip = s.clip;
+
+        s.source.volume = s.volume;
+        s.source.pitch = s.pitch;
+
+        s.source.loop = s.loop;
+    }
 
     // Awake is called before the Start method
     void Awake()
@@ -25,16 +45,23 @@ public class AudioManager : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
-        foreach(Sound s in sounds)
+
+        foreach(Sound s in drumTracks)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-
-            s.source.loop = s.loop;
+            initialiseSound(s);
         }
+
+        foreach(Sound s in additiveLayers)
+        {
+            initialiseSound(s);
+        }
+
+        foreach(Sound s in oneShots)
+        {
+            initialiseSound(s);
+        }
+
+        activeSources = new List<AudioSource>();
     }
 
     //Update is called every frame.
@@ -42,55 +69,29 @@ public class AudioManager : MonoBehaviour {
     {
         if (fadeIn != null)
         {
-            FadeIn(fadeIn, fadeSpeed);
+            FadeInTrack(fadeIn, fadeSpeed);
         }
         if (fadeOut != null)
         {
-            FadeOut(fadeOut);
+            FadeOutTrack(fadeOut);
         }
     }
 
-    //Plays the passed track.
-    public void Play(string name)
+    void PlayTrack(Sound s)
     {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
-        this.activeSource = s.source;
-        this.activeSource.Play();
+        s.source.Play();
+        activeSources.Add(s.source);
     }
 
-    //Allows changing of volume for selected track
-     public float Volume(string name, float volume)
+    float VolumeTrack(Sound s, float volume)
     {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-
-
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return 0f;
-        }
         s.source.volume = volume;
-
         return s.source.volume;
     }
 
-    //Starts a fade in based on passed speed (Fast/Slow)
-    public void FadeIn(string name, string speed)
+     //Starts a fade in based on passed speed (Fast/Slow)
+    void FadeInTrack(Sound s, string speed)
     {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-        fadeOut = null;
-
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
         if (speed == "fast")
         {
             s.source.volume = s.source.volume + 0.5f;
@@ -108,21 +109,14 @@ public class AudioManager : MonoBehaviour {
         }
         else
         {
-            fadeIn = name;
+            fadeIn = s;
         }
     }
 
     //Fades out music.
-    public void FadeOut(string name)
+    void FadeOutTrack(Sound s)
     {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
         fadeIn = null;
-
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
         s.source.volume = s.source.volume - 0.33f;
         if (s.source.volume == 0f)
         {
@@ -130,21 +124,99 @@ public class AudioManager : MonoBehaviour {
         }
         else
         {
-            fadeOut = name;
+            fadeOut = s;
         }
     }
 
-    //Sets passed sound track as active in the source
-    public void SetActive(string name)
+
+    public void PlayDrumTrack(int index)
     {
-        Sound s = Array.Find(sounds, sounds => sounds.Name == name);
-
-
-        if (s == null)
+        if(index >= drumTracks.Length)
         {
-            Debug.LogWarning("Sound: " + name + " not found!");
+            Debug.LogWarning("Invalid index for drum tracks");
             return;
         }
-        this.activeSource = s.source;
+
+        PlayTrack(drumTracks[index]);
+    }
+
+
+    public void PlayAllDrumTracks()
+    {
+        foreach(Sound s in drumTracks)
+        {
+           PlayTrack(s);
+        }
+    }
+
+
+    public void PlayLayerTrack(int index)
+    {
+        if(index >= additiveLayers.Length)
+        {
+            Debug.LogWarning("Invalid index for additive layers");
+            return;
+        }
+
+        PlayTrack(additiveLayers[index]);
+    }
+
+    public void PlayOneShot(string name)
+    {
+        Sound s = Array.Find(oneShots, sound => sound.Name == name);
+
+        if(s == null)
+        {
+            Debug.LogWarning("No one-shot found with name " + name);
+            return;
+        }
+
+        s.source.PlayOneShot(s.source.clip, 0.7F);
+    }
+
+
+     public float VolumeDrumTrack(int index, float volume)
+    {
+        if(index >= drumTracks.Length)
+        {
+            Debug.LogWarning("Invalid index for drum tracks");
+            return 0f;
+        }
+        
+        return VolumeTrack(drumTracks[index], volume);
+    }
+
+
+     public float VolumeLayerTrack(int index, float volume)
+    {
+        if(index >= additiveLayers.Length)
+        {
+            Debug.LogWarning("Invalid index for additive layers");
+            return 0f;
+        }
+        
+        return VolumeTrack(additiveLayers[index], volume);
+    }
+
+    public void FadeInDrumTrack(int index, string speed)
+    {
+        if(index >= drumTracks.Length)
+        {
+            Debug.LogWarning("Invalid index for drum tracks");
+            return;
+        }
+
+        FadeInTrack(drumTracks[index], speed);
+    }
+
+    public void FadeOutDrumTrack(int index)
+    {
+        if(index >= drumTracks.Length)
+        {
+            Debug.LogWarning("Invalid index for drum tracks");
+            return;
+        }
+
+        FadeOutTrack(drumTracks[index]);
     }
 }
