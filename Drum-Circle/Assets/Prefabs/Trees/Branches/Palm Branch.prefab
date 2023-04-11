@@ -56,9 +56,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 919132149155446097, guid: 719d52085a99349a2b13df1fd4aa709d, type: 3}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: texture
+      value: 
+      objectReference: {fileID: 2800000, guid: 7dd3227c4910c0649b704e7fa374d083, type: 3}
+    - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: leavesNo
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: 73014955a7c44e34f8790c8f5f3c9462, type: 2}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: segments
       value: 10

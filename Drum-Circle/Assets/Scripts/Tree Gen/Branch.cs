@@ -38,9 +38,12 @@ public class Branch : MonoBehaviour
     private Vector3[] pointsAlongCurve;
 
     public Mesh mesh;
+    new Renderer renderer;
 
     protected Vector3[] vertices = new Vector3[] { };
+    private Vector2[] uv = new Vector2[] { };
     private int[] triangles = new int[] { };
+    
 
     [SerializeField] int leavesNo = 5;
     struct leaf
@@ -53,6 +56,7 @@ public class Branch : MonoBehaviour
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
+        renderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -158,6 +162,7 @@ public class Branch : MonoBehaviour
 
         GenerateMesh(segments, faces);
         mesh.vertices = vertices;
+        mesh.uv = uv;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
         
@@ -185,6 +190,7 @@ public class Branch : MonoBehaviour
     void GenerateMesh(int segments, int faces)
     {
         vertices = new Vector3[] { };
+        uv = new Vector2[] { };
 
         pointsAlongCurve = curve.GetPointsAlongCurve(segments);
 
@@ -229,6 +235,12 @@ public class Branch : MonoBehaviour
             {
                 Array.Copy(parent.vertices, parent.vertices.Length - faces, newVertices, 0, faces);
                 newVertices = newVertices.Select(x => x - parent.growth).ToArray();
+
+                for (int j = 0; j < faces; j++)
+                {
+                    var newUv = new Vector2((float)j / faces, 0);
+                    uv = uv.Append(newUv).ToArray();
+                }
             }
 
             else
@@ -247,6 +259,9 @@ public class Branch : MonoBehaviour
                     vertex += (length/maxLength) *  pointsAlongCurve[i];
 
                     newVertices[j] = vertex;
+
+                    var newUv = new Vector2((float)j / faces, (float)i / pointsAlongCurve.Length);
+                    uv = uv.Append(newUv).ToArray();
                 }
             }
 
@@ -290,7 +305,6 @@ public class Branch : MonoBehaviour
                 }
 
                 vertices = vertices.Concat(rotatedNewVertices).ToArray();
-
             }
         }
 
@@ -336,12 +350,12 @@ public class Branch : MonoBehaviour
         for (int i = 0; i < leavesNo - 1; i++)
         {
             var rand = UnityEngine.Random.Range(0, 100);
-            leaves[i].position = leafPoints[rand];
+            leaves[i].position = leafPoints.Last();
             leaves[i].leafObj.transform.parent = this.gameObject.transform;
             leaves[i].leafObj.transform.localScale = Vector3.one * 5;
-            leaves[i].leafObj.transform.position = position + leafPoints[rand] * length / maxLength;
+            leaves[i].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
             leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
-            leaves[i].leafObj.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0);
+            leaves[i].leafObj.transform.Rotate(0, i * 360 / 5, 0);
         }
 
         leaves[leavesNo - 1].position = leafPoints.Last();
