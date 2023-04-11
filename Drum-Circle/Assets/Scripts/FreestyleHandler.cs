@@ -8,7 +8,7 @@ public class FreestyleHandler  {
     private int playerCount;
 
     private float[] schedule = {20f, 40f, 60f};
-    private float[] durations = {10f, 10f, 10f};
+    private float[] durations = {20f, 10f, 10f};
     private int scheduleIndex = 0;
 
     public FreestyleHandler(int playerCount)
@@ -40,9 +40,12 @@ public class FreestyleHandler  {
     {
         if(this.beatTransfer != null)
         {
-            int oneShot = audioManager.PlayRandomOneShot();
-            Debug.Log("RET " + oneShot.ToString());
-            this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, velocity);
+            if(playerIndex != this.beatTransfer.getProvider())
+            {
+                return;
+            }
+            int oneShot = audioManager.PlayRandomOneShot(velocity);
+            this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, oneShot, velocity);
         }
     }
 
@@ -55,6 +58,7 @@ public class FreestyleHandler  {
 
             audioManager.FadeOutDrumTrack(0);
             audioManager.FadeOutDrumTrack(1);
+            
         }
         else if(time >= schedule[scheduleIndex] + durations[scheduleIndex] && this.beatTransfer != null)
         {

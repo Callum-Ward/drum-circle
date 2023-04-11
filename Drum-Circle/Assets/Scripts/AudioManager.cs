@@ -177,11 +177,17 @@ public class AudioManager : MonoBehaviour {
         s.source.PlayOneShot(s.source.clip, 0.7F);
     }
 
-    public int PlayRandomOneShot()
+    public void PlayDrumOneShot(int index, float velocity)
+    {
+        AudioSource source = oneShots[index].source;
+        source.volume = velocity;
+        source.PlayOneShot(source.clip, 1f);
+    }
+
+    public int PlayRandomOneShot(float velocity)
     {
         int index = random.Next(1, oneShots.Length - 1);
-        AudioSource source = oneShots[index].source;
-        source.PlayOneShot(source.clip, 0.7f);
+        this.PlayDrumOneShot(index, velocity);
         return index;
     }
 

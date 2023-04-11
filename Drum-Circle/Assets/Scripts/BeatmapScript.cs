@@ -90,11 +90,20 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassAmount = 0.5f;
     }
 
-    private void registerHit(int queueIndex, MoveBeat beat)
+    private void registerHit(int queueIndex, MoveBeat beat, int oneShotIndex, float velocity)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
         beatManager.BeatDelete(queueIndex, true);
-        audioManager.FadeInDrumTrack(queueIndex / 2, "fast");
+
+        if(freestyleHandler.active() && oneShotIndex > 0)
+        {
+            audioManager.PlayDrumOneShot(oneShotIndex, velocity);
+        }
+        else
+        {
+            audioManager.FadeInDrumTrack(queueIndex / 2, "fast");
+        }
+
         beat.dontDelete = true;
         treeManager.SetHitStatus(true);
     }
@@ -257,13 +266,13 @@ public class BeatmapScript : MonoBehaviour
         };
     }
 
-    private bool checkCorrectDrumHit(int drumIndex)
+    private bool checkCorrectDrumHit(int drumIndex, float velocity)
     {
         if (beatManager.beatQueues[drumIndex].Count > 0) 
         {
             try{
-                var beatL = beatManager.beatQueues[drumIndex].Peek().GetComponent<MoveBeat>();
-                beatHit((drumIndex), beatL);
+                var beat = beatManager.beatQueues[drumIndex].Peek();
+                beatHit((drumIndex), beat.obj.GetComponent<MoveBeat>(), beat.oneShotIndex, velocity);
                 return true;
             } catch {
             }
@@ -278,22 +287,22 @@ public class BeatmapScript : MonoBehaviour
                 //Register left drum hit and perform code
                 if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
                 {
-                    if (checkCorrectDrumHit(i*2))
+                    if (checkCorrectDrumHit(i*2, midiInputVelocities[i*2]))
                     {
                         setEnvironmentTriggers(i*2);
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 0, 0.0f, 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiInputVelocities[i * 2] = 0.0f;
                 }
 
                 //Register right drum hit and perform code
                 if ((drumInputStrengths[i*2 + 1] > 0 || midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
-                    if (checkCorrectDrumHit(i*2 + 1))
+                    if (checkCorrectDrumHit(i*2 + 1, midiInputVelocities[i*2 + 1]))
                     {
                         // Enviroment triggers etc. right drum hit on target
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 1, 0.0f, 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
             }
@@ -341,10 +350,10 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-    void beatHit(int queueNo, MoveBeat beatSide) {
+    void beatHit(int queueNo, MoveBeat beatSide, int oneShotIndex, float velocity) {
         if (beatSide.window == true)
         {
-            registerHit(queueNo, beatSide);
+            registerHit(queueNo, beatSide, oneShotIndex, velocity);
         }
         else if (freestyleHandler.checkMiss(queueNo))
         {

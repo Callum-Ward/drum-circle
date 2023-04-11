@@ -114,7 +114,7 @@ public class RhythmSpawner : MonoBehaviour
         this.beatTransfer = newBeatTransfer;
     }
 
-    public void spawn(int pos, int left, int size)
+    public void spawn(int pos, int left, int size, int oneShotIndex = 0)
     {
         //pos: 1,2,3,4,5
         //if single player central position will be used to spawn 3
@@ -129,25 +129,25 @@ public class RhythmSpawner : MonoBehaviour
             spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
             GameObject newBeat = Instantiate(leftBeat, spawnLoc, transform.rotation);
             newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
-            beatManager.AddToQueue(2 * (pos - 1), newBeat);
+            beatManager.AddToQueue(2 * (pos - 1), newBeat, oneShotIndex);
         }
         else
         {
             GameObject newBeat = Instantiate(rightBeat, spawnLoc, transform.rotation);
             newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
-            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat);
+            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat, oneShotIndex);
         }
     }
 
-    public IEnumerator spawnWithDelayCoroutine(int pos, int left, int size, float delay)
+    public IEnumerator spawnWithDelayCoroutine(int pos, int left, int oneShotIndex, int size, float delay)
     {
         yield return new WaitForSeconds(delay);
-        spawn(pos, left, size);
+        spawn(pos, left, size, oneShotIndex);
     }
 
-    public void spawnWithDelay(int pos, int left, int size, float delay)
+    public void spawnWithDelay(int pos, int left, int oneShotIndex, int size, float delay)
     {
-        StartCoroutine(spawnWithDelayCoroutine(pos, left, size, delay));
+        StartCoroutine(spawnWithDelayCoroutine(pos, left, oneShotIndex, size, delay));
     }
 
     private int spawnFromMidi(int timeInMills, int playerIndex)

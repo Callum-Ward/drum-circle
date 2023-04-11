@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeatManager : MonoBehaviour
+public class Beat {
+    public GameObject obj;
+    public int oneShotIndex;
+}
 
+public class BeatManager : MonoBehaviour
 {
-    public Queue<GameObject>[] beatQueues;
+    public Queue<Beat>[] beatQueues;
     public float deleteDelay = 0.15f;
     private int playerCount;
 
     // Start is called before the first frame update
     void Start()
         {
-            beatQueues = new Queue<GameObject>[playerCount * 2];
+            beatQueues = new Queue<Beat>[playerCount * 2];
             for(int i = 0; i < playerCount * 2; i++)
             {
-                beatQueues[i] = new Queue<GameObject>();
+                beatQueues[i] = new Queue<Beat>();
             }
         }
 
@@ -25,8 +29,8 @@ public class BeatManager : MonoBehaviour
         for(int i = 0; i < playerCount * 2; i++)
         {
             try{
-                GameObject beat = beatQueues[i].Peek();
-                if (beat.GetComponent<MoveBeat>().delete == true)
+                Beat beat = beatQueues[i].Peek();
+                if (beat.obj.GetComponent<MoveBeat>().delete == true)
                 {
                     BeatDelete(i, false);
                 }
@@ -43,8 +47,11 @@ public class BeatManager : MonoBehaviour
     }
 
     //Queues for beats based on track.
-    public void AddToQueue(int queueIndex, GameObject beat)
+    public void AddToQueue(int queueIndex, GameObject obj, int oneShotIndex)
         {
+            Beat beat = new Beat();
+            beat.obj = obj;
+            beat.oneShotIndex = oneShotIndex;
             beatQueues[queueIndex].Enqueue(beat);
         }
 
@@ -53,7 +60,7 @@ public class BeatManager : MonoBehaviour
         {
         if (beatQueues[queueIndex].Count > 0)
         {
-            GameObject lastelem = beatQueues[queueIndex].Dequeue();
+            GameObject lastelem = beatQueues[queueIndex].Dequeue().obj;
             lastelem.GetComponent<MoveBeat>().fade = true;
             lastelem.GetComponent<MoveBeat>().highlight = highlight;
             StartCoroutine(WindowDelay(deleteDelay, lastelem));

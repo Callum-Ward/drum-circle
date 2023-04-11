@@ -28,11 +28,11 @@ public class BeatTransfer {
         return playerCount - (this.provider + this.recipient);
     }
 
-    public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity)
+    public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, int oneShot, float velocity)
     {
         if(playerIndex == this.provider)
         {
-            spawner.spawnWithDelay(this.recipient + 1, 1 - drumIndex, 1, 1.0f);
+            spawner.spawnWithDelay(this.recipient + 1, 1 - drumIndex, oneShot, 1, 1.0f);
         }
     }
 }
