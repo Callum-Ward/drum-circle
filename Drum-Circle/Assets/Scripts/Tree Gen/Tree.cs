@@ -20,7 +20,7 @@ public class Tree : MonoBehaviour
     [SerializeField] GameObject branchObj;
 
     [SerializeField] float length = 0;
-    [Range(0.01f, 0.25f)] public float width = 1;
+    [Range(0.001f, 0.25f)] public float width = 1;
 
     [HideInInspector] public float totalLength;
 
