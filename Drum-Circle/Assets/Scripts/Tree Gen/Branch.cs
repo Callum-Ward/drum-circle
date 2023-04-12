@@ -45,13 +45,13 @@ public class Branch : MonoBehaviour
     private int[] triangles = new int[] { };
     
 
-    [SerializeField] int leavesNo = 5;
-    struct leaf
+    //[SerializeField] int leavesNo = 5;
+    [HideInInspector] public struct leaf
     {
         public GameObject leafObj;
         public Vector3 position;
     }
-    private leaf[] leaves = new leaf[] { };
+    [HideInInspector] public leaf[] leaves = new leaf[] { };
 
     private void Awake()
     {
@@ -63,10 +63,10 @@ public class Branch : MonoBehaviour
     {
         if (!isLeaf)
         {
-            foreach(leaf leaf in leaves)
+            /*foreach(leaf leaf in leaves)
             {
                 leaf.leafObj.SetActive(false);
-            }
+            }*/
         }
     }
     
@@ -129,7 +129,7 @@ public class Branch : MonoBehaviour
 
         if(!isFullyGrown)
         {
-            length += maxLength / 100 * scoreMul;
+            length += maxLength / 1000 * scoreMul;
             
             width = length * maxWidth;
 
@@ -332,9 +332,11 @@ public class Branch : MonoBehaviour
         }
     }
 
-    void SetLeaves()
+
+    public virtual void SetLeaves()
     {
-        int leavesNo = UnityEngine.Random.Range(1, this.leavesNo + 1);
+        //int leavesNo = UnityEngine.Random.Range(1, this.leavesNo + 1);
+        int leavesNo = 20;
 
         for (int i = 0; i < leavesNo; i++)
         {
@@ -355,7 +357,7 @@ public class Branch : MonoBehaviour
             leaves[i].leafObj.transform.localScale = Vector3.one * 5;
             leaves[i].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
             leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
-            leaves[i].leafObj.transform.Rotate(0, i * 360 / 5, 0);
+            leaves[i].leafObj.transform.Rotate(0, i * 360 / leavesNo, 0);
         }
 
         leaves[leavesNo - 1].position = leafPoints.Last();
