@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Splines;
 using static UnityEngine.GraphicsBuffer;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 public class Branch : MonoBehaviour
 {
@@ -335,8 +336,7 @@ public class Branch : MonoBehaviour
 
     public virtual void SetLeaves()
     {
-        //int leavesNo = UnityEngine.Random.Range(1, this.leavesNo + 1);
-        int leavesNo = 20;
+        int leavesNo = 30;
 
         for (int i = 0; i < leavesNo; i++)
         {
@@ -347,32 +347,25 @@ public class Branch : MonoBehaviour
             leaves = leaves.Concat(new leaf[] { l }).ToArray();
         }
 
-        var leafPoints = curve.GetPointsAlongCurve(100);
-
-        for (int i = 0; i < leavesNo - 1; i++)
+        for (int i = 0; i < leavesNo; i++)
         {
-            var rand = UnityEngine.Random.Range(0, 100);
-            leaves[i].position = leafPoints.Last();
+            leaves[i].position = growth;
             leaves[i].leafObj.transform.parent = this.gameObject.transform;
-            leaves[i].leafObj.transform.localScale = Vector3.one * 5;
-            leaves[i].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
+            leaves[i].leafObj.transform.localScale = Vector3.zero;
+            leaves[i].leafObj.transform.position = position + growth * length / maxLength;
             leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
-            leaves[i].leafObj.transform.Rotate(0, i * 360 / leavesNo, 0);
-        }
 
-        leaves[leavesNo - 1].position = leafPoints.Last();
-        leaves[leavesNo - 1].leafObj.transform.parent = this.gameObject.transform;
-        leaves[leavesNo - 1].leafObj.transform.localScale = Vector3.one * 5;
-        leaves[leavesNo - 1].leafObj.transform.position = position + leafPoints.Last() * length / maxLength;
-        leaves[leavesNo - 1].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
-        leaves[leavesNo - 1].leafObj.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0);
+            var r = Random.Range(-40, 30);
+            leaves[i].leafObj.transform.Rotate(r, i * 360 / leavesNo, 0);
+        }
     }
 
-    void UpdateLeavesPosition()
+    public virtual void UpdateLeavesPosition()
     {
         foreach( var leaf in leaves )
         {
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 public class OakBranch : Branch
 {
-    public override void SetLeaves ()
+    public override void SetLeaves()
     {
         if (parent == null) return;
 
@@ -20,5 +20,15 @@ public class OakBranch : Branch
         l.leafObj.transform.rotation = Quaternion.LookRotation(growth, growth - basis);
 
         leaves = leaves.Concat(new leaf[] { l }).ToArray();
+    }
+
+    public override void UpdateLeavesPosition()
+    {
+        
+        foreach (var leaf in leaves)
+        {
+            leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
+        }
+        
     }
 }
