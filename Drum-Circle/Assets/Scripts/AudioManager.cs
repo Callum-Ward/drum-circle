@@ -11,8 +11,6 @@ public class AudioManager : MonoBehaviour {
     public Sound[] additiveLayers;
     public Sound[] oneShots;
 
-    public Sound[] sounds;
-
     public static AudioManager instance;
     private Sound fadeIn = null;
     private Sound fadeOut = null;
