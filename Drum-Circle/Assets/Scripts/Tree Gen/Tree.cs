@@ -14,6 +14,7 @@ using UnityEngine.XR;
 using UnityEngine.Splines;
 using static UnityEditor.PlayerSettings;
 using System.Security.Policy;
+using System.IO.IsolatedStorage;
 
 public class Tree : MonoBehaviour
 {
@@ -31,14 +32,15 @@ public class Tree : MonoBehaviour
     [Range (0.0f, 1.0f)] public float directionNoise;
 
     [SerializeField] float maxDepth = 10;
+    public bool isFullyGrown = false;
+
+    public int lod;
 
     List<GameObject> branches = new();
     Branch root = null;
 
     int depth = 1;
     float currentRotation = 0;
-
-    public int lod;
 
     Mesh mesh = null;
 
@@ -128,11 +130,18 @@ public class Tree : MonoBehaviour
 
     public void Grow(float scoreMul)
     {
+        bool fullyGrownCheck = true;
         foreach( var br in branches )
         {
             var branch = br.GetComponent<Branch>();
 
             branch.Grow(scoreMul);
+            if (!branch.isFullyGrown) fullyGrownCheck = false;
+        }
+
+        if (depth > maxDepth && fullyGrownCheck)
+        {
+            this.isFullyGrown = true;
         }
 
        //   CalculateTreeLength();

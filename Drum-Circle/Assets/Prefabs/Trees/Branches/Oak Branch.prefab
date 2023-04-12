@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: m_Name
-      value: branch
+      value: Oak Branch
       objectReference: {fileID: 0}
     - target: {fileID: 2915430925563637615, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: m_RootOrder
@@ -55,5 +55,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+--- !u!1 &2068024257373248739 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2915430925563637604, guid: e5dc6bc2215001547944d0db13264020, type: 3}
+  m_PrefabInstance: {fileID: 3802913714948486023}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3351314336568031724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068024257373248739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1fc0bc363cebe44bcc35cb281c2e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leafObj: {fileID: 919132149155446097, guid: 373f48792965943f2b1ab3cddac75740, type: 3}
+  parent: {fileID: 0}
+  childA: {fileID: 0}
+  childB: {fileID: 0}
+  growth: {x: 0, y: 0, z: 0}
+  basis: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  isLeaf: 1
+  isFullyGrown: 0
+  maxLength: 0
+  length: 0
+  maxWidth: 0
+  width: 0
+  mesh: {fileID: 0}
+  leavesNo: 5
