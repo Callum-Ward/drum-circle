@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class UISelectMenu : MonoBehaviour
 {    
    private VisualElement selectMenu;
+   private MessageListener messageListener;
 
    public void Awake() {
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
+        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
    }
 
    public void missionChoice(string mission) {
