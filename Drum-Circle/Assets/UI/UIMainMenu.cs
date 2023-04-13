@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class UIMainMenu : MonoBehaviour
 {
    private VisualElement mainMenu;
+   private MessageListener messageListener;
 
    public void Awake() {
         mainMenu = GameObject.Find("UIMainMenu").GetComponent<UIDocument>().rootVisualElement;
+        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
    }
 
    public void startGame() {
