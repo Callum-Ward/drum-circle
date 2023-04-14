@@ -7,8 +7,8 @@ public class FreestyleHandler  {
     private BeatTransfer beatTransfer;
     private int playerCount;
 
-    private float[] schedule = {20f, 40f, 60f};
-    private float[] durations = {20f, 10f, 10f};
+    private float[] schedule = {2000f};
+    private float[] durations = {20f};
     private int scheduleIndex = 0;
 
     public FreestyleHandler(int playerCount)

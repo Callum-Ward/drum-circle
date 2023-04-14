@@ -31,7 +31,7 @@ public class BeatManager : MonoBehaviour
         {
             try{
                 Beat beat = beatQueues[i].Peek();
-                if (beat.obj.GetComponent<MoveBeat>().delete == true)
+                if (beat.obj.GetComponent<MoveBeatUI>().delete == true)
                 {
                     BeatDelete(i, false);
                 }
@@ -62,8 +62,8 @@ public class BeatManager : MonoBehaviour
         if (beatQueues[queueIndex].Count > 0)
         {
             GameObject lastelem = beatQueues[queueIndex].Dequeue().obj;
-            lastelem.GetComponent<MoveBeat>().fade = true;
-            lastelem.GetComponent<MoveBeat>().highlight = highlight;
+            lastelem.GetComponent<MoveBeatUI>().fade = true;
+            lastelem.GetComponent<MoveBeatUI>().highlight = highlight;
             StartCoroutine(WindowDelay(deleteDelay, lastelem));
         }
     }

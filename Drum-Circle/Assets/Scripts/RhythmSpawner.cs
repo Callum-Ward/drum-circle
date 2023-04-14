@@ -135,13 +135,13 @@ public class RhythmSpawner : MonoBehaviour
             // spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
             GameObject newBeat = Instantiate(beat);
             newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1));
-            beatManager.AddToQueue(2 * (pos - 1), newBeat);
+            beatManager.AddToQueue(2 * (pos - 1), newBeat, oneShotIndex);
         }
         else
         {
             GameObject newBeat = Instantiate(beat);
             newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1);
-            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat);
+            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat, oneShotIndex);
         }
     }
 

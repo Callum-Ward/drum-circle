@@ -269,7 +269,7 @@ public class BeatmapScript : MonoBehaviour
         {
             try{
                 var beat = beatManager.beatQueues[drumIndex].Peek();
-                beatHit((drumIndex), beat.obj.GetComponent<MoveBeat>(), beat.oneShotIndex, velocity);
+                beatHit((drumIndex), beat.obj.GetComponent<MoveBeatUI>(), beat.oneShotIndex, velocity);
                 return true;
             } catch {
             }

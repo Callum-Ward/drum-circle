@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (ScoreMultiplier > 2)
         {
-            audioManager.Volume("layer2", 1f);
+            //audioManager.Volume("layer2", 1f);
         }
 
     }
