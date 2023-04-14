@@ -45,6 +45,7 @@ public class RhythmSpawner : MonoBehaviour
     private GameObject[] targetAreas;
 
     private BeatTransfer beatTransfer;
+    private bool soloFlag;
 
     // Start is called before the first frame update
     void Start()
@@ -109,14 +110,42 @@ public class RhythmSpawner : MonoBehaviour
         }
     }
 
-    public void setFreestyleMode(BeatTransfer? newBeatTransfer, bool freestyle)
+    public void setFreestyleMode(string mode, BeatTransfer? newBeatTransfer, int soloistIndex)
     {
-        int index = newBeatTransfer != null ? newBeatTransfer.getProvider() : this.beatTransfer.getProvider();
+        if(mode != "transfer" && mode != "solo" && mode != "none")
+        {
+            return;
+        }
 
-        colorFadeTargetComponent(targetAreas[index * 2], freestyle ? colorFreestyleMode : trackColors[index], 1.0f);
-        colorFadeTargetComponent(targetAreas[index * 2 + 1], freestyle ? colorFreestyleMode : trackColors[index], 1.0f);
+        int index = 0;
 
-        this.beatTransfer = newBeatTransfer;
+        if(mode == "transfer")
+        {
+            if(newBeatTransfer != null)
+            {
+                index = newBeatTransfer.getProvider();
+            } 
+            else {
+                this.beatTransfer.getProvider();
+            }
+
+            this.soloFlag = false;
+            this.beatTransfer = newBeatTransfer;
+        }
+        else if(mode == "solo")
+        {
+            index = soloistIndex;
+            this.soloFlag = true;
+            this.beatTransfer = null;
+        }
+        else
+        {
+            this.soloFlag = false;
+            this.beatTransfer = null;
+        }
+
+        colorFadeTargetComponent(targetAreas[index * 2], mode != "none" ? colorFreestyleMode : trackColors[index], 1.0f);
+        colorFadeTargetComponent(targetAreas[index * 2 + 1], mode != "none" ? colorFreestyleMode : trackColors[index], 1.0f);
     }
 
     public void spawn(int pos, int left, int size, int oneShotIndex = 0)
@@ -209,12 +238,16 @@ public class RhythmSpawner : MonoBehaviour
 
     public int spawnOnTime(float time, bool useMidi = false)
     {
+        if(this.soloFlag)
+        {
+            return - 1;
+        }
+
         int index = (int)(Math.Round(time, 2) * 100);
         int timeInMills = (int)Math.Ceiling(time * 1000);
         
         for(int i = 0; i < this.playerCount; i++)
         {
-
             if(this.beatTransfer != null)
             {
                 if(this.beatTransfer.nextPlayer(this.playerCount) != i)

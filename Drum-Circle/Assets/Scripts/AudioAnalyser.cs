@@ -24,11 +24,15 @@ public class TrackJson {
     public List<AudioTimestamp> timestampedOnsets;
 }
 
+public class TimestampedNote {
+    public int left;
+    public int noteNumber;
+}
+
 public class TrackMidi {
     public TimeSpan midiFileDuration;
     public int[] timestampedNotes;
 }
-
 
 public class AudioAnalyser : MonoBehaviour {
 

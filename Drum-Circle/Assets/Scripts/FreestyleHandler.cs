@@ -7,9 +7,12 @@ public class FreestyleHandler  {
     private BeatTransfer beatTransfer;
     private int playerCount;
 
-    private float[] schedule = {2000f};
-    private float[] durations = {20f};
+    private float[] soloSchedule = {10f};
+    private float[] soloDurations = {200f};
+    private float[] transferSchedule = {10000f};
+    private float[] transferDurations = {200f};
     private int scheduleIndex = 0;
+    private int activeSoloist = -1;
 
     public FreestyleHandler(int playerCount)
     {
@@ -20,6 +23,11 @@ public class FreestyleHandler  {
     public bool active()
     {
         return this.beatTransfer != null;
+    }
+
+    public bool activeSolo()
+    {
+        return this.activeSoloist >= 0;
     }
 
     public int nextPlayerIndex()
@@ -51,23 +59,44 @@ public class FreestyleHandler  {
 
     public void handleFreestyle(RhythmSpawner spawner, AudioManager audioManager, float time)
     {
-        if(time >= schedule[scheduleIndex] && this.beatTransfer == null)
+        if(time >= transferSchedule[scheduleIndex] && this.beatTransfer == null)
         {
             this.beatTransfer = new BeatTransfer(0, 1);
-            spawner.setFreestyleMode(this.beatTransfer, true);
+            spawner.setFreestyleMode("transfer", this.beatTransfer, -1);
 
             audioManager.FadeOutDrumTrack(0);
             audioManager.FadeOutDrumTrack(1);
+            audioManager.FadeOutDrumTrack(2);
             
         }
-        else if(time >= schedule[scheduleIndex] + durations[scheduleIndex] && this.beatTransfer != null)
+        else if(time >= transferSchedule[scheduleIndex] + transferDurations[scheduleIndex] && this.beatTransfer != null)
         {
-            spawner.setFreestyleMode(null, false);
+            spawner.setFreestyleMode("none", this.beatTransfer, -1);
 
             audioManager.FadeInDrumTrack(this.beatTransfer.getProvider(), "slow");
             audioManager.FadeInDrumTrack(this.beatTransfer.getRecipient(), "slow");
 
             this.beatTransfer = null;
+            this.scheduleIndex += 1;
+        }
+        else if(time >= soloSchedule[scheduleIndex] && !this.activeSolo())
+        {
+            this.activeSoloist = scheduleIndex;
+            spawner.setFreestyleMode("solo", this.beatTransfer, this.activeSoloist);
+
+            audioManager.FadeOutDrumTrack(0);
+            audioManager.FadeOutDrumTrack(1);
+            audioManager.FadeOutDrumTrack(2);
+            
+        }
+        else if(time >= soloSchedule[scheduleIndex] + soloDurations[scheduleIndex] && this.activeSolo())
+        {
+            spawner.setFreestyleMode("none", this.beatTransfer, -1);
+            audioManager.FadeInDrumTrack(0, "slow");
+            audioManager.FadeInDrumTrack(1, "slow");
+            audioManager.FadeInDrumTrack(2, "slow");
+
+            this.activeSoloist = -1;
             this.scheduleIndex += 1;
         }
     }

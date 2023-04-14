@@ -21,6 +21,7 @@ public class BeatmapScript : MonoBehaviour
     private float[] midiInputVelocities;
     private bool hitL = false;
     private bool hitR = false;
+    
     private bool useMidiFile = true;
 
     public int terrainBeatStage = 1;
