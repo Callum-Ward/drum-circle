@@ -2144,6 +2144,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: inputDelay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: windowtime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
       propertyPath: beatManager
       value: 
       objectReference: {fileID: 687088417}
@@ -4395,11 +4403,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: drumTracks.Array.data[1].volume
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: drumTracks.Array.data[2].volume
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: additiveLayers.Array.data[0].Name
@@ -4439,15 +4447,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: additiveLayers.Array.data[0].volume
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: additiveLayers.Array.data[1].volume
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: additiveLayers.Array.data[2].volume
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7305649572316112274, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: m_RootOrder
