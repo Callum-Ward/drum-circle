@@ -17,11 +17,11 @@ public class RhythmSpawner : MonoBehaviour
     public GameObject beatTrack;
     GameObject leftBeatParent;  
     GameObject rightBeatParent;
-    public GameObject leftBeat;
-    public GameObject rightBeat;
+    public GameObject beat;
     private Vector3 startSpawn;
     private AudioAnalyser audioAnalyser;
     private BeatManager beatManager;
+    private BeatmapScript beatmapScript;
     private const float spawnScale = 1.25f;
 
     private const int beatmapWidth = 5;
@@ -51,6 +51,11 @@ public class RhythmSpawner : MonoBehaviour
     {
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
+        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+
+        window = beatmapScript.window;
+        windowtime = beatmapScript.windowtime;
+        delay = beatmapScript.delay;
 
         enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
         //set beat spawner location with respect to camera position
@@ -62,11 +67,11 @@ public class RhythmSpawner : MonoBehaviour
         targetAreas = new GameObject[playerCount * 2];
 
         for(int i = 0; i < playerCount; i++){
-            GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f) + 0.25f, -4.25f, 0f), transform.rotation);
-            GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
+            // GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f) + 0.25f, -4.25f, 0f), transform.rotation);
+            // GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
             
-            newLeftTarget.transform.localScale *= spawnScale;
-            newRightTarget.transform.localScale *= spawnScale;
+            // newLeftTarget.transform.localScale *= spawnScale;
+            // newRightTarget.transform.localScale *= spawnScale;
 
 
             GameObject newLeftTargetBase = Instantiate(leftTargetBase, startSpawn + new Vector3((i * 2.5f) + 0.24f, -4.26f, 0.01f), transform.rotation);
@@ -121,21 +126,22 @@ public class RhythmSpawner : MonoBehaviour
         //if two players then 2 and 4 
         //if three players then 1,3,5 used
         //left: each player has 2 beat lines, if 1 then left beat spawn else right
-        Vector3 spawnLoc = startSpawn + new Vector3(((pos-1)*1.25f) + (pos*1.25f)-(left*1.25f), 0f, 0f);
-        Vector3 spawnScaleAddition = new Vector3((size - 1)*0.1f, (size-1)*0.1f, 0f);
+
+        // Vector3 spawnLoc = startSpawn + new Vector3(((pos-1)*1.25f) + (pos*1.25f)-(left*1.25f), 0f, 0f);
+        // Vector3 spawnScaleAddition = new Vector3((size - 1)*0.1f, (size-1)*0.1f, 0f);
    
         if (left==1)
         {
-            spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
-            GameObject newBeat = Instantiate(leftBeat, spawnLoc, transform.rotation);
-            newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
-            beatManager.AddToQueue(2 * (pos - 1), newBeat, oneShotIndex);
+            // spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
+            GameObject newBeat = Instantiate(beat);
+            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1));
+            beatManager.AddToQueue(2 * (pos - 1), newBeat);
         }
         else
         {
-            GameObject newBeat = Instantiate(rightBeat, spawnLoc, transform.rotation);
-            newBeat.transform.localScale = spawnScale * newBeat.transform.localScale + spawnScaleAddition;
-            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat, oneShotIndex);
+            GameObject newBeat = Instantiate(beat);
+            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1);
+            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat);
         }
     }
 

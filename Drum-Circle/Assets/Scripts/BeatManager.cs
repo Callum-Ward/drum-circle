@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Beat {
     public GameObject obj;
@@ -71,6 +72,10 @@ public class BeatManager : MonoBehaviour
     IEnumerator WindowDelay(float time, GameObject o)
     {
         yield return new WaitForSeconds(time);
+        
+        VisualElement beat = o.GetComponent<MoveBeatUI>().beatSpawnContainer;
+        VisualElement parent = beat.parent;
+        parent.Remove(beat);
 
         Destroy(o);
     }

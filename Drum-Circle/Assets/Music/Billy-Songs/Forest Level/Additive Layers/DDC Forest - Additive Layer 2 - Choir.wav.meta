@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Drum-Circle/Assets/Music/Billy-Songs/Forest Level/Additive Layers/DDC Forest - Additive Layer 2 - Choir.wav.meta
 guid: baf89ca6e13952d47bee80eb3e8a51f7
+========
+guid: ca2db61d42da9754fa08f1305ae81727
+>>>>>>>> JackDev:Drum-Circle/Assets/Music/Billy-Songs/Drum Hits (for freestyle)/DDC Oriental - Drum 3 - Conga ALL HITS.wav.meta
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6

@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Drum-Circle/Assets/Music/PlayerJson/BiBDrumsBass1.json.meta
 guid: 2cc604afb35fb32459c2b6c2ce0612b2
 TextScriptImporter:
+========
+guid: b8c7c8c4a7114664a8e14af074edb4ab
+PrefabImporter:
+>>>>>>>> JackDev:Drum-Circle/Assets/UI/beat.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
