@@ -32,7 +32,7 @@ public class ScoreManager : MonoBehaviour
         ComboCount = 0;
         ScoreMultiplier = 1f;
         //Debug.Log("Miss registered");
-        audioManager.FadeOut("layer2");
+        //audioManager.FadeOut("layer2");
     }
 
     //Increments counters on hit and calculates multiplier increase.
