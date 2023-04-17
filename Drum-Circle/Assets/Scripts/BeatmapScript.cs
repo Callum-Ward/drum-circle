@@ -15,6 +15,8 @@ public class BeatmapScript : MonoBehaviour
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
+    public float introTimer = 0f;
+    public float introDelay = 8f;
     public float beatTargetLocation = 0.3f;
     private int noteNumberOffset = 21; //44;
     private int[] drumInputStrengths;
@@ -47,6 +49,7 @@ public class BeatmapScript : MonoBehaviour
     public TutorialScript tutorialScript;
     public BeatUI beatUI;
     public TreeManager treeManager;
+    public WaypointMover waypointMover;
     public string[] sections;
     public string receivedString;
     private const int beatmapWidth = 10;
@@ -73,6 +76,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
+        waypointMover = GameObject.Find("Platform_Skull_03").GetComponent<WaypointMover>();
         // treeManager = GameObject.Find("Tree Manager").GetComponent<TreeManager>();
 
         this.freestyleHandler = new FreestyleHandler(this.playerCount);
@@ -319,31 +323,53 @@ public class BeatmapScript : MonoBehaviour
         handleTerrainBeatResponse();
         handleDrumInput();
 
-        //timer += Time.deltaTime;
+        beatUI.startLevelUI();
 
-        //Start the timer
-        if (timer <= delay && audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
-        {
-            timer += Time.deltaTime;
-            beatSpawner.spawnOnTime(timer, useMidiFile);
-            beatUI.startLevelUI();
-        }
-        //Play all layers of music simultaneously
-        else if(audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
-        {
-            audioManager.PlayAllDrumTracks();
-            //audioManager.PlayLayerTrack(1);
+        float countdown = introDelay - introTimer;
 
-            timer = 0f;
-            running = true;
-        }
-        //Drum hit functionality
-        else if(tutorialScript.tutorialComplete == true)
-        {
-            int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[0].time + delay + inputDelay, useMidiFile);
+        // if(introTimer <= introDelay) 
+        // {
+        //     introTimer += Time.deltaTime;
+        // }
+
+        // if(introTimer > introDelay)
+        {//Start the timer
+            if (introTimer <= introDelay && audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
+            {
+                timer += Time.deltaTime;
+                introTimer += Time.deltaTime;
+                beatSpawner.spawnOnTime(timer, useMidiFile);
+            }
+            //Play all layers of music simultaneously
+            else if(audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
+            {
+                audioManager.PlayAllDrumTracks();
+                audioManager.PlayLayerTrack(1);
+
+                timer = 0f;
+                running = true;
+                waypointMover.startMove();
+            }
+            //Drum hit functionality
+            else if(tutorialScript.tutorialComplete == true)
+            {
+                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[0].time + delay + inputDelay, useMidiFile);
+                
+                checkDrumHit();
+                freestyleHandler.handleFreestyle(beatSpawner, audioManager, audioManager.activeSources[0].time);
+            }
+
+            if(countdown <= 5 && countdown > 4) {
+                beatUI.IntroTimerStart();
+            }
+            else if (introDelay - introTimer <= 4 && countdown > 0) {
+                beatUI.IntroTimerUpdate(countdown);
+            }
+            else if (countdown <= 0) {
+                beatUI.IntroTimerStop();
+                introTimer = 10f;
+            }
             
-            checkDrumHit();
-            freestyleHandler.handleFreestyle(beatSpawner, audioManager, audioManager.activeSources[0].time);
         }
 
 //////////////TESTING SECTION////////////////////////////////
