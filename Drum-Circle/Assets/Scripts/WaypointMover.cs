@@ -11,6 +11,8 @@ public class WaypointMover : MonoBehaviour
     private Transform currentWaypoint;
     private Transform nextWaypoint;
 
+    private bool start = false;
+
     // Start is called before the first frame update
 
     void Start()
@@ -29,14 +31,20 @@ public class WaypointMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position,currentWaypoint.position) < switchDistance)
+        if(start == true)
         {
-            currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
-        
-            //nextWaypoint = waypoints.GetNextWaypoint(nextWaypoint);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position,currentWaypoint.position) < switchDistance)
+            {
+                currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
+            
+                //nextWaypoint = waypoints.GetNextWaypoint(nextWaypoint);
+            }
         }
-        
+    }
+
+    public void startMove() {
+        start = true;
     }
 }
