@@ -81,7 +81,7 @@ public class MoveBeatUI : MonoBehaviour
             container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
             element = beatSpawnContainer.Q<VisualElement>("beat");
 
-            Debug.Log("DrumNo: " + drumNo);
+            //Debug.Log("DrumNo: " + drumNo);
             
             if(left == true) {
                 Lanes[drumNo].Add(container);
@@ -110,7 +110,7 @@ public class MoveBeatUI : MonoBehaviour
             if (timer > (beatmapScript.delay + (windowtime/2)) && dontDelete == false)
             {
                 delete = true;
-                audioManager.FadeOut("drums");
+                audioManager.FadeOutDrumTrack(0);
             }
 
             else if (timer >= (beatmapScript.delay - windowtime/2))

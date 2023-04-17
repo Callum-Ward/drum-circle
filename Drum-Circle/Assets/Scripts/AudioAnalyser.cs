@@ -1,13 +1,16 @@
-using UnityEngine.Audio;
 using System;
-using UnityEngine;
-
-using System.IO;
-using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+using UnityEngine.Audio;
+using UnityEngine;
 
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
+
+using Newtonsoft.Json;
 
 public class AudioTimestamp {
     public bool isOnset;
@@ -15,28 +18,48 @@ public class AudioTimestamp {
     public string strength;
 }
 
-public class TrackAnalysis {
+public class TrackJson {
     public string name;
     public string path;
     public List<AudioTimestamp> timestampedOnsets;
 }
 
+public class TimestampedNote {
+    public int left;
+    public int noteNumber;
+}
+
 public class TrackMidi {
-    public MidiFile midiFile;
-    public TempoMap tempoMap;
+    public TimeSpan midiFileDuration;
+    public int[] timestampedNotes;
 }
 
 public class AudioAnalyser : MonoBehaviour {
 
     public static AudioAnalyser instance;
 
-    public string analysisFile;
-    public TrackAnalysis activeAnalysis;
-    public TrackMidi activeMidi;
+    private int playerCount;
 
-    public void loadTrackAnalysis(string name)
+    public string analysisFile;
+    public TrackJson activeAnalysis;
+
+    public TrackMidi[] playerMidis;
+    public TrackJson[] playerJson;
+
+    public string[] playerJsonFiles;
+    public string[] playerMidiFiles;
+
+    private long ticks = 123;
+
+
+    public void setPlayerCount(int playerCount)
     {
-        string path = "../Audio/" + name + ".json";
+        this.playerCount = playerCount;
+    }
+
+    private TrackJson loadTrackJson(string name)
+    {
+        string path = "./Assets/Music/PlayerJson/" + name + ".json";
         List<AudioTimestamp> timestamps;
         using (StreamReader r = new StreamReader(path))  
         {  
@@ -44,18 +67,73 @@ public class AudioAnalyser : MonoBehaviour {
             timestamps = JsonConvert.DeserializeObject<List<AudioTimestamp>>(json);  
         }  
 
-        this.activeAnalysis = new TrackAnalysis();
-        this.activeAnalysis.name = name;
-        this.activeAnalysis.path = path;
-        this.activeAnalysis.timestampedOnsets = timestamps;
+        TrackJson trackJson = new TrackJson();
+        trackJson.name = name;
+        trackJson.path = path;
+        trackJson.timestampedOnsets = timestamps;
+        return trackJson;
     }
 
-    public void loadMidiFile(string name)
+    public void loadAnalysisJson()
     {
-        string path = "../Audio/" + name + ".mid";
-        this.activeMidi = new TrackMidi();
-        this.activeMidi.midiFile = MidiFile.Read(path);
-        this.activeMidi.tempoMap = this.activeMidi.midiFile.GetTempoMap();
+        this.playerJson = new TrackJson[this.playerCount];
+        for(int i = 0; i < this.playerCount; i++)
+        {
+            TrackJson j = loadTrackJson(this.playerJsonFiles[i]);
+            this.playerJson[i] = j;
+        }
+    }
+
+    private int getMedianNoteNumber(IEnumerable<Note> notes)
+    {
+        List<int> noteNumbers = new List<int>();
+        foreach(Note note in notes)
+        {
+            noteNumbers.Add((int)(note.NoteNumber));
+        }
+
+        noteNumbers.Sort();
+        return noteNumbers[noteNumbers.Count / 2];
+    }
+
+    public TrackMidi loadTrackMidi(string name)
+    {
+        string path = "./Assets/Music/PlayerMidis/" + name + ".mid";
+
+        TrackMidi midi = new TrackMidi();
+
+        MidiFile midiFile = MidiFile.Read(path);
+        TempoMap tempoMap = midiFile.GetTempoMap();
+        TimeSpan midiFileDuration = midiFile.GetDuration<MetricTimeSpan>();
+        int durationInMills = midiFileDuration.Minutes * 60000 + midiFileDuration.Seconds * 1000 + midiFileDuration.Milliseconds;
+
+        midi.midiFileDuration = midiFileDuration;
+        midi.timestampedNotes = new int[durationInMills];
+
+        IEnumerable<Note> notes = midiFile.GetNotes();
+
+        int medianNoteNumber = getMedianNoteNumber(notes);
+
+        foreach(Note note in notes)
+        {
+            TimeSpan time = note.TimeAs<MetricTimeSpan>(tempoMap);
+            int timeInMills = time.Minutes * 60000 + time.Seconds * 1000 + time.Milliseconds;
+            midi.timestampedNotes[timeInMills] = 1;
+
+            midi.timestampedNotes[timeInMills] = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 2;
+        }
+
+        return midi;
+    }
+
+    public void loadAnalysisMidi()
+    {
+        this.playerMidis = new TrackMidi[this.playerCount];
+        for(int i = 0; i < this.playerCount; i++)
+        {
+            TrackMidi m = loadTrackMidi(this.playerMidiFiles[i]);
+            this.playerMidis[i] = m;
+        }
     }
 
     // Awake is called before the Start method
@@ -68,9 +146,12 @@ public class AudioAnalyser : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-
         DontDestroyOnLoad(gameObject);
-        loadTrackAnalysis(this.analysisFile);
-        loadMidiFile("ddc-oriental-taiko-midi");
+    }
+
+    void Start()
+    {
+        this.loadAnalysisJson();
+        this.loadAnalysisMidi();
     }
 }

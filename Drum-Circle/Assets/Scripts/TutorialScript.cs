@@ -65,21 +65,21 @@ public class TutorialScript : MonoBehaviour
     }
 
 
-    private void registerHit(int queueIndex, MoveBeat beat)
+    private void registerHit(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
         //audioManager.Volume("drums", 1f);
         beatManager.BeatDelete(queueIndex, true);
-        audioManager.FadeIn("drums", "fast");
+        //audioManager.FadeIn("drums", "fast");
         beat.dontDelete = true;
     }
 
-    private void registerMiss(int queueIndex, MoveBeat beat)
+    private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Miss();
-        audioManager.Play("tapFail", null);
-        audioManager.SetActive("drums");
-        audioManager.Volume("drums", 0f);
+        //audioManager.Play("tapFail");
+        //audioManager.SetActive("drums");
+        //audioManager.Volume("drums", 0f);
         //audioManager.FadeOut("drums");
         if (beat.timer >= (delay * 0.75))
         {

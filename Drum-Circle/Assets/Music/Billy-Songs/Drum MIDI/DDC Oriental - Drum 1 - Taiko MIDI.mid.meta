@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Drum-Circle/Assets/Music/PlayerJson/BiBDrumsBass2.json.meta
+guid: 25e78b031b9654f45ba08d41e2a9eca7
+TextScriptImporter:
+========
 guid: 11698c79b62b4e34d82eb547ebe3f43f
 DefaultImporter:
+>>>>>>>> JackDev:Drum-Circle/Assets/Music/Billy-Songs/Drum MIDI/DDC Oriental - Drum 1 - Taiko MIDI.mid.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

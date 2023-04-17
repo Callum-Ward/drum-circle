@@ -63,7 +63,7 @@ public class MoveBeat : MonoBehaviour
         if (timer > (beatmapScript.delay + (beatmapScript.windowtime)) && dontDelete == false)
         {
             delete = true;
-            audioManager.FadeOut("drums");
+            audioManager.FadeOutDrumTrack(0);
         }
 
         else if (timer >= (beatmapScript.delay - windowtime/2))
