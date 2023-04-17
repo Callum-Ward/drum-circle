@@ -58,7 +58,6 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareDuration = 10f;
     private float beatShareOnset = 30f;
 
-    SerialPort data_stream = new SerialPort("COM3", 9600);
 
     public int playerCount = 3;
 
@@ -214,10 +213,10 @@ public class BeatmapScript : MonoBehaviour
         if (message != null)
         {
             sections = message.Split(":");
-            //Debug.Log(message);
-            if (sections[0] == "on")
+            Debug.Log(message);
+            if (sections.Length > 1)
             {
-                drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
+                drumInputStrengths[Int32.Parse(sections[0])] = Int32.Parse(sections[1]);
             }
             messageListener.message = null;
         }
@@ -289,7 +288,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         setEnvironmentTriggers(i*2);
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 0, midiInputVelocities[i*2], 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiInputVelocities[i * 2] = 0.0f;
                 }
 
@@ -300,7 +299,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         // Enviroment triggers etc. right drum hit on target
                     }
-                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiInputVelocities[i * 2 + 1] = 0.0f;
                 }
             }

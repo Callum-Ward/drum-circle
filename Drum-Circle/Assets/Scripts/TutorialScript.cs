@@ -44,8 +44,6 @@ public class TutorialScript : MonoBehaviour
     public string receivedString;
     private const int beatmapWidth = 10;
 
-    SerialPort data_stream = new SerialPort("COM3", 19200);
-
     public int playerCount = 3;
 
     void Awake()
@@ -148,8 +146,8 @@ public class TutorialScript : MonoBehaviour
         //Opens the data stream for the connected drums
         try
         {
-            data_stream.Open();
-            data_stream.ReadTimeout = 10;
+            //data_stream.Open();
+            //data_stream.ReadTimeout = 10;
         }
         catch (System.Exception ex)
         {

@@ -44,8 +44,15 @@ public class FreestyleHandler  {
         return false;
     }
 
-    public void handleDrumHitFreestyle(RhythmSpawner spawner, AudioManager audioManager, int playerIndex, int drumIndex, float velocity, float delay)
-    {
+    public void handleDrumHitFreestyle(
+        RhythmSpawner spawner,
+        AudioManager audioManager,
+        AudioAnalyser audioAnalyser,
+        int playerIndex,
+        int drumIndex,
+        float velocity,
+        float delay
+    ){
         if(this.beatTransfer != null)
         {
             if(playerIndex != this.beatTransfer.getProvider())
@@ -54,6 +61,19 @@ public class FreestyleHandler  {
             }
             int oneShot = audioManager.PlayRandomOneShot(velocity);
             this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, oneShot, velocity);
+        } 
+        else if(this.activeSolo())
+        {
+            if(playerIndex != this.activeSoloist)
+            {
+                return;
+            }
+            int timeAtNearestNote = audioAnalyser.timeAtNearestNote(playerIndex, drumIndex, audioManager.activeSources[0].time);
+            if(timeAtNearestNote != -1)
+            {
+                //spawner.spawn(playerIndex, 1 - drumIndex, 1, 0, "rising");
+                audioManager.PlayDrumTrackAtTime(playerIndex, (int)Math.Floor((double)(timeAtNearestNote / 1000)));
+            }
         }
     }
 
