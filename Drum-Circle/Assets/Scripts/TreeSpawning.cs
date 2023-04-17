@@ -18,7 +18,7 @@ public class TreeSpawning : MonoBehaviour
     public float scale;
     public Vector3 closestSpawn;
     public bool GrowingTrees = false;
-    public float minGap = 3;
+    public float minGap = 1.5f;
     private float waterLevel = 106;
     public int scene = 1;
     private List<GameObject> treeObjs;
@@ -125,7 +125,8 @@ public class TreeSpawning : MonoBehaviour
         float randCircum = Random.Range(-1.0f, 1.0f); //specify point on circumference of circle
         float randDis = Random.Range(minDisFromCentre, radius); //scale point on circumference within specified range
         Vector2 pointInCircle = new Vector2(spawnCentre.x + randDis * Mathf.Sin(randCircum), spawnCentre.z + randDis * Mathf.Cos(randCircum)); //random point within specified range from spawn centre
-        return new Vector3(pointInCircle.x, Terrain.activeTerrain.SampleHeight(new Vector3(pointInCircle.x, 0, pointInCircle.y)), pointInCircle.y);
+        return new Vector3(pointInCircle.x, Terrain.activeTerrain.SampleHeight(new Vector3(pointInCircle.x, 0, pointInCircle.y)) + Terrain.activeTerrain.transform.position.y, pointInCircle.y);
+        //return new Vector3(pointInCircle.x, 0, pointInCircle.y);
     }
     private Vector3 getSpawnLocation() //specifies tree spawning strategy for each scene
     {
@@ -160,7 +161,8 @@ public class TreeSpawning : MonoBehaviour
                         }
                     }
                     treePos = getRandomSpawn(closestSpawn, closestSpawn.y,0);
-                    if (treePos.y > 106) validLocation = true; //prevent trees spawning under water
+                    //Debug.Log(treePos);
+                    if (treePos.y > waterLevel) validLocation = true; //prevent trees spawning under water
                     break;
             }
             if (validLocation) validLocation = validTreeProximity(treePos); //tree proximity validation applies to all scenes
@@ -170,14 +172,18 @@ public class TreeSpawning : MonoBehaviour
         if (attemps == attempLim)
         {
             Debug.Log("Unable to find valid spawn");
+            //Debug.Log(Terrain.activeTerrain.SampleHeight(new Vector3(110f, 0f, 109f)));
+
             return new Vector3(0, 0, 0);
         }
         if (scene == 3 && oldClosestSpawn != closestSpawn)
         {
             cameraFront.centre = new Vector3(closestSpawn.x, waterLevel, closestSpawn.z);
+            Debug.Log("Camera center updated");
+
         }
-        
-        
+
+
         return treePos;
 
     }
