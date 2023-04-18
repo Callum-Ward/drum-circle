@@ -22,7 +22,7 @@ public class OakBranch : Branch
         leaves = leaves.Concat(new leaf[] { l }).ToArray();
     }
 
-    public override void UpdateLeavesPosition()
+    /*public override void UpdateLeavesPosition()
     {
         
         foreach (var leaf in leaves)
@@ -30,5 +30,5 @@ public class OakBranch : Branch
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
         }
         
-    }
+    }*/
 }
