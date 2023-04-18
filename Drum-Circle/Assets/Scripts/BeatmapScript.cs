@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
+using UnityEngine.SceneManagement;
 
 public class BeatmapScript : MonoBehaviour
 {
@@ -61,7 +62,10 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareDuration = 10f;
     private float beatShareOnset = 30f;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> JackDev
     public int playerCount = 3;
 
     void Awake()
@@ -97,7 +101,7 @@ public class BeatmapScript : MonoBehaviour
 
     private void registerHit(int queueIndex, MoveBeatUI beat, int oneShotIndex, float velocity)
     {
-        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
+        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore), Mathf.FloorToInt(queueIndex/2));
         beatManager.BeatDelete(queueIndex, true);
 
         if(freestyleHandler.active() && oneShotIndex > 0)
@@ -115,7 +119,7 @@ public class BeatmapScript : MonoBehaviour
 
     private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
-        scoreManager.Miss();
+        scoreManager.Miss(Mathf.FloorToInt(queueIndex/2));
         audioManager.PlayOneShot("tap_fail");
         audioManager.VolumeDrumTrack(queueIndex / 2, 0f);
         if (beat.timer >= (delay * 0.85))
@@ -145,7 +149,7 @@ public class BeatmapScript : MonoBehaviour
             treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
             treeStage += 1;
         }
-        else if(Math.Floor(scoreManager.Score / treeScoreRatio) >= treeStage)
+        else if(Mathf.Floor(scoreManager.playerScores[Mathf.FloorToInt(drumIndex/2)] / treeScoreRatio) >= treeStage)
         {
             treeStage += 1;
             treeSpawner.spawnTree(drumIndex + 1, 2);
@@ -327,6 +331,10 @@ public class BeatmapScript : MonoBehaviour
 
         float countdown = introDelay - introTimer;
 
+        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
+            SceneManager.LoadScene("2MissionSelect");
+        }
+
         // if(introTimer <= introDelay) 
         // {
         //     introTimer += Time.deltaTime;
@@ -346,7 +354,8 @@ public class BeatmapScript : MonoBehaviour
                 audioManager.PlayAllDrumTracks();
                 audioManager.PlayLayerTrack(1);
 
-                timer = 0f;
+                // timer = 0f;
+                introTimer = 0f;
                 running = true;
                 waypointMover.startMove();
             }

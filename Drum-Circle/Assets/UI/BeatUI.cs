@@ -105,8 +105,8 @@ public class BeatUI : MonoBehaviour
     }
 
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal) {
-        scoreTags[player-1].text = "Score: " + scoreVal;
-        comboTags[player-1].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
+        scoreTags[player].text = "Score: " + scoreVal;
+        comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
     }
 
     // Update is called once per frame
@@ -184,23 +184,36 @@ public class BeatUI : MonoBehaviour
 
 
     void Update() {
-        updateScore(1, test, ctest, mtest);
-        time = time + Time.deltaTime;
-        test++;
-        if(mtest == 5) {
-            ctest++;
+               
+    }
+
+        IEnumerator FadeOutCoroutine() {
+        float startF = 1f;
+        float endF = 0f;
+        float startW = introTimer.resolvedStyle.width;
+        float startH = introTimer.resolvedStyle.height;
+        float endW = startW*2;
+        float endH = startH*2;
+        float cTimer = 0f;
+        float incrementF = (endF - startF);
+        float incrementW = (endW - startW);
+        float incrementH = (endH - startH);
+        long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
+
+        while (cTimer < 1f) {
+            cTimer += Time.deltaTime;
+            float newOpacity = startF+(incrementF*cTimer);
+            float newWidth = startW+(incrementW*cTimer);
+            float newHeight = startH+(incrementH*cTimer);
+            float newFontSize = introTimer.resolvedStyle.fontSize+1;
+
+            
+            introTimer.style.opacity = newOpacity;
+            introTimer.style.width = new StyleLength(newWidth);
+            introTimer.style.height = new StyleLength(newHeight);
+            introTimer.style.fontSize = new StyleLength(newFontSize);
+            yield return null;
         }
-        else {
-            ctest++;
-            mtest = Mathf.FloorToInt(ctest/100);
-        }
-    
-        if(counter == 50) {
-            counter = 0;
-        }
-        else
-            counter++;
-        
     }
 
         IEnumerator FadeOutCoroutine() {

@@ -65,7 +65,7 @@ public class TutorialScript : MonoBehaviour
 
     private void registerHit(int queueIndex, MoveBeatUI beat)
     {
-        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
+        scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore), Mathf.FloorToInt(queueIndex/2));
         //audioManager.Volume("drums", 1f);
         beatManager.BeatDelete(queueIndex, true);
         //audioManager.FadeIn("drums", "fast");
@@ -74,7 +74,7 @@ public class TutorialScript : MonoBehaviour
 
     private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
-        scoreManager.Miss();
+        scoreManager.Miss(Mathf.FloorToInt(queueIndex/2));
         //audioManager.Play("tapFail");
         //audioManager.SetActive("drums");
         //audioManager.Volume("drums", 0f);
@@ -143,16 +143,16 @@ public class TutorialScript : MonoBehaviour
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
        
-        //Opens the data stream for the connected drums
-        try
-        {
-            //data_stream.Open();
-            //data_stream.ReadTimeout = 10;
-        }
-        catch (System.Exception ex)
-        {
-            print(ex.ToString());
-        }
+        // //Opens the data stream for the connected drums
+        // try
+        // {
+        //     data_stream.Open();
+        //     data_stream.ReadTimeout = 10;
+        // }
+        // catch (System.Exception ex)
+        // {
+        //     print(ex.ToString());
+        // }
 
         stage = 2;
         tutorialComplete = true;
