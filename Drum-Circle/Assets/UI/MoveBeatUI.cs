@@ -81,10 +81,10 @@ public class MoveBeatUI : MonoBehaviour
             container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
             element = beatSpawnContainer.Q<VisualElement>("beat");
 
-            beatHeight = type == "rising" ? screenHeight : beatHeight;
-            moveSpeed = type == "rising" ? -1f : 1f;
+           // beatHeight = type == "rising" ? beatTargetLocation : beatHeight;
+            //moveSpeed = type == "rising" ? -1f : 1f;
 
-            //Debug.Log("DrumNo: " + drumNo);
+            Debug.Log("DrumNo: " + drumNo);
             
             if(left == true) {
                 Lanes[drumNo].Add(container);

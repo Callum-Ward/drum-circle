@@ -16,7 +16,7 @@ public class BeatmapScript : MonoBehaviour
     public float delay = 2.0f;
     public float inputDelay = 0f;
     public float beatTargetLocation = 0.3f;
-    private int noteNumberOffset = 44;
+    private int noteNumberOffset = 26; //21; //44;
     private int[] drumInputStrengths;
     private float[] midiInputVelocities;
     private bool hitL = false;
@@ -237,14 +237,14 @@ public class BeatmapScript : MonoBehaviour
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                /*  Debug.Log(string.Format(
+                  Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,
                     velocity,
                     (note.device as Minis.MidiDevice)?.channel,
                     note.device.description.product
-                )); */
+                )); 
 
                 midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
             };
@@ -332,7 +332,7 @@ public class BeatmapScript : MonoBehaviour
         else if(audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
         {
             audioManager.PlayAllDrumTracks();
-            audioManager.PlayLayerTrack(1);
+            //audioManager.PlayLayerTrack(1);
 
             timer = 0f;
             running = true;

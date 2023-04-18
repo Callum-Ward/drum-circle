@@ -7,7 +7,7 @@ public class FreestyleHandler  {
     private BeatTransfer beatTransfer;
     private int playerCount;
 
-    private float[] soloSchedule = {10f};
+    private float[] soloSchedule = {100000f};
     private float[] soloDurations = {200f};
     private float[] transferSchedule = {10000f};
     private float[] transferDurations = {200f};
@@ -59,21 +59,14 @@ public class FreestyleHandler  {
             {
                 return;
             }
-            int oneShot = audioManager.PlayRandomOneShot(velocity);
-            this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, oneShot, velocity);
+            int oneShotIndex = audioManager.PlaySoloOneShot(playerIndex, drumIndex, velocity);
+            this.beatTransfer.transferBeat(spawner, playerIndex, drumIndex, oneShotIndex, velocity);
         } 
         else if(this.activeSolo())
         {
-            if(playerIndex != this.activeSoloist)
-            {
-                return;
-            }
-            int timeAtNearestNote = audioAnalyser.timeAtNearestNote(playerIndex, drumIndex, audioManager.activeSources[0].time);
-            if(timeAtNearestNote != -1)
-            {
-                //spawner.spawn(playerIndex, 1 - drumIndex, 1, 0, "rising");
-                audioManager.PlayDrumTrackAtTime(playerIndex, (int)Math.Floor((double)(timeAtNearestNote / 1000)));
-            }
+            int oneShotIndex = audioManager.PlaySoloOneShot(playerIndex, drumIndex, velocity);
+            //spawner.spawn(playerIndex, 1 - drumIndex, 1, 0, "rising");
+            Debug.Log("AMP " + oneShotIndex.ToString());
         }
     }
 

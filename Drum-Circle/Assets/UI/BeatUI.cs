@@ -42,7 +42,6 @@ public class BeatUI : MonoBehaviour
     int mtest = 0;
 
     int counter = 0;
-    
 
     
     private void OnEnable()
