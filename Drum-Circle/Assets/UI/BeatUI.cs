@@ -215,34 +215,4 @@ public class BeatUI : MonoBehaviour
             yield return null;
         }
     }
-
-        IEnumerator FadeOutCoroutine() {
-        float startF = 1f;
-        float endF = 0f;
-        float startW = introTimer.resolvedStyle.width;
-        float startH = introTimer.resolvedStyle.height;
-        float endW = startW*2;
-        float endH = startH*2;
-        float cTimer = 0f;
-        float incrementF = (endF - startF);
-        float incrementW = (endW - startW);
-        float incrementH = (endH - startH);
-        long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
-
-        while (cTimer < 1f) {
-            cTimer += Time.deltaTime;
-            float newOpacity = startF+(incrementF*cTimer);
-            float newWidth = startW+(incrementW*cTimer);
-            float newHeight = startH+(incrementH*cTimer);
-            float newFontSize = introTimer.resolvedStyle.fontSize+1;
-
-            
-            introTimer.style.opacity = newOpacity;
-            introTimer.style.width = new StyleLength(newWidth);
-            introTimer.style.height = new StyleLength(newHeight);
-            introTimer.style.fontSize = new StyleLength(newFontSize);
-            yield return null;
-        }
-    }
-    
 }
