@@ -16,7 +16,7 @@ public class BeatmapScript : MonoBehaviour
     public float delay = 2.0f;
     public float inputDelay = 0f;
     public float beatTargetLocation = 0.3f;
-    private int noteNumberOffset = 26; //21; //44;
+    private int noteNumberOffset = 21; //44;
     private int[] drumInputStrengths;
     private float[] midiInputVelocities;
     private bool hitL = false;
