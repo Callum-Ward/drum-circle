@@ -69,7 +69,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                 IsRunning = true;
                                 // Get number of bodies in the current frame.
                                 currentFrameData.NumOfBodies = frame.NumberOfBodies;
-                                UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
+                                //UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
 
                                 // Copy bodies.
                                 for (uint i = 0; i < currentFrameData.NumOfBodies; i++)
