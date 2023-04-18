@@ -62,10 +62,6 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareDuration = 10f;
     private float beatShareOnset = 30f;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> JackDev
     public int playerCount = 3;
 
     void Awake()
