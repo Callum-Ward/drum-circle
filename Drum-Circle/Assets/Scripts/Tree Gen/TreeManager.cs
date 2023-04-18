@@ -43,17 +43,17 @@ public class TreeManager : MonoBehaviour
             if (hitStatus == true)
             {
                 var modifiedScore = false;
-                if(scoreManager.Score > lastScore) 
+                if(scoreManager.playerScores[0] > lastScore) 
                 {
                     modifiedScore = true;
-                    lastScore = scoreManager.Score;
+                    lastScore = scoreManager.playerScores[0];
                 }
                 
                 foreach (var t in trees)
                 {
                     var tree = t.GetComponent<Tree>();
 
-                    tree.Grow(scoreManager.ScoreMultiplier);
+                    tree.Grow(scoreManager.ScoreMultiplier[0]);
 
                     if(modifiedScore) tree.AddBranches();
                 }
