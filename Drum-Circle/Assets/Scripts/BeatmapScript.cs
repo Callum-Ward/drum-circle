@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
+using UnityEngine.SceneManagement;
 
 public class BeatmapScript : MonoBehaviour
 {
@@ -326,6 +327,10 @@ public class BeatmapScript : MonoBehaviour
 
         float countdown = introDelay - introTimer;
 
+        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
+            SceneManager.LoadScene("2MissionSelect");
+        }
+
         // if(introTimer <= introDelay) 
         // {
         //     introTimer += Time.deltaTime;
@@ -345,7 +350,8 @@ public class BeatmapScript : MonoBehaviour
                 audioManager.PlayAllDrumTracks();
                 audioManager.PlayLayerTrack(1);
 
-                timer = 0f;
+                // timer = 0f;
+                introTimer = 0f;
                 running = true;
                 waypointMover.startMove();
             }
