@@ -84,7 +84,7 @@ public class MoveBeatUI : MonoBehaviour
            // beatHeight = type == "rising" ? beatTargetLocation : beatHeight;
             //moveSpeed = type == "rising" ? -1f : 1f;
 
-            Debug.Log("DrumNo: " + drumNo);
+            //Debug.Log("DrumNo: " + drumNo);
             
             if(left == true) {
                 Lanes[drumNo].Add(container);

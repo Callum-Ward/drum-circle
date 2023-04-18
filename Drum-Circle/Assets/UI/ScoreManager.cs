@@ -16,23 +16,23 @@ public class ScoreManager : MonoBehaviour
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();        
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();   
-        int[] ScoreMultiplier = new int[3];
-        int[] ComboCounter = new int[3];
-        int[] ComboCount = new int[3];
-        int[] playerScores = new int[3];
+        ScoreMultiplier = new int[3];
+        ComboCounter = new int[3];
+        ComboCount = new int[3];
+        playerScores = new int[3];
     }
 
     public void Update()
     {
-        Debug.Log("Length of ScoreM" + ScoreMultiplier.Length);
-        Debug.Log("Length of ComboCount" + ComboCount.Length);
-        Debug.Log("Length of PlayerSc" + playerScores.Length);
+        //Debug.Log("Length of ScoreM" + ScoreMultiplier.Length);
+        //Debug.Log("Length of ComboCount" + ComboCount.Length);
+        //Debug.Log("Length of PlayerSc" + playerScores.Length);
         for(int i = 0; i < 3; i++) {            
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
             }
-            Debug.Log("I = " + i);
+            //Debug.Log("I = " + i);
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i]);
         }
 

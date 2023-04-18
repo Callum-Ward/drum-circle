@@ -19,7 +19,7 @@ public class BeatmapScript : MonoBehaviour
     public float introTimer = 0f;
     public float introDelay = 8f;
     public float beatTargetLocation = 0.3f;
-    private int noteNumberOffset = 21;
+    private int noteNumberOffset = 44; //21;
     private int[] drumInputStrengths;
     private float[] midiInputVelocities;
     private bool hitL = false;
@@ -217,7 +217,7 @@ public class BeatmapScript : MonoBehaviour
         if (message != null)
         {
             sections = message.Split(":");
-            Debug.Log(message);
+           //Debug.Log(message);
             if (sections.Length > 1)
             {
                 drumInputStrengths[Int32.Parse(sections[0])] = Int32.Parse(sections[1]);

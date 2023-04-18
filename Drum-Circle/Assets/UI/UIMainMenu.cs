@@ -26,6 +26,14 @@ public class UIMainMenu : MonoBehaviour
         SceneManager.LoadScene("2MissionSelect");
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        drumInputStrengths = new int[playerCount*2];
+        midiInputVelocities = new float[playerCount*2];
+        addMidiHandler();
+    }
+
     private void OnButtonClick() {
         startGame();
     }
@@ -66,7 +74,7 @@ public class UIMainMenu : MonoBehaviour
         }
     }
 
-        private void addMidiHandler()
+    private void addMidiHandler()
     {
         InputSystem.onDeviceChange += (device, change) =>
         {
@@ -81,7 +89,7 @@ public class UIMainMenu : MonoBehaviour
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                /*  Debug.Log(string.Format(
+                  /*Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,

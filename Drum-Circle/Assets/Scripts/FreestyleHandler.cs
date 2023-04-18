@@ -66,7 +66,7 @@ public class FreestyleHandler  {
         {
             int oneShotIndex = audioManager.PlaySoloOneShot(playerIndex, drumIndex, velocity);
             //spawner.spawn(playerIndex, 1 - drumIndex, 1, 0, "rising");
-            Debug.Log("AMP " + oneShotIndex.ToString());
+            //Debug.Log("AMP " + oneShotIndex.ToString());
         }
     }
 
