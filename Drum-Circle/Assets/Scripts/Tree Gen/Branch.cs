@@ -159,6 +159,10 @@ public class Branch : MonoBehaviour
                 segments = 2;
                 faces = 4;
                 break;
+            default:
+                segments = 2;
+                faces = 4;
+                break;
         }
 
         GenerateMesh(segments, faces);

@@ -44,7 +44,7 @@ public class BeatmapScript : MonoBehaviour
     public AudioManager audioManager;
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
-    public TreeSpawnerForest treeSpawner;
+    public TreeSpawning treeSpawner;
     public MessageListener messageListener;
     public Terrain terrain;
     public TutorialScript tutorialScript;
@@ -72,12 +72,13 @@ public class BeatmapScript : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
-        treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawnerForest>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
         waypointMover = GameObject.Find("Platform_Skull_03").GetComponent<WaypointMover>();
-        // treeManager = GameObject.Find("Tree Manager").GetComponent<TreeManager>();
+
+        treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
+        treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
 
         this.freestyleHandler = new FreestyleHandler(this.playerCount);
 
@@ -85,7 +86,6 @@ public class BeatmapScript : MonoBehaviour
         beatManager.setPlayerCount(this.playerCount);
         beatSpawner.setPlayerCount(this.playerCount);
         beatUI.setPlayerCount(this.playerCount);
-        treeSpawner.setPlayers(this.playerCount);
 
         drumInputStrengths = new int[this.playerCount*2];
         midiInputVelocities = new float[this.playerCount*2];
@@ -135,21 +135,20 @@ public class BeatmapScript : MonoBehaviour
 
     private void setEnvironmentTriggers(int drumIndex)
     {
+        int playerIndex = Mathf.FloorToInt(drumIndex / 2);
+
         if(drumIndex % 2 == 0 && terrainBeatStage <= 1)
         {   
             terrainBeatStage += 1;
         }
                             
-        if(treeStage == 0)
-        {
-            treeSpawner.spawnTreeAtLocation(1, new Vector2(293, 38), true);
-            treeStage += 1;
-        }
-        else if(Mathf.Floor(scoreManager.playerScores[Mathf.FloorToInt(drumIndex/2)] / treeScoreRatio) >= treeStage)
+        if(Mathf.Floor(scoreManager.playerScores[playerIndex] / treeScoreRatio) >= treeStage)
         {
             treeStage += 1;
-            treeSpawner.spawnTree(drumIndex + 1, 2);
+            //treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
         }
+
+        treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
     }
 
     private void handleTerrainBeatResponse()
@@ -320,7 +319,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
         //13
-        handleTerrainBeatResponse();
+        //handleTerrainBeatResponse();
         handleDrumInput();
 
         beatUI.startLevelUI();
