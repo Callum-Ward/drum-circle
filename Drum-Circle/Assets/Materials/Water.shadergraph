@@ -790,10 +790,10 @@
                 "m_Id": "94b062014f394b5b9dac97d9c0c4bc38"
             },
             {
-                "m_Id": "8cb52dfc1e6a41b992a3697ff489383d"
+                "m_Id": "213acf65a35346ddbeb8680f30e4326a"
             },
             {
-                "m_Id": "213acf65a35346ddbeb8680f30e4326a"
+                "m_Id": "8cb52dfc1e6a41b992a3697ff489383d"
             }
         ]
     },
@@ -4688,7 +4688,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "Alpha",
     "m_StageCapability": 2,
-    "m_Value": 1.0,
+    "m_Value": 0.800000011920929,
     "m_DefaultValue": 1.0,
     "m_Labels": []
 }
