@@ -206,6 +206,8 @@ public class Branch : MonoBehaviour
             minWidth = childA.width;
         }
 
+        //Debug.Log(segments.ToString() + ", " + faces.ToString());
+
         //for each sampled point of the curve
         for (int i = 0; i < pointsAlongCurve.Length; i++)
         {
