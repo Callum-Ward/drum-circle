@@ -7,6 +7,7 @@ using System.Text;
 public class PuppetAvatar : MonoBehaviour
 {
     public TrackerHandler KinectDevice;
+    public GameObject platform;
     Dictionary<JointId, Quaternion> absoluteOffsetMap1;
     Dictionary<JointId, Quaternion> absoluteOffsetMap2;
     Dictionary<JointId, Quaternion> absoluteOffsetMap3;
@@ -16,12 +17,9 @@ public class PuppetAvatar : MonoBehaviour
     public Transform CharacterRootTransform1;
     public Transform CharacterRootTransform2;
     public Transform CharacterRootTransform3;
-    public float OffsetY1;
-    public float OffsetZ1;
-    public float OffsetY2;
-    public float OffsetZ2;
-    public float OffsetY3;
-    public float OffsetZ3;
+    public Vector3 Offset1;
+    public Vector3 Offset2;
+    public Vector3 Offset3;
     private static HumanBodyBones MapKinectJoint(JointId joint)
     {
         // https://docs.microsoft.com/en-us/azure/Kinect-dk/body-joints
@@ -144,10 +142,11 @@ public class PuppetAvatar : MonoBehaviour
                 
                 if (j == 0)
                 {
-                    UnityEngine.Debug.Log("root1: " + RootPosition.x + RootPosition.y);
+                    // UnityEngine.Debug.Log("root1: " + RootPosition.x + RootPosition.y);
                     // character root plus translation reading from the kinect, plus the offset from the script public variables
-                    finalJoint.position = CharacterRootTransform1.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY1, RootPosition.z - OffsetZ1);
+                    // finalJoint.position = CharacterRootTransform1.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY1, RootPosition.z - OffsetZ1);
                     // finalJoint.position = CharacterRootTransform1.position + new Vector3(transform.GetChild(0).position.x, transform.GetChild(0).position.y + OffsetY1, transform.GetChild(0).position.z - OffsetZ1);
+                    finalJoint.position = new Vector3(platform.transform.position.x + Offset1.x, platform.transform.position.y + Offset1.y, platform.transform.position.z + Offset1.z);
                 }
             }
             if (MapKinectJoint((JointId)j) != HumanBodyBones.LastBone && absoluteOffsetMap2.ContainsKey((JointId)j))
@@ -162,10 +161,11 @@ public class PuppetAvatar : MonoBehaviour
                 
                 if (j == 0)
                 {
-                    UnityEngine.Debug.Log("root2: " + RootPosition.x + RootPosition.y);
+                    // UnityEngine.Debug.Log("root2: " + RootPosition.x + RootPosition.y);
 
                     // character root plus translation reading from the kinect, plus the offset from the script public variables
-                    finalJoint.position = CharacterRootTransform2.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY2, RootPosition.z - OffsetZ2);                    
+                    // finalJoint.position = CharacterRootTransform2.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY2, RootPosition.z - OffsetZ2);
+                    finalJoint.position = new Vector3(platform.transform.position.x + Offset2.x, platform.transform.position.y + Offset2.y, platform.transform.position.z + Offset2.z);                    
                     // finalJoint.position = CharacterRootTransform1.position + new Vector3(transform.GetChild(1).position.x, transform.GetChild(1).position.y + OffsetY2, transform.GetChild(1).position.z - OffsetZ2);
                 }
             }
@@ -181,10 +181,11 @@ public class PuppetAvatar : MonoBehaviour
                 
                 if (j == 0)
                 {
-                    UnityEngine.Debug.Log("root3: " + RootPosition.x + RootPosition.y);
+                    // UnityEngine.Debug.Log("root3: " + RootPosition.x + RootPosition.y);
 
                     // character root plus translation reading from the kinect, plus the offset from the script public variables
-                    finalJoint.position = CharacterRootTransform3.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY3, RootPosition.z - OffsetZ3);                    
+                    // finalJoint.position = CharacterRootTransform3.position + new Vector3(RootPosition.x, RootPosition.y + OffsetY3, RootPosition.z - OffsetZ3); 
+                    finalJoint.position = new Vector3(platform.transform.position.x + Offset3.x, platform.transform.position.y + Offset3.y, platform.transform.position.z + Offset3.z);                   
                     // finalJoint.position = CharacterRootTransform1.position + new Vector3(transform.GetChild(1).position.x, transform.GetChild(1).position.y + OffsetY2, transform.GetChild(1).position.z - OffsetZ2);
                 }
             }
