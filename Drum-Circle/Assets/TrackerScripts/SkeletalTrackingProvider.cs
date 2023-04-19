@@ -44,8 +44,9 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                 UnityEngine.Debug.Log("Open K4A device successful. id " + id + "sn:" + device.SerialNum);
 
                 var deviceCalibration = device.GetCalibration();
+                UnityEngine.Debug.Log("calibrated");
 
-                using (Tracker tracker = Tracker.Create(deviceCalibration, new TrackerConfiguration() { ProcessingMode = TrackerProcessingMode.DirectML, SensorOrientation = SensorOrientation.Default }))
+                using (Tracker tracker = Tracker.Create(deviceCalibration, new TrackerConfiguration() { ProcessingMode = TrackerProcessingMode.Cpu, SensorOrientation = SensorOrientation.Default }))
                 {
 
                     UnityEngine.Debug.Log("Body tracker created.");
@@ -69,7 +70,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                 IsRunning = true;
                                 // Get number of bodies in the current frame.
                                 currentFrameData.NumOfBodies = frame.NumberOfBodies;
-                                //UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
+                                UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
 
                                 // Copy bodies.
                                 for (uint i = 0; i < currentFrameData.NumOfBodies; i++)
