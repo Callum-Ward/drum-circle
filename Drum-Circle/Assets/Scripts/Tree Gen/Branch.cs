@@ -159,6 +159,10 @@ public class Branch : MonoBehaviour
                 segments = 2;
                 faces = 4;
                 break;
+            default:
+                segments = 2;
+                faces = 4;
+                break;
         }
 
         GenerateMesh(segments, faces);
@@ -191,9 +195,14 @@ public class Branch : MonoBehaviour
     void GenerateMesh(int segments, int faces)
     {
         vertices = new Vector3[] { };
-        uv = new Vector2[] { };
+        triangles = new int[] { };
 
-        pointsAlongCurve = curve.GetPointsAlongCurve(segments);
+        //the minimum widtht of the graph is the width of its children 
+        float minWidth = 0.001f;
+        if (!isLeaf)
+        {
+            minWidth = childA.width;
+        }
 
         //the minimum widtht of the graph is the width of its children 
         float minWidth = 0.001f;

@@ -18,7 +18,7 @@ bool gReverseDirection = false;
 CRGB leds[drumCount][NUM_LEDS];
 
 const int threshold = 920;
-const int peakDelay =35;
+const int peakDelay =25;
 const int bounceDelay=30;
 bool hits[drumCount];
 bool bounceReset[drumCount];

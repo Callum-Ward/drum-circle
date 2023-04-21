@@ -10,6 +10,9 @@ public class AudioManager : MonoBehaviour {
     public Sound[] drumTracks;
     public Sound[] additiveLayers;
     public Sound[] oneShots;
+    public int[] oneShotMap;
+
+    public float longestTime = 0;
 
     public static AudioManager instance;
     private Sound fadeIn = null;
@@ -82,6 +85,9 @@ public class AudioManager : MonoBehaviour {
     {
         s.source.Play();
         activeSources.Add(s.source);
+        if(s.clip.length > longestTime) {
+            longestTime = s.clip.length;
+        }
     }
 
     float VolumeTrack(Sound s, float volume)
@@ -177,14 +183,20 @@ public class AudioManager : MonoBehaviour {
 
     public void PlayDrumOneShot(int index, float velocity)
     {
+        if(index >= additiveLayers.Length)
+        {
+            Debug.LogWarning("Invalid index for drum one shots");
+            return;
+        }
+
         AudioSource source = oneShots[index].source;
         source.volume = velocity;
         source.PlayOneShot(source.clip, 1f);
     }
 
-    public int PlayRandomOneShot(float velocity)
+    public int PlaySoloOneShot(int playerIndex, int drumIndex, float velocity)
     {
-        int index = random.Next(1, oneShots.Length - 1);
+        int index = oneShotMap[playerIndex * 2 + drumIndex];
         this.PlayDrumOneShot(index, velocity);
         return index;
     }

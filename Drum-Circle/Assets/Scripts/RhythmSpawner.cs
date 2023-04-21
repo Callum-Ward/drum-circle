@@ -148,7 +148,7 @@ public class RhythmSpawner : MonoBehaviour
         colorFadeTargetComponent(targetAreas[index * 2 + 1], mode != "none" ? colorFreestyleMode : trackColors[index], 1.0f);
     }
 
-    public void spawn(int pos, int left, int size, int oneShotIndex = 0)
+    public void spawn(int pos, int left, int size, int oneShotIndex = 0, string type = "falling")
     {
         //pos: 1,2,3,4,5
         //if single player central position will be used to spawn 3
@@ -163,14 +163,22 @@ public class RhythmSpawner : MonoBehaviour
         {
             // spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1));
-            beatManager.AddToQueue(2 * (pos - 1), newBeat, oneShotIndex);
+            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1), type);
+
+            if(type == "falling")
+            {
+                beatManager.AddToQueue(2 * (pos - 1), newBeat, oneShotIndex);
+            }
         }
         else
         {
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1);
-            beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat, oneShotIndex);
+            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1, type);
+
+            if(type == "falling")
+            {
+                beatManager.AddToQueue(2 * (pos - 1) + 1, newBeat, oneShotIndex);
+            }
         }
     }
 
@@ -192,14 +200,13 @@ public class RhythmSpawner : MonoBehaviour
 
         for(int j = lb; j <= ub; j++)
         {
-            int note = audioAnalyser.playerMidis[playerIndex].timestampedNotes[j];
-            if(note != 0)
+            TimestampedNote? note = audioAnalyser.playerMidis[playerIndex].timestampedNotes[j];
+            if(note != null)
             {
-                int left = 2 - note;
-                spawn(playerIndex + 1, left, 1);
+                spawn(playerIndex + 1, note.left, 1);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
-                audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = 0;
-                return (playerIndex + 1) - left;
+                audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
+                return (playerIndex + 1) - note.left;
             }
         }
 

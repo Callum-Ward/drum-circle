@@ -88,26 +88,26 @@ public class TreeSpawning : MonoBehaviour
         return playerTreeCount[playerNo - 1];
     }
 
-    private void spawnAtLocation(int playerNo, Vector2 location, bool growing)
+    private void spawnAtLocation(int playerNo, Vector3 location, bool growing)
     {
-        Vector3 treePos = new Vector3(location.x, Terrain.activeTerrain.SampleHeight(new Vector3(location.x, 0, location.y)), location.y);
         GameObject newTree;
         if (growing)
         {
-            newTree = Instantiate(growingTree, treePos, transform.rotation);
+            newTree = Instantiate(growingTree, location, transform.rotation);
         }
         else
         {
-            newTree = Instantiate(staticTree, treePos, transform.rotation);
+            newTree = Instantiate(staticTree, location, transform.rotation);
         }
         playerTreeCount[playerNo - 1] += 1;
         treeObjs.Add(newTree);
-        Debug.Log("spawned tree at " + treePos);
+        Debug.Log("spawned tree at " + location);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
     {
         return Mathf.Pow(start.x - end.x, 2) + Mathf.Pow(start.z - end.z, 2); //distances are kept squared to reduce computation
     }
+     
     private bool validTreeProximity(Vector3 newTree)
     {
         foreach (GameObject existingTree in treeObjs) //loop through players existing trees
@@ -195,6 +195,7 @@ public class TreeSpawning : MonoBehaviour
     //scene number used to differentiate between spawning approaches
     public bool spawnTree(int playerNo, int treeCount, Color treeColour, bool growing) 
     {
+        //Debug.Log("pre spawn");
         playerNo = validPlayerNo(playerNo);
         if (treeCount < 1) treeCount = 1;
 

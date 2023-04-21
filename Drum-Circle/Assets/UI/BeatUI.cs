@@ -105,8 +105,8 @@ public class BeatUI : MonoBehaviour
     }
 
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal) {
-        scoreTags[player-1].text = "Score: " + scoreVal;
-        comboTags[player-1].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
+        scoreTags[player].text = "Score: " + scoreVal;
+        comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
     }
 
     // Update is called once per frame
@@ -184,23 +184,7 @@ public class BeatUI : MonoBehaviour
 
 
     void Update() {
-        updateScore(1, test, ctest, mtest);
-        time = time + Time.deltaTime;
-        test++;
-        if(mtest == 5) {
-            ctest++;
-        }
-        else {
-            ctest++;
-            mtest = Mathf.FloorToInt(ctest/100);
-        }
-    
-        if(counter == 50) {
-            counter = 0;
-        }
-        else
-            counter++;
-        
+               
     }
 
         IEnumerator FadeOutCoroutine() {
@@ -231,5 +215,4 @@ public class BeatUI : MonoBehaviour
             yield return null;
         }
     }
-    
 }
