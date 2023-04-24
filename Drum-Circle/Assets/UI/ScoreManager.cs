@@ -24,15 +24,11 @@ public class ScoreManager : MonoBehaviour
 
     public void Update()
     {
-        //Debug.Log("Length of ScoreM" + ScoreMultiplier.Length);
-        //Debug.Log("Length of ComboCount" + ComboCount.Length);
-        //Debug.Log("Length of PlayerSc" + playerScores.Length);
         for(int i = 0; i < 3; i++) {            
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
             }
-            //Debug.Log("I = " + i);
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i]);
         }
 
