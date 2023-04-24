@@ -38,6 +38,7 @@ public class UISelectMenu : MonoBehaviour
     }
 
     void Start() {
+        addMidiHandler();
         forestButton = selectMenu.Q<VisualElement>("ForestButton");
         mountainButton = selectMenu.Q<VisualElement>("MountainsButton");
         beachButton = selectMenu.Q<VisualElement>("BeachButton");
@@ -53,7 +54,7 @@ public class UISelectMenu : MonoBehaviour
 
     public void Update() {
     
-        // handleDrumInput();
+        //handleDrumInput();
 
 
         if (mTimer <= 0) {
@@ -127,7 +128,7 @@ public class UISelectMenu : MonoBehaviour
         }
     }
 
-        private void addMidiHandler()
+    private void addMidiHandler()
     {
         InputSystem.onDeviceChange += (device, change) =>
         {
@@ -149,21 +150,21 @@ public class UISelectMenu : MonoBehaviour
                     velocity,
                     (note.device as Minis.MidiDevice)?.channel,
                     note.device.description.product
-                )); */
+                )); 
 
                 midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
             };
 
             midiDevice.onWillNoteOff += (note) => {
-                /*Debug.Log(string.Format(
+               /* Debug.Log(string.Format(
                     "Note Off #{0} ({1}) ch:{2} dev:'{3}'",
                     note.noteNumber,
                     note.shortDisplayName,
                     (note.device as Minis.MidiDevice)?.channel,
                     note.device.description.product
-                ));
+                ));*/
 
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];*/
+                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];
             };
         };
     }

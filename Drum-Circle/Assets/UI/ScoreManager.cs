@@ -16,10 +16,10 @@ public class ScoreManager : MonoBehaviour
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();        
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();   
-        int[] ScoreMultiplier = new int[3];
-        int[] ComboCounter = new int[3];
-        int[] ComboCount = new int[3];
-        int[] playerScores = new int[3];
+        ScoreMultiplier = new int[3];
+        ComboCounter = new int[3];
+        ComboCount = new int[3];
+        playerScores = new int[3];
     }
 
     public void Update()

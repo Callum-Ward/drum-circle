@@ -30,6 +30,14 @@ public class UIMainMenu : MonoBehaviour
         SceneManager.LoadScene("2MissionSelect");
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        drumInputStrengths = new int[playerCount*2];
+        midiInputVelocities = new float[playerCount*2];
+        addMidiHandler();
+    }
+
     private void OnButtonClick() {
         startGame();
     }
@@ -70,7 +78,7 @@ public class UIMainMenu : MonoBehaviour
         // }
     }
 
-        private void addMidiHandler()
+    private void addMidiHandler()
     {
         InputSystem.onDeviceChange += (device, change) =>
         {

@@ -72,7 +72,7 @@ public class MoveBeatUI : MonoBehaviour
         
     }
 
-    public void Startup(bool left, int drumNo) {
+    public void Startup(bool left, int drumNo, string type) {
         if (start == false) {
             beatSpawnContainer = beatSpawnTemplate.Instantiate();
             container = new VisualElement();    //Create seperate container for the beat icon so that we can set absolute height, 
@@ -80,6 +80,9 @@ public class MoveBeatUI : MonoBehaviour
             container.style.position = Position.Absolute;
             container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
             element = beatSpawnContainer.Q<VisualElement>("beat");
+
+           // beatHeight = type == "rising" ? beatTargetLocation : beatHeight;
+            //moveSpeed = type == "rising" ? -1f : 1f;
 
             //Debug.Log("DrumNo: " + drumNo);
             
