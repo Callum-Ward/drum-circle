@@ -31,7 +31,7 @@ public class TimestampedNote {
 
 public class TrackMidi {
     public TimeSpan midiFileDuration;
-    public int[] timestampedNotes;
+    public TimestampedNote[] timestampedNotes;
 }
 
 public class AudioAnalyser : MonoBehaviour {
@@ -108,7 +108,7 @@ public class AudioAnalyser : MonoBehaviour {
         int durationInMills = midiFileDuration.Minutes * 60000 + midiFileDuration.Seconds * 1000 + midiFileDuration.Milliseconds;
 
         midi.midiFileDuration = midiFileDuration;
-        midi.timestampedNotes = new int[durationInMills];
+        midi.timestampedNotes = new TimestampedNote[durationInMills];
 
         IEnumerable<Note> notes = midiFile.GetNotes();
 
@@ -118,9 +118,9 @@ public class AudioAnalyser : MonoBehaviour {
         {
             TimeSpan time = note.TimeAs<MetricTimeSpan>(tempoMap);
             int timeInMills = time.Minutes * 60000 + time.Seconds * 1000 + time.Milliseconds;
-            midi.timestampedNotes[timeInMills] = 1;
-
-            midi.timestampedNotes[timeInMills] = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 2;
+            midi.timestampedNotes[timeInMills] = new TimestampedNote();
+            midi.timestampedNotes[timeInMills].noteNumber = (int)(note.NoteNumber);
+            midi.timestampedNotes[timeInMills].left = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 0;
         }
 
         return midi;
@@ -134,6 +134,34 @@ public class AudioAnalyser : MonoBehaviour {
             TrackMidi m = loadTrackMidi(this.playerMidiFiles[i]);
             this.playerMidis[i] = m;
         }
+    }
+
+    public int timeAtNearestNote(int playerIndex, int drumIndex, float time)
+    {
+        int buffer = 200;
+        int timeInMills = (int)Math.Ceiling(time * 1000);
+        for(int i = 0; i < buffer; i++)
+        {
+            TimestampedNote? note = this.playerMidis[playerIndex].timestampedNotes[timeInMills + i];
+            if(note != null)
+            {
+                if(1 - drumIndex == note.left)
+                {
+                    return timeInMills + i;
+                }
+            }
+
+            note = this.playerMidis[playerIndex].timestampedNotes[timeInMills - i];
+            if(note != null)
+            {
+                if(1 - drumIndex == note.left)
+                {
+                    return timeInMills - i;
+                }
+            }
+        }
+
+        return -1;
     }
 
     // Awake is called before the Start method
