@@ -23,19 +23,16 @@ public class BeatTransfer {
         return this.provider;
     }
 
-    public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity)
+    public int nextPlayer(int playerCount)
+    {
+        return playerCount - (this.provider + this.recipient);
+    }
+
+    public void transferBeat(RhythmSpawner spawner, int playerIndex, int drumIndex, int oneShot, float velocity)
     {
         if(playerIndex == this.provider)
         {
-            spawner.spawn(this.recipient + 1, 1 - drumIndex, 1);
+            spawner.spawnWithDelay(this.recipient + 1, 1 - drumIndex, oneShot, 1, 1.0f);
         }
-    }
-
-    
-    public IEnumerator TransferWithDelay(RhythmSpawner spawner, int playerIndex, int drumIndex, float velocity, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        this.transferBeat(spawner, playerIndex, drumIndex, velocity);
     }
 }

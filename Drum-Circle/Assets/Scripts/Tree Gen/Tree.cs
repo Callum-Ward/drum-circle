@@ -11,13 +11,19 @@ using System.Net.Security;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
+using UnityEngine.Splines;
+using static UnityEditor.PlayerSettings;
+using System.Security.Policy;
+using System.IO.IsolatedStorage;
 
 public class Tree : MonoBehaviour
 {
     [SerializeField] GameObject branchObj;
 
     [SerializeField] float length = 0;
-    [Range(0.01f, 0.25f)] public float width = 1;
+    [Range(0.001f, 0.25f)] public float width = 1;
+
+    [HideInInspector] public float totalLength;
 
     [Range(0.0f, 90.0f)] public float orientation = 45.0f;
     [Range(0.0f, 180.0f)] public float rotation = 137.5f;
@@ -26,6 +32,9 @@ public class Tree : MonoBehaviour
     [Range (0.0f, 1.0f)] public float directionNoise;
 
     [SerializeField] float maxDepth = 10;
+    public bool isFullyGrown = false;
+
+    public int lod;
 
     List<GameObject> branches = new();
     Branch root = null;
@@ -38,6 +47,7 @@ public class Tree : MonoBehaviour
     private void Start()
     {
         //mesh = GetComponent<MeshFilter>().mesh;
+        lod = GetComponent<LOD>().lod;
         currentRotation = Random.Range(0, 360);
 
         InitialiseTree();
@@ -45,7 +55,7 @@ public class Tree : MonoBehaviour
 
     private void Update()
     {
-
+        lod = GetComponent<LOD>().lod;
     }
 
     /*Returns random value between the min and max according to normal distribution*/
@@ -74,6 +84,21 @@ public class Tree : MonoBehaviour
     {
         return RandomNormal(-range, range);
     }
+    
+    Curve GetBranchCurve(Vector3 start, Vector3 end)
+    {
+        var cp1_xangle = RandomNormal(directionNoise) * 45;
+        var cp1_zangle = RandomNormal(directionNoise) * 45;
+        var cp1 = start + (start + end) * RandomNormal(0f, 0.66f);
+        cp1 = Quaternion.Euler(cp1_xangle, 0, cp1_zangle) * cp1;
+
+        var cp2_xangle = RandomNormal(directionNoise) * 45;
+        var cp2_zangle = RandomNormal(directionNoise) * 45;
+        var cp2 = end + (start - end) * RandomNormal(0f, 0.66f);
+        cp2 = Quaternion.Euler(cp2_xangle, 0, cp2_zangle) * cp2;
+
+        return new Curve(start, cp1, cp2, end);
+    }
 
     /*Initialise new tree and set the first branch*/
     void InitialiseTree()
@@ -95,7 +120,9 @@ public class Tree : MonoBehaviour
         var root = Instantiate(branchObj);
         var rootBranch = root.GetComponent<Branch>();
 
-        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width);
+        var curve = GetBranchCurve(Vector3.zero, growth);
+
+        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve);
 
         this.root = rootBranch;
         branches.Add(root);
@@ -103,11 +130,21 @@ public class Tree : MonoBehaviour
 
     public void Grow(float scoreMul)
     {
+        bool fullyGrownCheck = true;
         foreach( var br in branches )
         {
             var branch = br.GetComponent<Branch>();
+
             branch.Grow(scoreMul);
+            if (!branch.isFullyGrown) fullyGrownCheck = false;
         }
+
+        if (depth > maxDepth && fullyGrownCheck)
+        {
+            this.isFullyGrown = true;
+        }
+
+       //   CalculateTreeLength();
 
         /*var treeMesh = GenerateMesh(root);
         
@@ -137,8 +174,6 @@ public class Tree : MonoBehaviour
             //only fully grown leaf branches can grow new branches
             if ( !(branch.isLeaf && branch.isFullyGrown) ) continue;
 
-            branch.isLeaf = false;
-
 
             //Set up branch A
 
@@ -155,11 +190,14 @@ public class Tree : MonoBehaviour
 
             var growthA = Quaternion.Euler(noiseA) * basisA;
 
+            var curveA = GetBranchCurve(Vector3.zero, growthA);
+            var cp1 = (branch.growth - branch.curve.P2) * curveA.P1.magnitude;
+            curveA.P1 = cp1;
 
             //Setup branch B
 
             //the starting position of branch B is somewhere along the parent brnach
-            var posB = branch.position + branch.growth * RandomNormal(0, 1);
+            var posB = branch.position + branch.curve.GetPointAlongCurve(RandomNormal(0, 1));
 
             //the basis vector of branch B is at an angle from the parent specified by this.orientation
             //and is rotated around it by an angle specified by this.rotation
@@ -172,6 +210,8 @@ public class Tree : MonoBehaviour
             var noiseB = new Vector3(xangleB, 0, zangleB);
 
             var growthB = Quaternion.Euler(noiseB) * basisB;
+           
+            var curveB = GetBranchCurve(Vector3.zero, growthB);
 
 
             //Instantiate the branches
@@ -186,11 +226,13 @@ public class Tree : MonoBehaviour
             //Set them as the current branch's children
             branch.SetChildren(branchA, branchB);
 
-            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width);
-            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width);
+            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width, curveA);
+            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width, curveB);
 
             newBranches.Add(a);
             newBranches.Add(b);
+
+            branch.isLeaf = false;
 
             //Increment the current rotation by this.rotation
             currentRotation = (currentRotation + this.rotation) % 360;
@@ -201,6 +243,20 @@ public class Tree : MonoBehaviour
         if(addedBranches) depth++;
 
         branches = branches.Concat(newBranches).ToList();
+    }
+
+    void CalculateTreeLength()
+    {
+        var branch = root;
+        var length = root.length;
+
+        while(branch.childA != null)
+        {
+            branch = branch.childA;
+            length += branch.length;
+        }
+
+        totalLength = length;
     }
 
     /*Mesh GenerateMesh(Branch branch)

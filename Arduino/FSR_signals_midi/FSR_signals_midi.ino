@@ -133,8 +133,8 @@ void hitLeds(int drum) {
   for (int i=0;i<NUM_LEDS;i++) {
     leds[drum][i] = CRGB::Red;
   }
-  FastLED.show(); // display this frame
-  FastLED.delay(125);
+  //FastLED.show(); // display this frame
+  //FastLED.delay(125);
   
 }
 
