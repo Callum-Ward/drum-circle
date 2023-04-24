@@ -80,15 +80,15 @@ int getHitStrength(int hitVal) {
 
 void loop() {
  
-  //Fire2012WithPalette(); // run simulation frame, using palette colors
-  //FastLED.show(); // display this frame
-  //FastLED.delay(1000 / FRAMES_PER_SECOND);
+  Fire2012WithPalette(); // run simulation frame, using palette colors
+  FastLED.show(); // display this frame
+  FastLED.delay(1000 / FRAMES_PER_SECOND);
   
   for (auto i =0;i<drumCount;i++) {
     
     vals[i] = analogRead(i);
     if (vals[i] > threshold && hits[i] == false) {
-      hitLeds(i); //trigger leds to flash colour when hit
+      //hitLeds(i); //trigger leds to flash colour when hit
       maxVals[i]=vals[i];
       hitCount++;
       hits[i] = true;

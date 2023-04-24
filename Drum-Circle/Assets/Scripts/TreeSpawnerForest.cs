@@ -10,7 +10,6 @@ public class TreeSpawnerForest : MonoBehaviour
     //list containing central tree spawn locations is indexed based on player number
     //trees are stored in 2d list, first index specifies which player tree belongs to
 
-    public GameObject treeObject;
     public float treeScale;
     public GameObject staticTreeObject;
     public GameObject growingTreeObject;
@@ -86,7 +85,7 @@ public class TreeSpawnerForest : MonoBehaviour
         } 
         else
         {
-            newTree = Instantiate(treeObject, treePos, transform.rotation);
+            newTree = Instantiate(staticTreeObject, treePos, transform.rotation);
             newTree.transform.localScale *= treeScale;
         }
 

@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TreeManager : MonoBehaviour
 {
+    [Range(0.1f, 3f)] public float growthRate = 1; 
     [SerializeField] GameObject[] trees;
     [SerializeField] bool testing = false;
 
@@ -31,8 +32,8 @@ public class TreeManager : MonoBehaviour
             {
                 var tree = t.GetComponent<Tree>();
 
-                if (Input.GetKey(KeyCode.Space)) tree.Grow(1);
                 if (Input.GetKeyDown(KeyCode.A)) tree.AddBranches();
+                if (Input.GetKey(KeyCode.Space)) tree.Grow(growthRate);
             }
         }
 
@@ -43,17 +44,17 @@ public class TreeManager : MonoBehaviour
             if (hitStatus == true)
             {
                 var modifiedScore = false;
-                if(scoreManager.Score > lastScore) 
+                if(scoreManager.playerScores[0] > lastScore) 
                 {
                     modifiedScore = true;
-                    lastScore = scoreManager.Score;
+                    lastScore = scoreManager.playerScores[0];
                 }
                 
                 foreach (var t in trees)
                 {
                     var tree = t.GetComponent<Tree>();
 
-                    tree.Grow(scoreManager.ScoreMultiplier);
+                    tree.Grow(scoreManager.ScoreMultiplier[0]);
 
                     if(modifiedScore) tree.AddBranches();
                 }

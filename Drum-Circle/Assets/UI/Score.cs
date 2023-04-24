@@ -10,18 +10,18 @@ public class Score : MonoBehaviour
     public ScoreManager scoreManager;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        transform.position = Camera.main.transform.position + new Vector3(4f, 1.75f, 4f);
-        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
-    }
+    // void Start()
+    // {
+    //     transform.position = Camera.main.transform.position + new Vector3(4f, 1.75f, 4f);
+    //     scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+    // }
 
-    // Update is called once per frame
-    void Update()
-    {
+    // // Update is called once per frame
+    // void Update()
+    // {
 
-        ScoreValue = (int)scoreManager.Score;
+    //     ScoreValue = (int)scoreManager.Score;
 
-        ScoreText.text = ScoreValue.ToString();
-    }
+    //     ScoreText.text = ScoreValue.ToString();
+    // }
 }

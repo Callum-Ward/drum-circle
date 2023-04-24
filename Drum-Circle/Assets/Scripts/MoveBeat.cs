@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MoveBeat : MonoBehaviour
 {
@@ -14,12 +15,19 @@ public class MoveBeat : MonoBehaviour
     private float alpha = 1.0f;
     public bool fade = false;
     public bool highlight = false;
+    public bool test = false;
 
     public ScoreManager scoreManager;
     public BeatManager beatManager;
     public BeatmapScript beatmapScript;
     public AudioManager audioManager;
+
+    VisualElement beatUI;
+    UIDocument beatSpawnUI;
     MeshRenderer beatRenderer;
+
+    TemplateContainer beatSpawnContainer;
+    VisualTreeAsset beatSpawnTemplate;
 
     private Vector3 baseScale;
 
@@ -29,16 +37,25 @@ public class MoveBeat : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        beatUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement;
         baseScale = gameObject.transform.localScale;
     }
 
-    void start()
+    void Start()
     {
+    }
+
+    void OnEnable() {        
+        beatSpawnUI = GetComponent<UIDocument>();
+
+        TemplateContainer beatSpawnContainer = beatSpawnTemplate.Instantiate();
+        beatSpawnUI.rootVisualElement.Q("Lane1L").Add(beatSpawnContainer);
     }
 
     //Checks if beat needs to be deleted each frame and calculates score for hitting beat at this time.
     void Update()
     {
+        // transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         timer += Time.deltaTime;
         windowtime = beatmapScript.windowtime;
@@ -46,7 +63,7 @@ public class MoveBeat : MonoBehaviour
         if (timer > (beatmapScript.delay + (beatmapScript.windowtime)) && dontDelete == false)
         {
             delete = true;
-            audioManager.FadeOut("drums");
+            audioManager.FadeOutDrumTrack(0);
         }
 
         else if (timer >= (beatmapScript.delay - windowtime/2))

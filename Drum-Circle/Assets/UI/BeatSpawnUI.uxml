@@ -1,34 +1,43 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/BeatSpawnUI.uss?fileID=7433441132597879392&amp;guid=d5759aa029c8ab8478300df6489bc595&amp;type=3#BeatSpawnUI" />
-    <ui:VisualElement name="ScreenContainer" style="width: auto; height: auto; justify-content: space-around; flex-grow: 1; align-items: center; flex-direction: row; flex-wrap: nowrap;">
+    <ui:VisualElement name="ScreenContainer" style="width: auto; height: auto; justify-content: flex-start; flex-grow: 1; align-items: flex-start; flex-direction: row; flex-wrap: nowrap;">
         <ui:VisualElement name="Scores" style="height: 100%; width: 100%; align-items: center; justify-content: flex-start; position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
-            <ui:Label text="Player1" display-tooltip-when-elided="true" name="Player1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Player2" display-tooltip-when-elided="true" name="Player2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Player3" display-tooltip-when-elided="true" name="Player3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo2" enable-rich-text="true" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score1" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
-            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex;" />
+            <ui:Label text="Player1" display-tooltip-when-elided="true" name="Player1" style="height: 16px; width: 60px; -unity-font-style: bold; font-size: 10px; left: 10%; position: absolute; display: flex; visibility: hidden; align-items: center; -unity-text-align: upper-center;" />
+            <ui:Label text="Player2" display-tooltip-when-elided="true" name="Player2" style="height: 16px; width: 60px; -unity-font-style: bold; font-size: 10px; left: 10%; position: absolute; display: flex; visibility: hidden; align-items: center;" />
+            <ui:Label text="Player3" display-tooltip-when-elided="true" name="Player3" style="height: 16px; width: 60px; -unity-font-style: bold; font-size: 10px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo1" style="height: 16px; width: 60px; -unity-font-style: bold; font-size: 10px; left: 10%; position: absolute; display: flex; visibility: hidden; align-items: center; -unity-text-align: upper-center;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo2" enable-rich-text="true" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
+            <ui:Label text="Combo: 0&#10;Multiplier: 0" display-tooltip-when-elided="true" name="Combo3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score1" style="height: 16px; width: 60px; -unity-font-style: bold; font-size: 10px; left: 10%; position: absolute; display: flex; visibility: hidden; align-items: center; -unity-text-align: upper-center;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
+            <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Lane1L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex;">
-            <ui:IMGUIContainer name="Target" />
+        <ui:VisualElement name="Lane1" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center; visibility: visible; display: flex;">
+            <ui:VisualElement name="Lane1L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Lane1R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Lane1R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px;">
-            <ui:IMGUIContainer name="Target" />
+        <ui:VisualElement name="Lane2" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center;">
+            <ui:VisualElement name="Lane2L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Lane2R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Lane2L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px;">
-            <ui:IMGUIContainer name="Target" />
+        <ui:VisualElement name="Lane3" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center;">
+            <ui:VisualElement name="Lane3L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Lane3R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
+                <ui:IMGUIContainer name="Target" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Lane2R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px;">
-            <ui:IMGUIContainer name="Target" />
-        </ui:VisualElement>
-        <ui:VisualElement name="Lane3L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px;">
-            <ui:IMGUIContainer name="Target" />
-        </ui:VisualElement>
-        <ui:VisualElement name="Lane3R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: center; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px;">
-            <ui:IMGUIContainer name="Target" />
-        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement style="position: absolute; min-width: 100%; min-height: 100%; justify-content: center; align-items: center; -unity-text-align: middle-center;">
+        <ui:Label display-tooltip-when-elided="true" name="IntroTimer" enable-rich-text="true" text="Ready?" style="position: relative; left: auto; top: auto; align-items: center; justify-content: center; -unity-font: resource(&apos;&apos;); -unity-font-style: bold; font-size: 70%; visibility: visible; color: rgb(0, 197, 34); -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(0, 0, 0); -unity-text-align: middle-center;" />
     </ui:VisualElement>
 </ui:UXML>
