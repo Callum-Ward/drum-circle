@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Layouts;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.StyleSheets;
 using UnityEngine.UIElements.Experimental;
+using System.Linq;
 
 public class BeatUI : MonoBehaviour
 {
@@ -93,7 +96,7 @@ public class BeatUI : MonoBehaviour
             for(int j = 0; j < 3; j++) {
                 tags[i][j].visible = false;
             }
-            playerLanes[i].style.display = DisplayStyle.None;
+            // playerLanes[i].style.display = DisplayStyle.None;
         }
 
         beatSpawnUI = GetComponent<UIDocument>();
@@ -146,9 +149,9 @@ public class BeatUI : MonoBehaviour
                 container[i].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
                 container[i+3].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
                 } 
-            }
+             }
         
-        // int targetOffset = Mathf.RoundToInt(screenHeight*beatmapScript.inputDelay);
+        int targetOffset = Mathf.RoundToInt(screenHeight*beatmapScript.inputDelay);
 
         
 
@@ -183,37 +186,40 @@ public class BeatUI : MonoBehaviour
     }
 
 
-    void Update() {
-               
+    void Update() 
+    {
+        
+        if(Input.GetKey(KeyCode.UpArrow)) {
+            Lane1L.AddToClassList("glow-class:glow");
     }
 
-        IEnumerator FadeOutCoroutine() {
-        float startF = 1f;
-        float endF = 0f;
-        float startW = introTimer.resolvedStyle.width;
-        float startH = introTimer.resolvedStyle.height;
-        float endW = startW*2;
-        float endH = startH*2;
-        float cTimer = 0f;
-        float incrementF = (endF - startF);
-        float incrementW = (endW - startW);
-        float incrementH = (endH - startH);
-        long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
+    IEnumerator FadeOutCoroutine() {
+    float startF = 1f;
+    float endF = 0f;
+    float startW = introTimer.resolvedStyle.width;
+    float startH = introTimer.resolvedStyle.height;
+    float endW = startW*2;
+    float endH = startH*2;
+    float cTimer = 0f;
+    float incrementF = (endF - startF);
+    float incrementW = (endW - startW);
+    float incrementH = (endH - startH);
+    long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
 
-        while (cTimer < 1f) {
-            cTimer += Time.deltaTime;
-            float newOpacity = startF+(incrementF*cTimer);
-            float newWidth = startW+(incrementW*cTimer);
-            float newHeight = startH+(incrementH*cTimer);
-            float newFontSize = introTimer.resolvedStyle.fontSize+1;
+    while (cTimer < 1f) {
+        cTimer += Time.deltaTime;
+        float newOpacity = startF+(incrementF*cTimer);
+        float newWidth = startW+(incrementW*cTimer);
+        float newHeight = startH+(incrementH*cTimer);
+        float newFontSize = introTimer.resolvedStyle.fontSize+1;
 
-            
-            introTimer.style.opacity = newOpacity;
-            introTimer.style.width = new StyleLength(newWidth);
-            introTimer.style.height = new StyleLength(newHeight);
-            introTimer.style.fontSize = new StyleLength(newFontSize);
-            yield return null;
-        }
+        
+        introTimer.style.opacity = newOpacity;
+        introTimer.style.width = new StyleLength(newWidth);
+        introTimer.style.height = new StyleLength(newHeight);
+        introTimer.style.fontSize = new StyleLength(newFontSize);
+        yield return null;
     }
+}
     
 }

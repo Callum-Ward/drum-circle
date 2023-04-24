@@ -376,51 +376,6 @@ public class BeatmapScript : MonoBehaviour
             }
             
         }
-
-//////////////TESTING SECTION////////////////////////////////
-        /* if(Input.GetKey(KeyCode.Alpha1) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("drums", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha1)) {
-            audioManager.Volume("drums", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha2) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("drums2", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha2)) {
-            audioManager.Volume("drums2", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha3) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("drums3", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha3)) {
-            audioManager.Volume("drums3", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha4) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("layer1", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha4)) {
-            audioManager.Volume("layer1", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha5) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("layer2", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha5)) {
-            audioManager.Volume("layer2", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha6) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("layer3", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha6)) {
-            audioManager.Volume("layer3", 1f);
-        };
-        if(Input.GetKey(KeyCode.Alpha7) && Input.GetKey(KeyCode.LeftShift)) {
-            audioManager.Volume("layer4", 0f);
-        };
-        if(Input.GetKeyDown(KeyCode.Alpha7)) {
-            audioManager.Volume("layer4", 0.6f);
-        };*/
-//////////////TESTING SECTION////////////////////////////////
     }
 
     void beatHit(int queueNo, MoveBeatUI beatSide, int oneShotIndex, float velocity) {
