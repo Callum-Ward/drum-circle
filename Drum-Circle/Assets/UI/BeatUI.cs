@@ -191,6 +191,7 @@ public class BeatUI : MonoBehaviour
         
         if(Input.GetKey(KeyCode.UpArrow)) {
             Lane1L.AddToClassList("glow-class:glow");
+        }
     }
 
     IEnumerator FadeOutCoroutine() {
