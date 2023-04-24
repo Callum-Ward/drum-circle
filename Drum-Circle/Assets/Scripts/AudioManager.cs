@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour {
     public Sound[] additiveLayers;
     public Sound[] oneShots;
     public int[] oneShotMap;
+    public int persistentLayerIndex;
 
     public float longestTime = 0;
 
@@ -168,6 +169,14 @@ public class AudioManager : MonoBehaviour {
         PlayTrack(additiveLayers[index]);
     }
 
+    public void PlayAllLayerTracks()
+    {
+        for(int i = 0; i < additiveLayers.Length; i++)
+        {
+            PlayLayerTrack(i);
+        }
+    }
+
     public void PlayOneShot(string name)
     {
         Sound s = Array.Find(oneShots, sound => sound.Name == name);
@@ -189,7 +198,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
 
-        AudioSource source = oneShots[index].source;
+        AudioSource source = oneShots[oneShotMap[index]].source;
         source.volume = velocity;
         source.PlayOneShot(source.clip, 1f);
     }
@@ -246,4 +255,49 @@ public class AudioManager : MonoBehaviour {
 
         FadeOutTrack(drumTracks[index]);
     }
+
+     public void FadeInLayerTrack(int index, string speed)
+    {
+        if(index >= additiveLayers.Length)
+        {
+            Debug.LogWarning("Invalid index for drum tracks");
+            return;
+        }
+
+        FadeInTrack(additiveLayers[index], speed);
+    }
+
+    public void FadeOutLayerTrack(int index)
+    {
+        if(index >= additiveLayers.Length)
+        {
+            Debug.LogWarning("Invalid index for layer tracks");
+            return;
+        }
+
+        FadeOutTrack(additiveLayers[index]);
+    }
+
+    public void ReduceToBackgroundLayer()
+    {
+        for(int i = 0; i < additiveLayers.Length; i++)
+        {
+            if(i != persistentLayerIndex)
+            {
+                FadeOutLayerTrack(i);
+            }
+        }
+    }
+
+    public void FadeInFromBackgroundLayer()
+    {
+        for(int i = 0; i < additiveLayers.Length; i++)
+        {
+            if(i != persistentLayerIndex)
+            {
+                FadeInLayerTrack(i, "slow");
+            }
+        }
+    }
+
 }

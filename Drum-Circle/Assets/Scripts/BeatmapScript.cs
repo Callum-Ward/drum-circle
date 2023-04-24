@@ -63,6 +63,7 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareOnset = 30f;
 
     public int playerCount = 3;
+    public int sceneNumber;
 
     void Awake()
     {
@@ -93,6 +94,8 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassSpeed = 0.5f;
         terrain.terrainData.wavingGrassStrength = 0.5f;
         terrain.terrainData.wavingGrassAmount = 0.5f;
+
+        this.freestyleHandler.setScene(this.sceneNumber);
     }
 
     private void registerHit(int queueIndex, MoveBeatUI beat, int oneShotIndex, float velocity)
@@ -347,7 +350,7 @@ public class BeatmapScript : MonoBehaviour
             else if(audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
             {
                 audioManager.PlayAllDrumTracks();
-                audioManager.PlayLayerTrack(1);
+                audioManager.PlayAllLayerTracks();
 
                 // timer = 0f;
                 introTimer = 0f;
@@ -360,7 +363,7 @@ public class BeatmapScript : MonoBehaviour
                 int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[0].time + delay + inputDelay, useMidiFile);
                 
                 checkDrumHit();
-                freestyleHandler.handleFreestyle(beatSpawner, audioManager, audioManager.activeSources[0].time);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[0].time);
             }
 
             if(countdown <= 5 && countdown > 4) {
