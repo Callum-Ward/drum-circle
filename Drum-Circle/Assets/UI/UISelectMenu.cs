@@ -18,7 +18,7 @@ public class UISelectMenu : MonoBehaviour
     private float[] midiInputVelocities;
     private int playerCount = 3;
     public string[] sections;
-    private int noteNumberOffset = 44;
+    private int noteNumberOffset = 21;
 
     private Color originalColor;
     private Color highlightColor = Color.white;
@@ -31,9 +31,10 @@ public class UISelectMenu : MonoBehaviour
 
     public void Awake() {
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
-        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
-        drumInputStrengths = new int[6];
-        midiInputVelocities = new float[6];
+        // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+            midiInputVelocities = new float[playerCount*2];
+            drumInputStrengths = new int[playerCount*2];
+            addMidiHandler();
     }
 
     void Start() {
@@ -141,7 +142,7 @@ public class UISelectMenu : MonoBehaviour
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                /*  Debug.Log(string.Format(
+                  /*Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,

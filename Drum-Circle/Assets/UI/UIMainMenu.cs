@@ -15,11 +15,15 @@ public class UIMainMenu : MonoBehaviour
     private float[] midiInputVelocities;
     private int playerCount = 3;
     public string[] sections;
-    private int noteNumberOffset = 44;
+    private int noteNumberOffset = 21;
 
     public void Awake() {
             mainMenu = GameObject.Find("UIMainMenu").GetComponent<UIDocument>().rootVisualElement;
-            messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+            // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+
+            midiInputVelocities = new float[playerCount*2];
+            drumInputStrengths = new int[playerCount*2];
+            addMidiHandler();
     }
 
     public void startGame() {
@@ -53,17 +57,17 @@ public class UIMainMenu : MonoBehaviour
             drumInputStrengths[i] = 0;
         }
         
-        string message = messageListener.message;
-        if (message != null)
-        {
-            sections = message.Split(":");
-            //Debug.Log(message);
-            if (sections[0] == "on")
-            {
-                drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
-            }
-            messageListener.message = null;
-        }
+        // string message = messageListener.message;
+        // if (message != null)
+        // {
+        //     sections = message.Split(":");
+        //     //Debug.Log(message);
+        //     if (sections[0] == "on")
+        //     {
+        //         drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
+        //     }
+        //     messageListener.message = null;
+        // }
     }
 
         private void addMidiHandler()
@@ -81,14 +85,14 @@ public class UIMainMenu : MonoBehaviour
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                /*  Debug.Log(string.Format(
+                  Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,
                     velocity,
                     (note.device as Minis.MidiDevice)?.channel,
                     note.device.description.product
-                )); */
+                )); 
 
                 midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
             };
