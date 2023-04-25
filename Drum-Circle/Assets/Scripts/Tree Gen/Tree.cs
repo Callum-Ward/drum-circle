@@ -44,7 +44,7 @@ public class Tree : MonoBehaviour
 
     Mesh mesh = null;
 
-    private void Awake()
+    private void Start()
     {
         //mesh = GetComponent<MeshFilter>().mesh;
         lod = GetComponent<LOD>().lod;
