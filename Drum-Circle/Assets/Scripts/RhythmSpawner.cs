@@ -125,7 +125,7 @@ public class RhythmSpawner : MonoBehaviour
         if (left==1)
         {
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1), type);
+            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1), size, type);
 
             if(type == "falling")
             {
@@ -135,7 +135,7 @@ public class RhythmSpawner : MonoBehaviour
         else
         {
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1, type);
+            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) + 1, size, type);
 
             if(type == "falling")
             {
@@ -165,7 +165,7 @@ public class RhythmSpawner : MonoBehaviour
             TimestampedNote? note = audioAnalyser.playerMidis[playerIndex].timestampedNotes[j];
             if(note != null)
             {
-                spawn(playerIndex + 1, note.left, 1);
+                spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
                 return (playerIndex + 1) - note.left;
