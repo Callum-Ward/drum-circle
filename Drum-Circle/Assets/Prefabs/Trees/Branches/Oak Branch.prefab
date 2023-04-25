@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1fc0bc363cebe44bcc35cb281c2e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leafObj: {fileID: 919132149155446097, guid: 373f48792965943f2b1ab3cddac75740, type: 3}
+  leafObj: {fileID: 0}
   parent: {fileID: 0}
   childA: {fileID: 0}
   childB: {fileID: 0}
@@ -89,4 +89,3 @@ MonoBehaviour:
   maxWidth: 0
   width: 0
   mesh: {fileID: 0}
-  leavesNo: 5
