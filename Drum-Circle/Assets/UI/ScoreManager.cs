@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public int[] ScoreMultiplier;
-    public int[] ComboCounter;
-    public int[] ComboCount;
-    public AudioManager audioManager;
-    public int[] playerScores;
+    [HideInInspector] public int[] ScoreMultiplier;
+    [HideInInspector] public int[] ComboCounter;
+    [HideInInspector] public int[] ComboCount;
+    [HideInInspector] public AudioManager audioManager;
+    [HideInInspector] public int[] playerScores;
     public BeatUI beatUI;
 
 

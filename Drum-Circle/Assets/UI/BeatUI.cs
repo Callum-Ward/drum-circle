@@ -11,9 +11,9 @@ using System.Linq;
 
 public class BeatUI : MonoBehaviour
 {
-    public bool gameStart = true;
+    [HideInInspector] public bool gameStart = true;
     public int playerNo = 0;
-    public int count = 0;
+    [HideInInspector] public int count = 0;
     VisualElement root;
     Label playerTag1, playerTag2, playerTag3;
     Label scoreTag1, scoreTag2, scoreTag3;
@@ -24,10 +24,10 @@ public class BeatUI : MonoBehaviour
     VisualElement[] container = new VisualElement[6];
     Label[] playerTags, scoreTags, comboTags;
     Label[][] tags;
-    public float screenWidth;
-    public float screenHeight;
-    public float textWidth;
-    public float textHeight;
+    [HideInInspector] public float screenWidth;
+    [HideInInspector] public float screenHeight;
+    [HideInInspector] public float textWidth;
+    [HideInInspector] public float textHeight;
     private int start = 0;
     private bool startFade = false;
 
@@ -220,7 +220,6 @@ public class BeatUI : MonoBehaviour
         introTimer.style.height = new StyleLength(newHeight);
         introTimer.style.fontSize = new StyleLength(newFontSize);
         yield return null;
+        }
     }
-}
-    
 }
