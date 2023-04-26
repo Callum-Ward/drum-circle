@@ -11,19 +11,19 @@ public class Combo : MonoBehaviour
     public ScoreManager scoreManager;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        transform.position = Camera.main.transform.position + new Vector3(4f, 1f, 4f);
-        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
-    }
+    // void Start()
+    // {
+    //     transform.position = Camera.main.transform.position + new Vector3(4f, 1f, 4f);
+    //     scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+    // }
 
-    // Update is called once per frame
-    void Update()
-    {
+    // // Update is called once per frame
+    // void Update()
+    // {
 
-        ComboValue = (int)scoreManager.ScoreMultiplier;
-        ComboCounter = scoreManager.ComboCount;
+    //     ComboValue = (int)scoreManager.ScoreMultiplier;
+    //     ComboCounter = scoreManager.ComboCount;
 
-        ComboText.text = "Combo: " + ComboCounter + " Multiplier: " + ComboValue.ToString() + "x";
-    }
+    //     ComboText.text = "Combo: " + ComboCounter + " Multiplier: " + ComboValue.ToString() + "x";
+    // }
 }

@@ -9,7 +9,10 @@ files = [
     #('./BiBDrumsBass.mp3', 'BiBDrumsBass.json'),
     #('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json'),
     #('./Jormungandr.mp3', 'Jormungandr.json')
-    ('./tutorial1.wav', 'tutorial1.json')
+    #('./tutorial1.wav', 'tutorial1.json')
+    ('./DDC Oriental - Drum 1 - Taiko.wav', 'DD_L2_P1_json.json'),
+    ('./DDC Oriental - Drum 2 - Khol.wav', 'DD_L2_P2_json.json'),
+    ('./DDC Oriental - Drum 3 - Conga.wav', 'DD_L2_P3_json.json')
 ]
 
 def print_progress_bar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
