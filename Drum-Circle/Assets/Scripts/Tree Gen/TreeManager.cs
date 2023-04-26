@@ -32,7 +32,7 @@ public class TreeManager : MonoBehaviour
             {
                 var tree = t.GetComponent<Tree>();
 
-                if (Input.GetKeyDown(KeyCode.A)) tree.AddBranches();
+                if (Input.GetKeyDown(KeyCode.A)) tree.AddBranches(0);
                 if (Input.GetKey(KeyCode.Space)) tree.Grow(10 * growthRate);
             }
         }
@@ -56,7 +56,7 @@ public class TreeManager : MonoBehaviour
 
                     tree.Grow(scoreManager.ScoreMultiplier[0] * growthRate);
 
-                    if(modifiedScore) tree.AddBranches();
+                    if(modifiedScore) tree.AddBranches(0);
                 }
             }
         }

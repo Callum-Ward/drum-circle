@@ -39,7 +39,6 @@ public class Branch : MonoBehaviour
     private Vector3[] pointsAlongCurve;
 
     public Mesh mesh;
-    new Renderer renderer;
 
     protected Vector3[] vertices = new Vector3[] { };
     private Vector2[] uv = new Vector2[] { };
@@ -58,7 +57,6 @@ public class Branch : MonoBehaviour
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
-        renderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -74,7 +72,7 @@ public class Branch : MonoBehaviour
 
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Vector3 growth, Vector3 basis, Vector3 position,
-        float width, Curve curve)
+        float width, Curve curve, float growthPhase)
     {
         this.tree = tree.GetComponent<Tree>();
 
@@ -92,25 +90,25 @@ public class Branch : MonoBehaviour
 
         SetLeaves();
 
-        Place(tree);
+        Place(tree, growthPhase);
     }
 
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Branch parent, Vector3 growth, Vector3 basis, Vector3 position,
-        float width, Curve curve)
+        float width, Curve curve, float growthPhase)
     {
         this.parent = parent;
 
-        SetBranch(tree, growth, basis, position, width, curve);
+        SetBranch(tree, growth, basis, position, width, curve, growthPhase);
     }
 
     /*Places branch in place*/
-    public void Place(GameObject tree)
+    public void Place(GameObject tree, float growthPhase)
     {
         this.transform.parent = tree.transform;
         this.transform.position = position;
 
-        length = 0;
+        length = growthPhase * maxLength;
     }
 
     /*Set the children of a brnach*/
@@ -139,9 +137,8 @@ public class Branch : MonoBehaviour
             if (length >= maxLength) isFullyGrown = true;
         }
 
-        int segments = 0;
-        int faces = 0;
-
+        int segments;
+        int faces;
         switch (tree.lod)
         {
             case 0:
@@ -372,7 +369,7 @@ public class Branch : MonoBehaviour
         foreach (var leaf in leaves)
         {
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
-            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7 /* * (maxLength / tree.length)*/;
         }
     }
 }

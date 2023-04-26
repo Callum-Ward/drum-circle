@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843689298843814379, guid: 62e8fe4c93fafea4587bf8e0910ebad3, type: 3}
       propertyPath: m_Name
-      value: Branch Variant
+      value: Cherry Branch
       objectReference: {fileID: 0}
     - target: {fileID: 5843689298843814380, guid: 62e8fe4c93fafea4587bf8e0910ebad3, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d1fc0bc363cebe44bcc35cb281c2e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leafObj: {fileID: 919132149155446097, guid: b4a5eb14136be42149f0923f049b9090, type: 3}
+  leafObj: {fileID: 919132149155446097, guid: d6620394e1e4f4942962bc52efa41866, type: 3}
   parent: {fileID: 0}
   childA: {fileID: 0}
   childB: {fileID: 0}
