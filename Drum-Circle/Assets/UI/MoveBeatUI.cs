@@ -24,6 +24,7 @@ public class MoveBeatUI : MonoBehaviour
     private float screenHeight;
     private bool start = false;
     private float beatTargetLocation;
+    private bool rising = false;
 
     public ScoreManager scoreManager;
     public BeatManager beatManager;
@@ -54,12 +55,6 @@ public class MoveBeatUI : MonoBehaviour
         deleteTime = beatManager.deleteDelay;
     }
 
-    void Start()
-    {
-        
-        
-    }
-
     void OnEnable() {        
         Lane1L = beatUI.Q<VisualElement>("Lane1L");
         Lane1R = beatUI.Q<VisualElement>("Lane1R");
@@ -78,13 +73,13 @@ public class MoveBeatUI : MonoBehaviour
             container = new VisualElement();    //Create seperate container for the beat icon so that we can set absolute height, 
             container.Add(beatSpawnContainer);  //Container then goes into lane so beat inherits center position of lane.
             container.style.position = Position.Absolute;
-            container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
+            if(type == "rising") {
+                container.style.top = new Length(Mathf.RoundToInt((screenHeight*beatTargetLocation)))
+                rising = true;                
+            } else {
+                container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));   
+            }
             element = beatSpawnContainer.Q<VisualElement>("beat");
-
-           // beatHeight = type == "rising" ? beatTargetLocation : beatHeight;
-            //moveSpeed = type == "rising" ? -1f : 1f;
-
-            //Debug.Log("DrumNo: " + drumNo);
             
             if(left == true) {
                 Lanes[drumNo].Add(container);
@@ -106,7 +101,11 @@ public class MoveBeatUI : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
-            beatHeight += ((screenHeight * Time.deltaTime) / beatmapScript.delay) * moveSpeed;
+            if(rising = true) {
+                beatHeight -= ((screenHeight * Time.deltaTime) / beatmapScript.delay) * moveSpeed;
+            } else {
+                beatHeight += ((screenHeight * Time.deltaTime) / beatmapScript.delay) * moveSpeed;
+            }
             windowtime = beatmapScript.windowtime;
             beatSpawnContainer.style.top = new StyleLength(Mathf.RoundToInt(beatHeight));
 
