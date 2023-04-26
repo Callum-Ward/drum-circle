@@ -19,8 +19,8 @@ public class BeatUI : MonoBehaviour
     Label scoreTag1, scoreTag2, scoreTag3;
     Label comboTag1, comboTag2, comboTag3;
     Label introTimer, freestyleNotice;
-    VisualElement Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R, Lane1, Lane2, Lane3;
-    VisualElement[] lanes, playerLanes;
+    VisualElement Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R, Lane1, Lane2, Lane3, lane1Container, lane2Container, lane3Container;
+    VisualElement[] lanes, playerLanes, laneContainers;
     VisualElement[] container = new VisualElement[6];
     Label[] playerTags, scoreTags, comboTags;
     Label[][] tags;
@@ -77,6 +77,9 @@ public class BeatUI : MonoBehaviour
         Lane1 = root.Q<VisualElement>("Lane1");
         Lane2 = root.Q<VisualElement>("Lane2");
         Lane3 = root.Q<VisualElement>("Lane3");
+        lane1Container = root.Q<VisualElement>("Lane1Container");
+        lane2Container = root.Q<VisualElement>("Lane2Container");
+        lane3Container = root.Q<VisualElement>("Lane3Container");
         introTimer = root.Q<Label>("IntroTimer");
         freestyleNotice = root.Q<Label>("FreestyleNotice");
    
@@ -89,6 +92,8 @@ public class BeatUI : MonoBehaviour
         scoreTags = new Label[] {scoreTag1, scoreTag2, scoreTag3};
         comboTags = new Label[] {comboTag1, comboTag2, comboTag3};
         tags = new Label[][] {playerTags, scoreTags, comboTags};
+        laneContainers = new VisualElement[] {lane1Container, lane2Container, lane3Container};
+
 
         playerLanes = new VisualElement[] {Lane1, Lane2, Lane3};
         lanes = new VisualElement[] {Lane1L, Lane2L, Lane3L, Lane1R, Lane2R, Lane3R};
@@ -111,6 +116,26 @@ public class BeatUI : MonoBehaviour
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal) {
         scoreTags[player].text = "Score: " + scoreVal;
         comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
+    }
+
+    public void failShake(int player) {
+        StartCoroutine(failShakeCo(player));
+    }
+
+    IEnumerator failShakeCo(int player) {
+        float timer = 0;
+        float amount = 50;
+        laneContainers[player].style.position = Position.Absolute;
+        // float startPos = laneContainers[player].resolvedStyle.left;
+        while(timer < 1) {
+            float x = (UnityEngine.Random.Range(-1f, 1f) * 100);
+            laneContainers[player].style.left = new Length(Mathf.RoundToInt(x));
+            timer += Time.deltaTime;
+        Debug.Log("current position: " + laneContainers[player].style.left);
+        }
+        laneContainers[player].style.left = new Length(0);
+        // laneContainers[player].style.position = Position.Flex;
+        yield return null;
     }
 
     // Update is called once per frame
