@@ -54,6 +54,14 @@ public class BeatUI : MonoBehaviour
 
     private GUIStyle guiStyle = new GUIStyle();
 
+    private class TargetEffect {
+        public int swellStage;
+        public float swellEffect;
+    }
+
+    private TargetEffect[] beatTargetEffects = new TargetEffect[6];
+    private int[] drumIndexUIMap = new int[6]{0, 3, 1, 4, 2, 5};
+
     
     private void OnEnable()
     {
@@ -105,6 +113,13 @@ public class BeatUI : MonoBehaviour
             // playerLanes[i].style.display = DisplayStyle.None;
         }
 
+        for(int i = 0; i < 6; i++){
+            beatTargetEffects[i] = new TargetEffect();
+            beatTargetEffects[i].swellStage = 0;
+            beatTargetEffects[i].swellEffect = 1f;
+        }
+
+
         beatSpawnUI = GetComponent<UIDocument>();
 
     }
@@ -118,9 +133,14 @@ public class BeatUI : MonoBehaviour
         comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
     }
 
+    public void hitSwell(int drumIndex) {
+        beatTargetEffects[drumIndexUIMap[drumIndex]].swellStage = 1;
+    }
+
     public void failShake(int player) {
         StartCoroutine(failShakeCo(player));
     }
+
 
     IEnumerator failShakeCo(int player) {
         float timer = 0;
@@ -223,6 +243,46 @@ public class BeatUI : MonoBehaviour
         StartCoroutine(FadeOutCoroutine(freestyleNotice));
     }
 
+    IEnumerator beatSwellCo(int drumIndex)
+    {
+        if(beatTargetEffects[drumIndex].swellStage == 1)
+        {
+            if(beatTargetEffects[drumIndex].swellEffect < 1.15f)
+            {
+                beatTargetEffects[drumIndex].swellEffect += 0.05f;
+                beatSpawnContainer[drumIndex].style.scale = new Scale(new Vector2(beatTargetEffects[drumIndex].swellEffect, beatTargetEffects[drumIndex].swellEffect));
+            }
+            else
+            {
+                beatTargetEffects[drumIndex].swellStage = 2;
+            }
+        }
+        else if(beatTargetEffects[drumIndex].swellStage == 2)
+        {
+            if(beatTargetEffects[drumIndex].swellEffect > 1f)
+            {
+                beatTargetEffects[drumIndex].swellEffect -= 0.05f;
+                beatSpawnContainer[drumIndex].style.scale = new Scale(new Vector2(beatTargetEffects[drumIndex].swellEffect, beatTargetEffects[drumIndex].swellEffect));
+            }
+            else
+            {
+                beatTargetEffects[drumIndex].swellStage = 0;
+            }
+        }
+        yield return null;
+    }
+
+    private void handleBeatTargetSwell()
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            StartCoroutine(beatSwellCo(i));
+
+            //Do we need to wait for the coroutines to finish?
+        }
+    }
+
+
 
     void Update() 
     {
@@ -230,6 +290,9 @@ public class BeatUI : MonoBehaviour
         if(Input.GetKey(KeyCode.UpArrow)) {
             Lane1L.AddToClassList("glow-class:glow");
         }
+
+        handleBeatTargetSwell();
+
     }
 
         IEnumerator FadeOutCoroutine(Label label) {

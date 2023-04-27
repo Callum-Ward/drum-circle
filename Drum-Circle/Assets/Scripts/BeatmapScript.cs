@@ -127,7 +127,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
-        beatUI.failShake(Mathf.RoundToInt(queueIndex/2));
+        //beatUI.failShake(Mathf.RoundToInt(queueIndex/2));
         treeManager.SetHitStatus(false);
     }
 
@@ -256,6 +256,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         setEnvironmentTriggers(i*2);
                     }
+                    beatUI.hitSwell(i*2);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
@@ -267,6 +268,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         // Enviroment triggers etc. right drum hit on target
                     }
+                    beatUI.hitSwell(i*2 + 1);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }

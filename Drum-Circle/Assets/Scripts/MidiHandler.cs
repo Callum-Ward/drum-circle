@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.Layouts;
 public class MidiHandler : MonoBehaviour {
     private int playerCount = 3;
     public float[] midiInputVelocities;
-    private int noteNumberOffset = 21;
+    private int noteNumberOffset = 44; //21;
 
     void Awake()
     {
@@ -30,14 +30,14 @@ public class MidiHandler : MonoBehaviour {
                 // object is only useful to specify the target note (note
                 // number, channel number, device name, etc.) Use the velocity
                 // argument as an input note velocity.
-                   Debug.Log(string.Format(
+                /* Debug.Log(string.Format(
                     "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
                     note.noteNumber,
                     note.shortDisplayName,
                     velocity,
                     (note.device as Minis.MidiDevice)?.channel,
                     note.device.description.product
-                )); 
+                )); */
 
                 midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
             };
