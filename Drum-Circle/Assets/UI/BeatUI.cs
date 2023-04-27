@@ -18,7 +18,7 @@ public class BeatUI : MonoBehaviour
     Label playerTag1, playerTag2, playerTag3;
     Label scoreTag1, scoreTag2, scoreTag3;
     Label comboTag1, comboTag2, comboTag3;
-    Label introTimer;
+    Label introTimer, freestyleNotice;
     VisualElement Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R, Lane1, Lane2, Lane3;
     VisualElement[] lanes, playerLanes;
     VisualElement[] container = new VisualElement[6];
@@ -78,6 +78,7 @@ public class BeatUI : MonoBehaviour
         Lane2 = root.Q<VisualElement>("Lane2");
         Lane3 = root.Q<VisualElement>("Lane3");
         introTimer = root.Q<Label>("IntroTimer");
+        freestyleNotice = root.Q<Label>("FreestyleNotice");
    
         guiStyle.fontSize = 60;
 
@@ -182,7 +183,19 @@ public class BeatUI : MonoBehaviour
     public void IntroTimerStop() 
     {
         introTimer.text = "GO!";
-        StartCoroutine(FadeOutCoroutine());
+        StartCoroutine(FadeOutCoroutine(introTimer));
+    }
+
+    public void FreestyleNoticeStart(int playerIndex)
+    {
+        Debug.Log("FNS");
+        freestyleNotice.visible = true;
+        freestyleNotice.text = "Freestyle Player " + (playerIndex + 1).ToString();
+    }
+
+    public void FreestyleNoticeStop() 
+    {
+        StartCoroutine(FadeOutCoroutine(freestyleNotice));
     }
 
 
@@ -194,32 +207,32 @@ public class BeatUI : MonoBehaviour
         }
     }
 
-    IEnumerator FadeOutCoroutine() {
-    float startF = 1f;
-    float endF = 0f;
-    float startW = introTimer.resolvedStyle.width;
-    float startH = introTimer.resolvedStyle.height;
-    float endW = startW*2;
-    float endH = startH*2;
-    float cTimer = 0f;
-    float incrementF = (endF - startF);
-    float incrementW = (endW - startW);
-    float incrementH = (endH - startH);
-    long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
+        IEnumerator FadeOutCoroutine(Label label) {
+            float startF = 1f;
+            float endF = 0f;
+            float startW = label.resolvedStyle.width;
+            float startH = label.resolvedStyle.height;
+            float endW = startW*2;
+            float endH = startH*2;
+            float cTimer = 0f;
+            float incrementF = (endF - startF);
+            float incrementW = (endW - startW);
+            float incrementH = (endH - startH);
+            long intervalInTicks = (long)(0.05 * TimeSpan.TicksPerSecond);
 
-    while (cTimer < 1f) {
-        cTimer += Time.deltaTime;
-        float newOpacity = startF+(incrementF*cTimer);
-        float newWidth = startW+(incrementW*cTimer);
-        float newHeight = startH+(incrementH*cTimer);
-        float newFontSize = introTimer.resolvedStyle.fontSize+1;
+            while (cTimer < 1f) {
+                cTimer += Time.deltaTime;
+                float newOpacity = startF+(incrementF*cTimer);
+                float newWidth = startW+(incrementW*cTimer);
+                float newHeight = startH+(incrementH*cTimer);
+                float newFontSize = label.resolvedStyle.fontSize+1;
 
-        
-        introTimer.style.opacity = newOpacity;
-        introTimer.style.width = new StyleLength(newWidth);
-        introTimer.style.height = new StyleLength(newHeight);
-        introTimer.style.fontSize = new StyleLength(newFontSize);
-        yield return null;
-        }
+                
+                label.style.opacity = newOpacity;
+                label.style.width = new StyleLength(newWidth);
+                label.style.height = new StyleLength(newHeight);
+                label.style.fontSize = new StyleLength(newFontSize);
+                yield return null;
+            }
     }
 }

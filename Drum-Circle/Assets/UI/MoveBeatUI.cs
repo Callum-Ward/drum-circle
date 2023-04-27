@@ -67,18 +67,18 @@ public class MoveBeatUI : MonoBehaviour
         
     }
 
-    public void Startup(bool left, int drumNo, string type) {
+    public void Startup(bool left, int drumNo, int size, string type) {
+        Debug.Log("b sup " + size.ToString());
         if (start == false) {
             beatSpawnContainer = beatSpawnTemplate.Instantiate();
             container = new VisualElement();    //Create seperate container for the beat icon so that we can set absolute height, 
             container.Add(beatSpawnContainer);  //Container then goes into lane so beat inherits center position of lane.
             container.style.position = Position.Absolute;
-            if(type == "rising") {
-                container.style.top = new Length(Mathf.RoundToInt((screenHeight*beatTargetLocation)))
-                rising = true;                
-            } else {
-                container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));   
-            }
+            container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));
+
+            container.style.scale = new Scale(new Vector2(0.75f * (float)size, 0.75f * (float)size));
+            moveSpeed = size == 2 ? moveSpeed * 2f / 3f : moveSpeed * 4f / 3f;
+
             element = beatSpawnContainer.Q<VisualElement>("beat");
             
             if(left == true) {
