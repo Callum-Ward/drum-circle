@@ -19,7 +19,7 @@ public class BeatmapScript : MonoBehaviour
     public float introTimer = 0f;
     public float introDelay = 8f;
     public float beatTargetLocation = 0.3f;
-    private int noteNumberOffset = 44; //21;
+    private int noteNumberOffset = 21;
     private int[] drumInputStrengths;
     private float[] midiInputVelocities;
     private bool hitL = false;
@@ -45,6 +45,7 @@ public class BeatmapScript : MonoBehaviour
     public BeatManager beatManager;
     public RhythmSpawner beatSpawner;
     public TreeSpawning treeSpawner;
+    public MidiHandler midiHandler;
     public MessageListener messageListener;
     public Terrain terrain;
     public TutorialScript tutorialScript;
@@ -73,6 +74,7 @@ public class BeatmapScript : MonoBehaviour
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
+        midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
@@ -125,6 +127,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
+        beatUI.failShake(Mathf.RoundToInt(queueIndex/2));
         treeManager.SetHitStatus(false);
     }
 
@@ -228,47 +231,6 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-    private void addMidiHandler()
-    {
-        InputSystem.onDeviceChange += (device, change) =>
-        {
-            if (change != InputDeviceChange.Added) return;
-
-            var midiDevice = device as Minis.MidiDevice;
-            if (midiDevice == null) return;
-
-            midiDevice.onWillNoteOn += (note, velocity) => {
-                // Note that you can't use note.velocity because the state
-                // hasn't been updated yet (as this is "will" event). The note
-                // object is only useful to specify the target note (note
-                // number, channel number, device name, etc.) Use the velocity
-                // argument as an input note velocity.
-                /* Debug.Log(string.Format(
-                    "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
-                    note.noteNumber,
-                    note.shortDisplayName,
-                    velocity,
-                    (note.device as Minis.MidiDevice)?.channel,
-                    note.device.description.product
-                ));*/
-
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
-            };
-
-            midiDevice.onWillNoteOff += (note) => {
-                /*Debug.Log(string.Format(
-                    "Note Off #{0} ({1}) ch:{2} dev:'{3}'",
-                    note.noteNumber,
-                    note.shortDisplayName,
-                    (note.device as Minis.MidiDevice)?.channel,
-                    note.device.description.product
-                ));
-
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];*/
-            };
-        };
-    }
-
     private bool checkCorrectDrumHit(int drumIndex, float velocity)
     {
         if (beatManager.beatQueues[drumIndex].Count > 0) 
@@ -288,25 +250,25 @@ public class BeatmapScript : MonoBehaviour
         for(int i = 0; i < this.playerCount; i++)
             {
                 //Register left drum hit and perform code
-                if ((drumInputStrengths[i*2] > 0 || midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
+                if ((drumInputStrengths[i*2] > 0 || midiHandler.midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
                 {
-                    if (checkCorrectDrumHit(i*2, midiInputVelocities[i*2]))
+                    if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
                         setEnvironmentTriggers(i*2);
                     }
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
-                    midiInputVelocities[i * 2] = 0.0f;
+                    midiHandler.clearMidiInputVelocities(i * 2);
                 }
 
                 //Register right drum hit and perform code
-                if ((drumInputStrengths[i*2 + 1] > 0 || midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
+                if ((drumInputStrengths[i*2 + 1] > 0 || midiHandler.midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
-                    if (checkCorrectDrumHit(i*2 + 1, midiInputVelocities[i*2 + 1]))
+                    if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
                         // Enviroment triggers etc. right drum hit on target
                     }
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
-                    midiInputVelocities[i * 2 + 1] = 0.0f;
+                    midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }
             }
     }
@@ -315,7 +277,6 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
-        addMidiHandler();
     }
 
     // Update is called once per frame
@@ -329,7 +290,12 @@ public class BeatmapScript : MonoBehaviour
 
         float countdown = introDelay - introTimer;
 
+        if(Input.GetKey(KeyCode.UpArrow)) {            
+            beatUI.failShake(Mathf.RoundToInt(0));
+        }
+
         if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
+        // if(timer > 0 ) {            
             SceneManager.LoadScene("2MissionSelect");
         }
 
@@ -342,7 +308,6 @@ public class BeatmapScript : MonoBehaviour
         {//Start the timer
             if (introTimer <= introDelay && audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
             {
-                timer += Time.deltaTime;
                 introTimer += Time.deltaTime;
                 beatSpawner.spawnOnTime(timer, useMidiFile);
             }
@@ -375,8 +340,8 @@ public class BeatmapScript : MonoBehaviour
             else if (countdown <= 0) {
                 beatUI.IntroTimerStop();
                 introTimer = 10f;
-            }
-            
+            }            
+            timer += Time.deltaTime;
         }
     }
 
