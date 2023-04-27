@@ -110,8 +110,7 @@ public class MoveBeatUI : MonoBehaviour
                 beatHeight -= ((screenHeight * Time.deltaTime) / beatmapScript.delay) * moveSpeed;
             } else {
                 beatHeight += ((screenHeight * Time.deltaTime) / beatmapScript.delay) * moveSpeed;
-            }
-            windowtime = beatmapScript.windowtime;
+            }            windowtime = beatmapScript.windowtime;
             beatSpawnContainer.style.top = new StyleLength(Mathf.RoundToInt(beatHeight));
 
             if (timer > (beatmapScript.delay + (windowtime/2)) && dontDelete == false)

@@ -16,7 +16,7 @@
             <ui:VisualElement style="flex-grow: 1; width: 100%;" />
             <ui:VisualElement style="flex-grow: 1; width: 100%;" />
             <ui:VisualElement style="flex-grow: 1; width: 100%; height: 100%;">
-                <ui:VisualElement name="Lane1Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: row; align-items: center; background-color: rgba(0, 25, 0, 0.5); position: absolute; width: 100%; height: 100%; left: 0; visibility: visible; overflow: visible; display: flex;">
+                <ui:VisualElement name="Lane1Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: row; align-items: center; background-color: rgba(0, 25, 0, 0.5); position: absolute; width: 100%; height: 100%; left: 0; visibility: visible; overflow: visible; display: flex; translate: 0 0;">
                     <ui:VisualElement name="Lane1L" class="glow-class glow" style="height: auto; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; display: flex; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-background-image-tint-color: rgb(255, 255, 255);">
                         <ui:IMGUIContainer name="Target" />
                     </ui:VisualElement>

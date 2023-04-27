@@ -12,7 +12,7 @@ using System.Linq;
 public class BeatUI : MonoBehaviour
 {
     [HideInInspector] public bool gameStart = true;
-    public int playerNo = 0;
+    public int playerNo = 3;
     [HideInInspector] public int count = 0;
     VisualElement root;
     Label playerTag1, playerTag2, playerTag3;
@@ -20,7 +20,7 @@ public class BeatUI : MonoBehaviour
     Label comboTag1, comboTag2, comboTag3;
     Label introTimer, freestyleNotice;
     VisualElement Lane1L, Lane1R, Lane2L, Lane2R, Lane3L, Lane3R, Lane1, Lane2, Lane3, lane1Container, lane2Container, lane3Container;
-    VisualElement[] lanes, playerLanes, laneContainers;
+    [HideInInspector] public VisualElement[] lanes, playerLanes, laneContainers;
     VisualElement[] container = new VisualElement[6];
     Label[] playerTags, scoreTags, comboTags;
     Label[][] tags;
@@ -118,24 +118,16 @@ public class BeatUI : MonoBehaviour
         comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
     }
 
-    public void failShake(int player) {
-        StartCoroutine(failShakeCo(player));
-    }
+    // public void failShake(int player) {
+    //     StartCoroutine(failShakeCo(player));
+    // }
 
-    IEnumerator failShakeCo(int player) {
-        float timer = 0;
-        float amount = 50;
-        laneContainers[player].style.position = Position.Absolute;
-        // float startPos = laneContainers[player].resolvedStyle.left;
-        while(timer < 1) {
-            float x = (UnityEngine.Random.Range(-1f, 1f) * 100);
-            laneContainers[player].style.left = new Length(Mathf.RoundToInt(x));
-            timer += Time.deltaTime;
-        Debug.Log("current position: " + laneContainers[player].style.left);
-        }
-        laneContainers[player].style.left = new Length(0);
-        // laneContainers[player].style.position = Position.Flex;
-        yield return null;
+    public void failShake(int player, int strength) {
+        // laneContainers[player].style.position = Position.Absolute;
+        float x = (UnityEngine.Random.Range(-1f, 1f) * strength);
+        laneContainers[player].style.left = new StyleLength(Mathf.RoundToInt(x));
+        Debug.Log("current position: " + laneContainers[player].style.translate);
+        // laneContainers[player].style.translate = new Translate(0, 0, 0);
     }
 
     // Update is called once per frame
