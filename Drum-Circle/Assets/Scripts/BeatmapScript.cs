@@ -128,7 +128,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
-        beatUI.hitMiss((int)(queueIndex / 2));
+        beatUI.hitMiss((int)(queueIndex / 2), (windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore));
         treeManager.SetHitStatus(false);
     }
 
