@@ -101,8 +101,8 @@ public class FreestyleHandler  {
         {
             this.activeSoloist = scheduleIndex;
             spawner.setFreestyleMode("solo", this.beatTransfer, this.activeSoloist);
+            beatUI.toggleFreestyle(this.activeSoloist, true);
 
-            //beatUI.FreestyleNoticeStart(this.activeSoloist);
             this.noticeActive = true;
 
             audioManager.FadeOutDrumTrack(0);
@@ -120,6 +120,8 @@ public class FreestyleHandler  {
         else if(time >= soloSchedule[scheduleIndex] + soloDurations[scheduleIndex] && this.activeSolo())
         {
             spawner.setFreestyleMode("none", this.beatTransfer, -1);
+            beatUI.toggleFreestyle(this.activeSoloist, false);
+
             audioManager.FadeInDrumTrack(0, "slow");
             audioManager.FadeInDrumTrack(1, "slow");
             audioManager.FadeInDrumTrack(2, "slow");
