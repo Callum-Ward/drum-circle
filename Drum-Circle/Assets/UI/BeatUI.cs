@@ -40,6 +40,7 @@ public class BeatUI : MonoBehaviour
     private float beatTargetLocation;
 
     BeatmapScript beatmapScript;
+    ScoreManager scoreManager;
 
     TemplateContainer[] beatSpawnContainer = new TemplateContainer[6];
 
@@ -62,6 +63,9 @@ public class BeatUI : MonoBehaviour
     private class LaneEffect {
         public int glowStage;
         public int shakeStrength;
+        public Color glowColorMin;
+        public Color glowColorMax;
+        public bool repeat;
     }
 
     private TargetEffect[] beatTargetEffects = new TargetEffect[6];
@@ -72,6 +76,7 @@ public class BeatUI : MonoBehaviour
     private void OnEnable()
     {
         root = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement;
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
 
         playerTag1 = root.Q<Label>("Player1");
         playerTag2 = root.Q<Label>("Player2");
@@ -129,6 +134,9 @@ public class BeatUI : MonoBehaviour
             laneEffects[i] = new LaneEffect();
             laneEffects[i].glowStage = 0;
             laneEffects[i].shakeStrength = 5;
+            laneEffects[i].glowColorMin = new Color(0f, 0f, 0f, 0.3f);
+            laneEffects[i].glowColorMax = new Color(0f, 0f, 0f, 0.3f);
+            laneEffects[i].repeat = false;
         }
 
 
@@ -149,15 +157,22 @@ public class BeatUI : MonoBehaviour
     //     StartCoroutine(failShakeCo(player));
     // }
 
-    public void hitMiss(int playerIndex) {
+    public void hitMiss(int playerIndex, float windowScore) {
+        //Debug.Log("HM " + windowScore.ToString());
+        
+        float multiplier = 5f;
+        laneEffects[playerIndex].shakeStrength = 4;
         laneEffects[playerIndex].glowStage = 1;
+        laneEffects[playerIndex].glowColorMin = new Color(0.01f * multiplier, 0.0f, 0.0f, 0.3f + 0.025f * multiplier);
+        laneEffects[playerIndex].glowColorMax = new Color(0.1f * multiplier, 0.0f, 0.0f, 0.3f + 0.075f * multiplier);
+        laneEffects[playerIndex].repeat = false;
     }
 
     private void failShake(int player, int strength) {
         // laneContainers[player].style.position = Position.Absolute;
         float x = (UnityEngine.Random.Range(-1f, 1f) * strength);
         laneContainers[player].style.left = new StyleLength(Mathf.RoundToInt(x));
-        Debug.Log("current position: " + laneContainers[player].style.translate);
+        //Debug.Log("current position: " + laneContainers[player].style.translate);
         // laneContainers[player].style.translate = new Translate(0, 0, 0);
     }
 
@@ -277,37 +292,65 @@ public class BeatUI : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator failShakeCo(int playerIndex)
+
+    IEnumerator laneGlowCo(int playerIndex)
     {
         if(laneEffects[playerIndex].glowStage == 1) 
         {
             Color c = laneContainers[0].style.backgroundColor.value;
-            if(c.a < 0.6f)
+            float redInc = (laneEffects[playerIndex].glowColorMax.r - laneEffects[playerIndex].glowColorMin.r) / 10f;
+            float greenInc = (laneEffects[playerIndex].glowColorMax.g - laneEffects[playerIndex].glowColorMin.g) / 10f;
+            float blueInc = (laneEffects[playerIndex].glowColorMax.b - laneEffects[playerIndex].glowColorMin.b) / 10f;
+            float alphaInc = (laneEffects[playerIndex].glowColorMax.a - laneEffects[playerIndex].glowColorMin.a) / 10f;
+
+            if(c.a < laneEffects[playerIndex].glowColorMax.a)
             {
-                laneContainers[0].style.backgroundColor = new Color(c.r + 0.05f, c.g, c.b, c.a + 0.025f);
+                laneContainers[playerIndex].style.backgroundColor = new Color(c.r + redInc, c.g + greenInc, c.b + blueInc, c.a + alphaInc);
             }
             else
             {
                 laneEffects[playerIndex].glowStage = 2;
             }
-            failShake(playerIndex, laneEffects[playerIndex].shakeStrength);
-
         }
         else if(laneEffects[playerIndex].glowStage == 2)
         {
             Color c = laneContainers[0].style.backgroundColor.value;
-            if(c.a > 0.3f)
+            float redInc = (laneEffects[playerIndex].glowColorMax.r - laneEffects[playerIndex].glowColorMin.r) / 10f;
+            float greenInc = (laneEffects[playerIndex].glowColorMax.g - laneEffects[playerIndex].glowColorMin.g) / 10f;
+            float blueInc = (laneEffects[playerIndex].glowColorMax.b - laneEffects[playerIndex].glowColorMin.b) / 10f;
+            float alphaInc = (laneEffects[playerIndex].glowColorMax.a - laneEffects[playerIndex].glowColorMin.a) / 10f;
+            
+            if(c.a > laneEffects[playerIndex].glowColorMin.a)
             {
-                laneContainers[0].style.backgroundColor = new Color(c.r - 0.05f, c.g, c.b, c.a - 0.025f);
+                laneContainers[playerIndex].style.backgroundColor = new Color(c.r - redInc, c.g - greenInc, c.b - blueInc, c.a - alphaInc);
             }
             else
             {
                 // Finish shaking/glowing effect
-                laneEffects[playerIndex].glowStage = 0;
-                laneContainers[playerIndex].style.left = 0;
+                if(laneEffects[playerIndex].repeat)
+                {
+                    laneEffects[playerIndex].glowStage = 1;
+                }
+                else
+                {
+                    laneEffects[playerIndex].glowStage = 0;
+                    laneEffects[playerIndex].shakeStrength = 5;
+                    laneEffects[playerIndex].glowColorMin = new Color(0f, 0f, 0f, 0.3f);
+                    laneEffects[playerIndex].glowColorMax = new Color(0f, 0f, 0f, 0.3f);
+                    laneEffects[playerIndex].repeat = false;
+
+                    laneContainers[playerIndex].style.backgroundColor = laneEffects[playerIndex].glowColorMin;
+                    laneContainers[playerIndex].style.left = 0;
+                }
             }
-            failShake(playerIndex, laneEffects[playerIndex].shakeStrength);
         }
+        yield return null;
+    }
+
+
+    IEnumerator comboGlowCoroutine()
+    {
+
         yield return null;
     }
 
@@ -317,7 +360,26 @@ public class BeatUI : MonoBehaviour
         {
             if(i < 3)
             {
-                StartCoroutine(failShakeCo(i));
+                if(scoreManager.ComboCounter[i] > 0 && laneEffects[i].glowStage == 0)
+                {
+                    float scoreMultiplier = scoreManager.ComboCounter[i] > 10 ? 10f : (float)scoreManager.ComboCounter[i];
+                    laneEffects[i].glowStage = 1;
+                    laneEffects[i].glowColorMin = new Color(0.0f, 0.05f, 0.0f, 0.3f);
+                    laneEffects[i].glowColorMax = new Color(0.0f, 0.05f * scoreMultiplier, 0.0f, 0.3f + 0.02f * scoreMultiplier);
+                    laneEffects[i].repeat = true;
+                }
+                else if(scoreManager.ComboCounter[i] == 0 && laneEffects[i].glowStage > 0 && laneEffects[i].repeat)
+                {
+                    laneEffects[i].glowStage = 0;
+                    laneEffects[i].glowColorMin = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+                    laneEffects[i].glowColorMax = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+                    laneEffects[i].repeat = false;
+                }
+                else if(laneEffects[i].glowStage > 0 && !laneEffects[i].repeat)
+                {
+                    failShake(i, laneEffects[i].shakeStrength);
+                }
+                StartCoroutine(laneGlowCo(i));
             }
             StartCoroutine(beatSwellCo(i));
             //Do we need to wait for the coroutines to finish?

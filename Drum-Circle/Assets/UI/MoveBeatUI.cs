@@ -81,8 +81,9 @@ public class MoveBeatUI : MonoBehaviour
                 container.style.top = new Length(Mathf.RoundToInt(-(screenHeight*beatTargetLocation)));   
             }
 
-            container.style.scale = new Scale(new Vector2(0.75f * (float)size, 0.75f * (float)size));
-            moveSpeed = size == 2 ? moveSpeed * 2f / 3f : moveSpeed * 4f / 3f;
+            float scale = size == 2 ? 1.1f : 0.9f;
+            container.style.scale = new Scale(new Vector2(scale, scale));
+            moveSpeed = size == 2 ? moveSpeed * 10f / 11f : moveSpeed * 10f / 9f;
 
             element = beatSpawnContainer.Q<VisualElement>("beat");
              
