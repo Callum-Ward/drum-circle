@@ -11,12 +11,12 @@ using UnityEngine.SceneManagement;
 public class BeatmapScript : MonoBehaviour
 {
     public RhythmSpawner spawner;
-    public float timer = 0.0f;
-    public float window = 0f;
+    [HideInInspector] public float timer = 0.0f;
+    [HideInInspector] public float window = 0f;
     public float windowtime = 0.3f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
-    public float introTimer = 0f;
+    [HideInInspector] public float introTimer = 0f;
     public float introDelay = 8f;
     public float beatTargetLocation = 0.3f;
     private int noteNumberOffset = 21;
@@ -24,10 +24,11 @@ public class BeatmapScript : MonoBehaviour
     private float[] midiInputVelocities;
     private bool hitL = false;
     private bool hitR = false;
+    private float[] shakeTimer = new float[3] {0f, 0f, 0f};
     
     private bool useMidiFile = true;
 
-    public int terrainBeatStage = 1;
+    [HideInInspector] public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
     private float glowRate = 1.1f;
     private int treeStage = 0;
@@ -39,21 +40,22 @@ public class BeatmapScript : MonoBehaviour
 
     private FreestyleHandler freestyleHandler;
 
-    public ScoreManager scoreManager;
-    public AudioAnalyser audioAnalyser;
-    public AudioManager audioManager;
-    public BeatManager beatManager;
-    public RhythmSpawner beatSpawner;
-    public TreeSpawning treeSpawner;
-    public MidiHandler midiHandler;
-    public MessageListener messageListener;
-    public Terrain terrain;
-    public TutorialScript tutorialScript;
-    public BeatUI beatUI;
-    public TreeManager treeManager;
-    public WaypointMover waypointMover;
-    public string[] sections;
-    public string receivedString;
+    [HideInInspector] public ScoreManager scoreManager;
+    [HideInInspector] public AudioAnalyser audioAnalyser;
+    [HideInInspector] public AudioManager audioManager;
+    [HideInInspector] public BeatManager beatManager;
+    [HideInInspector] public RhythmSpawner beatSpawner;
+    [HideInInspector] public TreeSpawning treeSpawner;
+    [HideInInspector] public MidiHandler midiHandler;
+    [HideInInspector] public MessageListener messageListener;
+    [HideInInspector] public Terrain terrain;
+    [HideInInspector] public TutorialScript tutorialScript;
+    [HideInInspector] public BeatUI beatUI;
+    [HideInInspector] public TreeManager treeManager;
+    [HideInInspector] public WaypointMover waypointMover;
+    [HideInInspector] public string[] sections;
+    [HideInInspector] public bool[] shake = new bool[3] {false, false, false};
+    [HideInInspector] public string receivedString;
     private const int beatmapWidth = 10;
 
 
@@ -64,7 +66,7 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareOnset = 30f;
 
     public int playerCount = 3;
-    public int sceneNumber;
+    [HideInInspector] public int sceneNumber;
 
     void Awake()
     {
@@ -127,7 +129,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
-        //beatUI.failShake(Mathf.RoundToInt(queueIndex/2));
+        shake[Mathf.FloorToInt(queueIndex/2)] = true;
         treeManager.SetHitStatus(false);
     }
 
@@ -288,12 +290,26 @@ public class BeatmapScript : MonoBehaviour
         //handleTerrainBeatResponse();
         handleDrumInput();
 
+        //Handle UI shake on miss
+        for(int i = 0; i < 3; i++) {
+            if(shake[i] == true) {
+                beatUI.failShake(i, 5);
+                shakeTimer[i] += Time.deltaTime;
+                if(shakeTimer[i] >= 0.3f) {
+                    shakeTimer[i] = 0;
+                    shake[i] = false;
+                    beatUI.laneContainers[i].style.left = 0;
+                }
+            }
+        }
+       
+
         beatUI.startLevelUI();
 
         float countdown = introDelay - introTimer;
 
         if(Input.GetKey(KeyCode.UpArrow)) {            
-            beatUI.failShake(Mathf.RoundToInt(0));
+            beatUI.failShake(Mathf.RoundToInt(0), 5);
         }
 
         if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
