@@ -54,7 +54,6 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public TreeManager treeManager;
     [HideInInspector] public WaypointMover waypointMover;
     [HideInInspector] public string[] sections;
-    [HideInInspector] public bool[] shake = new bool[3] {false, false, false};
     [HideInInspector] public string receivedString;
     private const int beatmapWidth = 10;
 
@@ -129,7 +128,7 @@ public class BeatmapScript : MonoBehaviour
         {
             beatManager.BeatDelete(queueIndex, false);
         }
-        shake[Mathf.FloorToInt(queueIndex/2)] = true;
+        beatUI.hitMiss((int)(queueIndex / 2));
         treeManager.SetHitStatus(false);
     }
 
@@ -288,29 +287,11 @@ public class BeatmapScript : MonoBehaviour
     {
         //13
         //handleTerrainBeatResponse();
-        handleDrumInput();
-
-        //Handle UI shake on miss
-        for(int i = 0; i < 3; i++) {
-            if(shake[i] == true) {
-                beatUI.failShake(i, 5);
-                shakeTimer[i] += Time.deltaTime;
-                if(shakeTimer[i] >= 0.3f) {
-                    shakeTimer[i] = 0;
-                    shake[i] = false;
-                    beatUI.laneContainers[i].style.left = 0;
-                }
-            }
-        }
-       
+        handleDrumInput();       
 
         beatUI.startLevelUI();
 
         float countdown = introDelay - introTimer;
-
-        if(Input.GetKey(KeyCode.UpArrow)) {            
-            beatUI.failShake(Mathf.RoundToInt(0), 5);
-        }
 
         if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
         // if(timer > 0 ) {            

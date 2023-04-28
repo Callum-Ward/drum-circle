@@ -59,7 +59,13 @@ public class BeatUI : MonoBehaviour
         public float swellEffect;
     }
 
+    private class LaneEffect {
+        public int glowStage;
+        public int shakeStrength;
+    }
+
     private TargetEffect[] beatTargetEffects = new TargetEffect[6];
+    private LaneEffect[] laneEffects = new LaneEffect[3];
     private int[] drumIndexUIMap = new int[6]{0, 3, 1, 4, 2, 5};
 
     
@@ -119,6 +125,12 @@ public class BeatUI : MonoBehaviour
             beatTargetEffects[i].swellEffect = 1f;
         }
 
+        for(int i = 0; i < 3; i++){
+            laneEffects[i] = new LaneEffect();
+            laneEffects[i].glowStage = 0;
+            laneEffects[i].shakeStrength = 5;
+        }
+
 
         beatSpawnUI = GetComponent<UIDocument>();
 
@@ -137,7 +149,11 @@ public class BeatUI : MonoBehaviour
         beatTargetEffects[drumIndexUIMap[drumIndex]].swellStage = 1;
     }
 
-    public void failShake(int player, int strength) {
+    public void hitMiss(int playerIndex) {
+        laneEffects[playerIndex].glowStage = 1;
+    }
+
+    private void failShake(int player, int strength) {
         // laneContainers[player].style.position = Position.Absolute;
         float x = (UnityEngine.Random.Range(-1f, 1f) * strength);
         laneContainers[player].style.left = new StyleLength(Mathf.RoundToInt(x));
@@ -168,20 +184,22 @@ public class BeatUI : MonoBehaviour
                         tags[j][i].style.left = screenWidth*(i+1) /(playerNo+1) - (tags[j][i].resolvedStyle.width/2);
                         tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*5;
                     }
-                playerLanes[i].style.display = DisplayStyle.Flex;    
-                beatSpawnContainer[i] = beatSpawnTemplate.Instantiate();
-                beatSpawnContainer[i+3] = beatSpawnTemplate.Instantiate();
-                container[i] = new VisualElement();
-                container[i+3] = new VisualElement();
-                container[i].Add(beatSpawnContainer[i]);
-                container[i+3].Add(beatSpawnContainer[i+3]);
-                lanes[i].Add(container[i]);
-                lanes[i+3].Add(container[i+3]);
-                container[i].style.position = Position.Absolute;
-                container[i+3].style.position = Position.Absolute;
-                container[i].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
-                container[i+3].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
-                } 
+                    playerLanes[i].style.display = DisplayStyle.Flex;    
+                    beatSpawnContainer[i] = beatSpawnTemplate.Instantiate();
+                    beatSpawnContainer[i+3] = beatSpawnTemplate.Instantiate();
+                    container[i] = new VisualElement();
+                    container[i+3] = new VisualElement();
+                    container[i].Add(beatSpawnContainer[i]);
+                    container[i+3].Add(beatSpawnContainer[i+3]);
+                    lanes[i].Add(container[i]);
+                    lanes[i+3].Add(container[i+3]);
+                    container[i].style.position = Position.Absolute;
+                    container[i+3].style.position = Position.Absolute;
+                    container[i].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
+                    container[i+3].style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
+                    laneContainers[i].style.backgroundColor = new Color(0f, 0f, 0f, 0.3f);
+                }
+
              }
         
         int targetOffset = Mathf.RoundToInt(screenHeight*beatmapScript.inputDelay);
@@ -259,17 +277,54 @@ public class BeatUI : MonoBehaviour
         yield return null;
     }
 
-    private void handleBeatTargetSwell()
+    IEnumerator failShakeCo(int playerIndex)
+    {
+        if(laneEffects[playerIndex].glowStage == 1) 
+        {
+            Color c = laneContainers[0].style.backgroundColor.value;
+            if(c.a < 0.6f)
+            {
+                laneContainers[0].style.backgroundColor = new Color(c.r + 0.05f, c.g, c.b, c.a + 0.025f);
+            }
+            else
+            {
+                laneEffects[playerIndex].glowStage = 2;
+            }
+            failShake(playerIndex, laneEffects[playerIndex].shakeStrength);
+
+        }
+        else if(laneEffects[playerIndex].glowStage == 2)
+        {
+            Color c = laneContainers[0].style.backgroundColor.value;
+            if(c.a > 0.3f)
+            {
+                laneContainers[0].style.backgroundColor = new Color(c.r - 0.05f, c.g, c.b, c.a - 0.025f);
+            }
+            else
+            {
+                // Finish shaking/glowing effect
+                laneEffects[playerIndex].glowStage = 0;
+                laneContainers[playerIndex].style.left = 0;
+            }
+            failShake(playerIndex, laneEffects[playerIndex].shakeStrength);
+        }
+        yield return null;
+    }
+
+    private void handleUIEffects()
     {
         for(int i = 0; i < 6; i++)
         {
+            if(i < 3)
+            {
+                StartCoroutine(failShakeCo(i));
+            }
             StartCoroutine(beatSwellCo(i));
-
             //Do we need to wait for the coroutines to finish?
         }
     }
 
-
+    int gs = 0;
 
     void Update() 
     {
@@ -278,7 +333,27 @@ public class BeatUI : MonoBehaviour
             Lane1L.AddToClassList("glow-class:glow");
         }
 
-        handleBeatTargetSwell();
+        handleUIEffects();
+
+        /* if(gs == 0){
+            Color c = laneContainers[0].style.backgroundColor.value;
+            if(c.a < 0.6f){
+                laneContainers[0].style.backgroundColor = new Color(c.r + 0.02f, c.g, c.b, c.a + 0.01f);
+            }
+            else{
+                gs = 1;
+            }
+        }
+        else if(gs == 1){
+            Color c = laneContainers[0].style.backgroundColor.value;
+            if(c.a > 0.3f){
+                laneContainers[0].style.backgroundColor = new Color(c.r - 0.02f, c.g, c.b, c.a - 0.01f);
+            }
+            else{
+                gs = 0;
+            }
+        }*/
+
 
     }
 
