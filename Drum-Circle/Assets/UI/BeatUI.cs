@@ -55,14 +55,10 @@ public class BeatUI : MonoBehaviour
 
     private GUIStyle guiStyle = new GUIStyle();
 
-    private class TargetEffect {
-        public int swellStage;
-        public float swellEffect;
-    }
+    private Color[] targetColors = new Color[3]{new Color(0.84f, 0.34f, 0.09f), new Color(0.11f, 0.68f, 0.94f), new Color(0.02f, 0.21f, 0.02f)};
 
-
-    private TargetEffect[] beatTargetEffects = new TargetEffect[6];
-    private LaneEffect[] laneEffects = new LaneEffect[3];
+    private UITargetEffect[] beatTargetEffects = new UITargetEffect[6];
+    private UILaneEffect[] laneEffects = new UILaneEffect[3];
     private int[] drumIndexUIMap = new int[6]{0, 3, 1, 4, 2, 5};
 
     
@@ -118,13 +114,11 @@ public class BeatUI : MonoBehaviour
         }
 
         for(int i = 0; i < 6; i++){
-            beatTargetEffects[i] = new TargetEffect();
-            beatTargetEffects[i].swellStage = 0;
-            beatTargetEffects[i].swellEffect = 1f;
+            beatTargetEffects[i] = new UITargetEffect();
         }
 
         for(int i = 0; i < 3; i++){
-            laneEffects[i] = new LaneEffect();
+            laneEffects[i] = new UILaneEffect();
         }
 
 
@@ -136,7 +130,7 @@ public class BeatUI : MonoBehaviour
         playerNo = number;
     }
 
-    public void updateScore(int player, float scoreVal, int comboVal, int multiVal) {
+    public void updateScore(int player, float scoreVal, int comboVal, int multiVal, int winningPlayer) {
         scoreTags[player].text = "Score: " + scoreVal;
         comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
         if(comboVal > 0)
@@ -147,11 +141,21 @@ public class BeatUI : MonoBehaviour
                 laneContainers[player].style.backgroundColor = laneEffects[player].getTransitionColor(laneContainers[player].style.backgroundColor.value);
             }
         }
+       /* if(winningPlayer == player && scoreVal > 100f)
+        {
+            beatTargetEffects[player*2].SetMode("winning");
+            beatTargetEffects[player*2 + 1].SetMode("winning");
+        }
+        else
+        {
+            beatTargetEffects[player*2].SetMode("none");
+            beatTargetEffects[player*2 + 1].SetMode("none");
+        }*/
     }
 
-    // public void failShake(int player) {
-    //     StartCoroutine(failShakeCo(player));
-    // }
+    public void hitSwell(int drumIndex) {
+        beatTargetEffects[drumIndexUIMap[drumIndex]].SetMode("swell");
+    }
 
     public void hitMiss(int playerIndex, float windowScore) {
         laneEffects[playerIndex].SetMode("miss", 4f);
@@ -253,59 +257,25 @@ public class BeatUI : MonoBehaviour
         StartCoroutine(FadeOutCoroutine(freestyleNotice));
     }
 
-    IEnumerator beatSwellCo(int drumIndex)
+    private IEnumerator PlayerUIEffectCo(int playerIndex)
     {
-        if(beatTargetEffects[drumIndex].swellStage == 1)
+        Color nextLaneColor = laneEffects[playerIndex].getNextGlowValue(laneContainers[playerIndex].style.backgroundColor.value);
+        float nextShakeValue = laneEffects[playerIndex].getNextShakeValue();
+
+        laneContainers[playerIndex].style.backgroundColor = new StyleColor(nextLaneColor);
+        laneContainers[playerIndex].style.left = nextShakeValue;
+
+        for(int i = 0; i < 2; i++)
         {
-            if(beatTargetEffects[drumIndex].swellEffect < 1.15f)
-            {
-                beatTargetEffects[drumIndex].swellEffect += 0.05f;
-                beatSpawnContainer[drumIndex].style.scale = new Scale(new Vector2(beatTargetEffects[drumIndex].swellEffect, beatTargetEffects[drumIndex].swellEffect));
-            }
-            else
-            {
-                beatTargetEffects[drumIndex].swellStage = 2;
-            }
-        }
-        else if(beatTargetEffects[drumIndex].swellStage == 2)
-        {
-            if(beatTargetEffects[drumIndex].swellEffect > 1f)
-            {
-                beatTargetEffects[drumIndex].swellEffect -= 0.05f;
-                beatSpawnContainer[drumIndex].style.scale = new Scale(new Vector2(beatTargetEffects[drumIndex].swellEffect, beatTargetEffects[drumIndex].swellEffect));
-            }
-            else
-            {
-                beatTargetEffects[drumIndex].swellStage = 0;
-            }
+            Color nextBeatTargetColor = beatTargetEffects[drumIndexUIMap[playerIndex * 2 + i]].getNextGlowValue(beatSpawnContainer[playerIndex * 2 + i].style.backgroundColor.value);
+            float nextScaleValue = beatTargetEffects[drumIndexUIMap[playerIndex * 2 + i]].getNextScaleEffect();
+
+            //beatSpawnContainer[drumIndexUIMap[playerIndex * 2 + i]].style.backgroundColor = new StyleColor(nextBeatTargetColor);
+            beatSpawnContainer[drumIndexUIMap[playerIndex * 2 + i]].style.scale = new Scale(new Vector2(nextScaleValue, nextScaleValue));
         }
         yield return null;
     }
 
-
-    IEnumerator comboGlowCoroutine()
-    {
-
-        yield return null;
-    }
-
-    private void handleUIEffects()
-    {
-        for(int i = 0; i < 6; i++)
-        {
-            if(i < 3)
-            {
-                Color nextLaneColor = laneEffects[i].getNextGlowValue(laneContainers[i].style.backgroundColor.value);
-                float nextShakeValue = laneEffects[i].getNextShakeValue();
-                laneContainers[i].style.backgroundColor = new StyleColor(nextLaneColor);
-                laneContainers[i].style.left = nextShakeValue;
-            }
-            StartCoroutine(beatSwellCo(i));
-            //Do we need to wait for the coroutines to finish?
-        }
-    }
-
-    int gs = 0;
 
     void Update() 
     {
@@ -314,7 +284,17 @@ public class BeatUI : MonoBehaviour
             Lane1L.AddToClassList("glow-class:glow");
         }
 
-        handleUIEffects();
+        if(start == 2)
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                if(i < 3)
+                {
+                    StartCoroutine(PlayerUIEffectCo(i));
+                }
+            //Do we need to wait for the coroutines to finish?
+            }
+        }
 
         /* if(gs == 0){
             Color c = laneContainers[0].style.backgroundColor.value;
