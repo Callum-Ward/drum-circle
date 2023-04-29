@@ -10,6 +10,8 @@ public class AudioManager : MonoBehaviour {
     public Sound[] drumTracks;
     public Sound[] additiveLayers;
     public Sound[] oneShots;
+    public Sound background;
+
     public int[] oneShotMap;
     public int persistentLayerIndex;
 
@@ -64,6 +66,8 @@ public class AudioManager : MonoBehaviour {
         {
             initialiseSound(s);
         }
+
+        initialiseSound(background);
 
         activeSources = new List<AudioSource>();
         random = new System.Random();
@@ -208,6 +212,11 @@ public class AudioManager : MonoBehaviour {
         int index = oneShotMap[playerIndex * 2 + drumIndex];
         this.PlayDrumOneShot(index, velocity);
         return index;
+    }
+
+    public void PlayBackgroundTrack()
+    {
+        PlayTrack(background);
     }
 
 

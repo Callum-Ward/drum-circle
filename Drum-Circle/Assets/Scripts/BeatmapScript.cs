@@ -279,6 +279,7 @@ public class BeatmapScript : MonoBehaviour
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
+        audioManager.PlayBackgroundTrack();
     }
 
     // Update is called once per frame
@@ -304,13 +305,13 @@ public class BeatmapScript : MonoBehaviour
 
         // if(introTimer > introDelay)
         {//Start the timer
-            if (introTimer <= introDelay && audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
+            if (introTimer <= introDelay && audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
             {
                 introTimer += Time.deltaTime;
                 beatSpawner.spawnOnTime(timer, useMidiFile);
             }
             //Play all layers of music simultaneously
-            else if(audioManager.activeSources.Count == 0 && tutorialScript.tutorialComplete == true)
+            else if(audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
             {
                 audioManager.PlayAllDrumTracks();
                 audioManager.PlayAllLayerTracks();
@@ -323,10 +324,10 @@ public class BeatmapScript : MonoBehaviour
             //Drum hit functionality
             else if(tutorialScript.tutorialComplete == true)
             {
-                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[0].time + delay + inputDelay, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[1].time + delay + inputDelay, useMidiFile);
                 
                 checkDrumHit();
-                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[0].time);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time);
             }
 
             if(countdown <= 5 && countdown > 4) {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,12 +25,21 @@ public class ScoreManager : MonoBehaviour
 
     public void Update()
     {
+        Tuple<int, int> maxScore = new Tuple<int, int>(0, 0);
+        for(int i = 0; i < 3; i++)
+        {
+            if(playerScores[i] > maxScore.Item2)
+            {
+                maxScore = new Tuple<int, int>(i, playerScores[i]);
+            }
+        }
+
         for(int i = 0; i < 3; i++) {            
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
             }
-            beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i]);
+            beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
         }
 
     }
