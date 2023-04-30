@@ -27,6 +27,7 @@ public class TrackJson {
 public class TimestampedNote {
     public int left;
     public int noteNumber;
+    public int noteSize;
 }
 
 public class TrackMidi {
@@ -84,16 +85,34 @@ public class AudioAnalyser : MonoBehaviour {
         }
     }
 
-    private int getMedianNoteNumber(IEnumerable<Note> notes)
+    private Tuple<int, int> getNotesInformation(IEnumerable<Note> notes)
     {
         List<int> noteNumbers = new List<int>();
+        List<int> noteVelocities = new List<int>();
+        int minVelocity = 127;
+        int maxVelocity = 0;
+
         foreach(Note note in notes)
         {
             noteNumbers.Add((int)(note.NoteNumber));
+            noteVelocities.Add((int)note.Velocity);
+
+            int noteVelocity = (int)note.Velocity;
+            if(noteVelocity < minVelocity)
+            {
+                minVelocity = noteVelocity;
+            }
+            if(noteVelocity > maxVelocity)
+            {
+                maxVelocity = noteVelocity;
+            }
         }
 
         noteNumbers.Sort();
-        return noteNumbers[noteNumbers.Count / 2];
+
+        int medianNoteNumber = noteNumbers[noteNumbers.Count / 2];
+        int medianVelocity = noteVelocities[noteVelocities.Count / 2];
+        return Tuple.Create(medianNoteNumber, medianVelocity);
     }
 
     public TrackMidi loadTrackMidi(string name)
@@ -112,7 +131,9 @@ public class AudioAnalyser : MonoBehaviour {
 
         IEnumerable<Note> notes = midiFile.GetNotes();
 
-        int medianNoteNumber = getMedianNoteNumber(notes);
+        Tuple<int, int> notesInformation = getNotesInformation(notes);
+        int medianNoteNumber = notesInformation.Item1;
+        int medianVelocity = notesInformation.Item2;
 
         foreach(Note note in notes)
         {
@@ -121,6 +142,7 @@ public class AudioAnalyser : MonoBehaviour {
             midi.timestampedNotes[timeInMills] = new TimestampedNote();
             midi.timestampedNotes[timeInMills].noteNumber = (int)(note.NoteNumber);
             midi.timestampedNotes[timeInMills].left = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 0;
+            midi.timestampedNotes[timeInMills].noteSize = (int)(note.Velocity) >= medianVelocity ? 2 : 1;
         }
 
         return midi;

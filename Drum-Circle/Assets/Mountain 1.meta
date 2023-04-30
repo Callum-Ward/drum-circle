@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<< HEAD
 guid: 154a74abc316bee46b7465fa2e8f5da5
+=======
+guid: 287010707840c6740a2460fe7fb17228
+>>>>>>> 93767eb8 (merge from JackDev)
+=======
+guid: 287010707840c6740a2460fe7fb17228
+>>>>>>> dbcf1da814102ffaaa11bdf61c86d2d09c098713
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

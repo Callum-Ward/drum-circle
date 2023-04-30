@@ -57,37 +57,6 @@ public class RhythmSpawner : MonoBehaviour
         window = beatmapScript.window;
         windowtime = beatmapScript.windowtime;
         delay = beatmapScript.delay;
-
-        enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
-        //set beat spawner location with respect to camera position
-        transform.position = Camera.main.transform.position + new Vector3(0f,2.5f,4f);
-        //transform.rotation = Camera.main.transform.rotation;
-        //set left most spawn location with respect to spawner postion
-        startSpawn = transform.position + new Vector3(-3.5f, 0.35f, 0f);
-
-        targetAreas = new GameObject[playerCount * 2];
-
-        for(int i = 0; i < playerCount; i++){
-            // GameObject newLeftTarget = Instantiate(leftTargetForeground, startSpawn + new Vector3((i * 2.5f) + 0.25f, -4.25f, 0f), transform.rotation);
-            // GameObject newRightTarget = Instantiate(rightTargetForeground, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.25f, 0f), transform.rotation);
-            
-            // newLeftTarget.transform.localScale *= spawnScale;
-            // newRightTarget.transform.localScale *= spawnScale;
-
-
-            GameObject newLeftTargetBase = Instantiate(leftTargetBase, startSpawn + new Vector3((i * 2.5f) + 0.24f, -4.26f, 0.01f), transform.rotation);
-            GameObject newRightTargetBase = Instantiate(rightTargetBase, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.26f, 0.01f), transform.rotation);
-            //GameObject newLeftTrack = Instantiate(beatTrack, startSpawn + new Vector3((i * 2.5f) - 0.01f, -4.26f, 0.01f), transform.rotation);
-            //GameObject newRightTrack = Instantiate(beatTrack, startSpawn + new Vector3((i * 2.5f) + 1.24f, -4.26f, 0.01f), transform.rotation);
-
-            colorFadeTargetComponent(newLeftTargetBase, trackColors[i], 1.0f);
-            colorFadeTargetComponent(newRightTargetBase, trackColors[i], 1.0f);
-            //colorFadeTargetComponent(newLeftTrack, trackColors[i], 0.4f);
-            //colorFadeTargetComponent(newRightTrack, trackColors[i], 0.4f);
-
-            targetAreas[i * 2] = newLeftTargetBase;
-            targetAreas[i * 2 + 1] = newRightTargetBase;
-        }
     }
 
     // Update is called once per frame
@@ -143,9 +112,6 @@ public class RhythmSpawner : MonoBehaviour
             this.soloFlag = false;
             this.beatTransfer = null;
         }
-
-        colorFadeTargetComponent(targetAreas[index * 2], mode != "none" ? colorFreestyleMode : trackColors[index], 1.0f);
-        colorFadeTargetComponent(targetAreas[index * 2 + 1], mode != "none" ? colorFreestyleMode : trackColors[index], 1.0f);
     }
 
     public void spawn(int pos, int left, int size, int oneShotIndex = 0, string type = "falling")
@@ -155,15 +121,11 @@ public class RhythmSpawner : MonoBehaviour
         //if two players then 2 and 4 
         //if three players then 1,3,5 used
         //left: each player has 2 beat lines, if 1 then left beat spawn else right
-
-        // Vector3 spawnLoc = startSpawn + new Vector3(((pos-1)*1.25f) + (pos*1.25f)-(left*1.25f), 0f, 0f);
-        // Vector3 spawnScaleAddition = new Vector3((size - 1)*0.1f, (size-1)*0.1f, 0f);
    
         if (left==1)
         {
-            // spawnLoc = spawnLoc + new Vector3(0.25f, 0f, 0f);
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1), type);
+            newBeat.GetComponent<MoveBeatUI>().Startup(true, 2 * (pos - 1), size, type);
 
             if(type == "falling")
             {
@@ -173,7 +135,7 @@ public class RhythmSpawner : MonoBehaviour
         else
         {
             GameObject newBeat = Instantiate(beat);
-            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) +1, type);
+            newBeat.GetComponent<MoveBeatUI>().Startup(false, 2 * (pos - 1) + 1, size, type);
 
             if(type == "falling")
             {
@@ -203,7 +165,7 @@ public class RhythmSpawner : MonoBehaviour
             TimestampedNote? note = audioAnalyser.playerMidis[playerIndex].timestampedNotes[j];
             if(note != null)
             {
-                spawn(playerIndex + 1, note.left, 1);
+                spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
                 return (playerIndex + 1) - note.left;
