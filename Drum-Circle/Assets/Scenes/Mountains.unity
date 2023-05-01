@@ -471,7 +471,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -513,7 +513,7 @@ Light:
   m_BoundingSphereOverride: {x: 6.976956e+22, y: 3.0710994e+32, z: 1.4747191e+25, w: 6.976956e+22}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
+  m_ShadowRadius: 4
   m_ShadowAngle: 0
 --- !u!1 &30525481
 GameObject:
@@ -7814,7 +7814,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -7856,7 +7856,7 @@ Light:
   m_BoundingSphereOverride: {x: 1.05e-43, y: 4.0058793e-11, z: 0.9960966, w: -0.0076067536}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
+  m_ShadowRadius: 4
   m_ShadowAngle: 0
 --- !u!1 &500768957
 GameObject:
@@ -8421,8 +8421,7 @@ MonoBehaviour:
   rightTargetForeground: {fileID: 834267409023545195, guid: fa9fdfaedd51c374da8e4bc2362a2abd, type: 3}
   rightTargetBase: {fileID: 5282272894402615112, guid: 73c335d3bd590c04696dce35e5934bd2, type: 3}
   beatTrack: {fileID: 1648900045813027432, guid: 6d4c3bbd962bc1a4c92ace3f99978d01, type: 3}
-  leftBeat: {fileID: 5045700899163357228, guid: 5b2f1ec385cc76a49880b75398d7ba6f, type: 3}
-  rightBeat: {fileID: 834267409023545195, guid: 62a907b361b951141a636a0c436b51f2, type: 3}
+  beat: {fileID: 0}
   windowtime: 0.3
   window: 0
   delay: 2
@@ -18037,7 +18036,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
 --- !u!4 &1322749247 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7305649572316112274, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
   m_PrefabInstance: {fileID: 1322749246}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1347166886
