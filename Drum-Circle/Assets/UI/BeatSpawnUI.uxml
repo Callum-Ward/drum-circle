@@ -12,29 +12,43 @@
             <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score2" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
             <ui:Label text="Score: 0" display-tooltip-when-elided="true" name="Score3" style="height: 22px; width: 90px; -unity-font-style: bold; font-size: 14px; left: 10%; position: absolute; display: flex; visibility: hidden;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Lane1" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center; visibility: visible; display: flex;">
-            <ui:VisualElement name="Lane1L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
-            </ui:VisualElement>
-            <ui:VisualElement name="Lane1R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="Lane2" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center;">
-            <ui:VisualElement name="Lane2L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
-            </ui:VisualElement>
-            <ui:VisualElement name="Lane2R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
+        <ui:VisualElement name="Lane1" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33px; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%; height: 100px;">
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 100%; height: 100%;">
+                <ui:VisualElement name="Lane1Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: row; align-items: center; background-color: rgba(0, 25, 0, 0.5); position: absolute; width: 100%; height: 100%; left: 0; visibility: visible; overflow: visible; display: flex; translate: 0 0;">
+                    <ui:VisualElement name="Lane1L" class="glow-class glow" style="height: auto; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; display: flex; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                        <ui:IMGUIContainer name="Target" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Lane1R" style="height: 100%; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(81, 81, 81);">
+                        <ui:IMGUIContainer name="Target" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Lane3" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: auto; flex-direction: row; align-items: center; justify-content: center;">
-            <ui:VisualElement name="Lane3L" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; display: flex; position: relative; left: -20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
+        <ui:VisualElement name="Lane2" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33px; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%;">
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement name="Lane2Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: row; align-items: center; background-color: rgba(0, 25, 0, 0.5);">
+                <ui:VisualElement name="Lane2L" style="height: auto; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; display: flex; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                    <ui:IMGUIContainer name="Target" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Lane2R" style="height: 100%; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(81, 81, 81);">
+                    <ui:IMGUIContainer name="Target" />
+                </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="Lane3R" style="height: 100%; width: 50px; flex-grow: 1; background-color: rgba(0, 0, 0, 0.21); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 3px; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: 50px; max-width: 50px; position: relative; left: 20px; visibility: visible; top: 0; min-height: 100%;">
-                <ui:IMGUIContainer name="Target" />
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Lane3" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33%; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%;">
+            <ui:VisualElement name="Lane3Container" style="min-width: 33%; max-width: 33%; flex-grow: 1; flex-direction: row; align-items: center; -unity-text-outline-width: 0; -unity-text-outline-color: rgb(0, 0, 0); background-color: rgba(0, 25, 0, 0.5); border-left-width: 5px; border-right-width: 5px; width: 33%;">
+                <ui:VisualElement name="Lane3L" style="height: auto; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; display: flex; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                    <ui:IMGUIContainer name="Target" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Lane3R" style="height: 100%; width: auto; flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; align-items: center; justify-content: flex-start; opacity: 1; flex-direction: column; min-width: auto; max-width: none; position: relative; left: auto; visibility: visible; top: auto; min-height: 100%; background-image: none; -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(81, 81, 81);">
+                    <ui:IMGUIContainer name="Target" />
+                </ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; width: 33%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 33%;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement style="position: absolute; min-width: 100%; min-height: 100%; justify-content: center; align-items: center; -unity-text-align: middle-center;">

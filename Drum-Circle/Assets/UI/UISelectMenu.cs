@@ -15,10 +15,9 @@ public class UISelectMenu : MonoBehaviour
     private float mTimer = 0f;
     private int buttonSelection = 0;
     private int[] drumInputStrengths;
-    private float[] midiInputVelocities;
     private int playerCount = 3;
     public string[] sections;
-    private int noteNumberOffset = 44;
+    private int noteNumberOffset = 21;
 
     private Color originalColor;
     private Color highlightColor = Color.white;
@@ -29,15 +28,16 @@ public class UISelectMenu : MonoBehaviour
     VisualElement beachButton;
     VisualElement[] buttons;
 
+    private MidiHandler midiHandler;
+
     public void Awake() {
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
-        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
+        midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         drumInputStrengths = new int[playerCount*2];
-        midiInputVelocities = new float[playerCount*2];
     }
 
     void Start() {
-        addMidiHandler();
         forestButton = selectMenu.Q<VisualElement>("ForestButton");
         mountainButton = selectMenu.Q<VisualElement>("MountainsButton");
         beachButton = selectMenu.Q<VisualElement>("BeachButton");
@@ -74,8 +74,9 @@ public class UISelectMenu : MonoBehaviour
         }
 
         
-        if ((drumInputStrengths[0] > 0 || midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
+        if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
         {
+            midiHandler.clearMidiInputVelocities(0);
             buttons[buttonSelection].style.backgroundColor = originalColor;
             if(buttonSelection == 2) {
                 buttonSelection = 0;
@@ -86,8 +87,9 @@ public class UISelectMenu : MonoBehaviour
             buttons[buttonSelection].style.backgroundColor = highlightColor;
             Debug.Log("CurrentSelection: " + buttonSelection);
         }
-        else if ((drumInputStrengths[1] > 0 || midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
+        else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
         {
+            midiHandler.clearMidiInputVelocities(1);
             buttons[buttonSelection].style.backgroundColor = confirmColor;
                     if (buttonSelection == 0) {
                         missionChoice("Forest");
@@ -125,46 +127,5 @@ public class UISelectMenu : MonoBehaviour
             }
             messageListener.message = null;
         }
-    }
-
-    private void addMidiHandler()
-    {
-        InputSystem.onDeviceChange += (device, change) =>
-        {
-            if (change != InputDeviceChange.Added) return;
-
-            var midiDevice = device as Minis.MidiDevice;
-            if (midiDevice == null) return;
-
-            midiDevice.onWillNoteOn += (note, velocity) => {
-                // Note that you can't use note.velocity because the state
-                // hasn't been updated yet (as this is "will" event). The note
-                // object is only useful to specify the target note (note
-                // number, channel number, device name, etc.) Use the velocity
-                // argument as an input note velocity.
-                  Debug.Log(string.Format(
-                    "Note On #{0} ({1}) vel:{2:0.00} ch:{3} dev:'{4}'",
-                    note.noteNumber,
-                    note.shortDisplayName,
-                    velocity,
-                    (note.device as Minis.MidiDevice)?.channel,
-                    note.device.description.product
-                )); 
-
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
-            };
-
-            midiDevice.onWillNoteOff += (note) => {
-               /* Debug.Log(string.Format(
-                    "Note Off #{0} ({1}) ch:{2} dev:'{3}'",
-                    note.noteNumber,
-                    note.shortDisplayName,
-                    (note.device as Minis.MidiDevice)?.channel,
-                    note.device.description.product
-                ));*/
-
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = -midiInputVelocities[note.noteNumber - noteNumberOffset];
-            };
-        };
     }
 }

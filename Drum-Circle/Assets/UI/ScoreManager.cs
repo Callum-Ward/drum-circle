@@ -1,14 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public int[] ScoreMultiplier;
-    public int[] ComboCounter;
-    public int[] ComboCount;
-    public AudioManager audioManager;
-    public int[] playerScores;
+    [HideInInspector] public int[] ScoreMultiplier;
+    [HideInInspector] public int[] ComboCounter;
+    [HideInInspector] public int[] ComboCount;
+    [HideInInspector] public AudioManager audioManager;
+    [HideInInspector] public int[] playerScores;
     public BeatUI beatUI;
 
 
@@ -24,16 +25,21 @@ public class ScoreManager : MonoBehaviour
 
     public void Update()
     {
-        //Debug.Log("Length of ScoreM" + ScoreMultiplier.Length);
-        //Debug.Log("Length of ComboCount" + ComboCount.Length);
-        //Debug.Log("Length of PlayerSc" + playerScores.Length);
+        Tuple<int, int> maxScore = new Tuple<int, int>(0, 0);
+        for(int i = 0; i < 3; i++)
+        {
+            if(playerScores[i] > maxScore.Item2)
+            {
+                maxScore = new Tuple<int, int>(i, playerScores[i]);
+            }
+        }
+
         for(int i = 0; i < 3; i++) {            
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
             }
-            //Debug.Log("I = " + i);
-            beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i]);
+            beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
         }
 
     }
