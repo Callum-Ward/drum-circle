@@ -7,7 +7,7 @@ using UnityEngine;
 public class TreeManager : MonoBehaviour
 {
     [Range(0.1f, 3f)] public float growthRate = 1; 
-    [SerializeField] GameObject[] trees;
+    public GameObject[] trees;
     [SerializeField] bool testing = false;
 
     ScoreManager scoreManager = null;
@@ -40,23 +40,27 @@ public class TreeManager : MonoBehaviour
         else
         {
             trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
-            
+            var growingTrees = new GameObject[] { };
+            foreach (var t in trees)
+            {
+                var tree = t.GetComponent<Tree>();
+                if (!tree.isFullyGrown)
+                {
+                    growingTrees.Append(t);
+                }
+            }
+            trees = growingTrees;
+
             if (hitStatus == true)
             {
-                var modifiedScore = false;
-                if(scoreManager.playerScores[0] > lastScore) 
-                {
-                    modifiedScore = true;
-                    lastScore = scoreManager.playerScores[0];
-                }
                 
                 foreach (var t in trees)
                 {
                     var tree = t.GetComponent<Tree>();
 
-                    tree.Grow(scoreManager.ScoreMultiplier[0] * growthRate);
+                    tree.Grow(scoreManager.ScoreMultiplier[0] + growthRate);
 
-                    if(modifiedScore) tree.AddBranches(0);
+                    tree.AddBranches();
                 }
             }
         }
