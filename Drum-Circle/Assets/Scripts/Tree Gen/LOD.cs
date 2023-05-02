@@ -20,9 +20,15 @@ public class LOD : MonoBehaviour
     private void Awake()
     {
         camera = Camera.main;
+        getLOD();
     }
 
     private void Update()
+    {
+        getLOD();
+    }
+
+    private void getLOD()
     {
         distance = Vector3.Distance(this.transform.position, camera.transform.position);
 

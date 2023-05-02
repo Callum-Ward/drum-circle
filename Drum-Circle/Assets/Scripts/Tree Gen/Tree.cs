@@ -20,7 +20,7 @@ public class Tree : MonoBehaviour
 {
     [SerializeField] GameObject branchObj;
 
-    [SerializeField] float length = 0;
+    public float length = 0;
     [Range(0.001f, 0.25f)] public float width = 1;
 
     [HideInInspector] public float totalLength;
@@ -42,11 +42,8 @@ public class Tree : MonoBehaviour
     int depth = 1;
     float currentRotation = 0;
 
-    Mesh mesh = null;
-
-    private void Start()
+    private void Awake()
     {
-        //mesh = GetComponent<MeshFilter>().mesh;
         lod = GetComponent<LOD>().lod;
         currentRotation = Random.Range(0, 360);
 
@@ -122,14 +119,35 @@ public class Tree : MonoBehaviour
 
         var curve = GetBranchCurve(Vector3.zero, growth);
 
-        rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve);
+        if (maxDepth > 0)
+        {
+            rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve, 1);
+            rootBranch.isFullyGrown = false;
 
-        this.root = rootBranch;
-        branches.Add(root);
+            this.root = rootBranch;
+            branches.Add(root);
+            Grow(1);
+
+            rootBranch.isFullyGrown = true;
+
+            AddBranches(0.5f);
+            Grow(1);
+        }
+        else
+        {
+            rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve, 0.2f);
+            this.root = rootBranch;
+            branches.Add(root);
+        }
     }
 
     public void Grow(float scoreMul)
     {
+        if (this.isFullyGrown)
+        {
+            return;
+        }
+
         bool fullyGrownCheck = true;
         foreach( var br in branches )
         {
@@ -141,6 +159,12 @@ public class Tree : MonoBehaviour
 
         if (depth > maxDepth && fullyGrownCheck)
         {
+            lod = 0;
+            foreach(var br in branches)
+            {
+                var branch = br.GetComponent<Branch>();
+                branch.Grow(1);
+            }
             this.isFullyGrown = true;
         }
 
@@ -154,7 +178,7 @@ public class Tree : MonoBehaviour
     }
     
     /*Adds a new set of branches to the tree*/
-    public void AddBranches()
+    public void AddBranches(float growthPhase)
     {
         //cotinue if we max depth hasn't been reached yet
         if (depth > maxDepth) return;
@@ -226,8 +250,8 @@ public class Tree : MonoBehaviour
             //Set them as the current branch's children
             branch.SetChildren(branchA, branchB);
 
-            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width, curveA);
-            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width, curveB);
+            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width, curveA, growthPhase);
+            branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width, curveB, growthPhase);
 
             newBranches.Add(a);
             newBranches.Add(b);
