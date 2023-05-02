@@ -10,9 +10,10 @@ public class TreeSpawning : MonoBehaviour
     //list containing central tree spawn locations is indexed based on player number
     //trees are stored in 2d list, first index specifies which player tree belongs to
 
-
+    public GameObject treeManager;
     public GameObject staticTree;
     public GameObject growingTree;
+    public int maxGrowingTrees;
     public Transform platform;
     public camera_front cameraFront;
     public float scale;
@@ -26,6 +27,7 @@ public class TreeSpawning : MonoBehaviour
     private List<Vector3> beachIslandSpawns;
     private List<Vector2> treeLocations;
     private float radius;
+    private GameObject[] growingTrees; 
 
     int validPlayerNo(int noPlayers)
     {
@@ -68,6 +70,8 @@ public class TreeSpawning : MonoBehaviour
             getSpawnLocation(); //update the closest spawn so when game starts cameras face closest island spawn
             cameraFront.centre = new Vector3(closestSpawn.x, waterLevel, closestSpawn.z);
         }
+
+        growingTrees = treeManager.GetComponent<TreeManager>().trees;
 
     }
 
@@ -203,6 +207,7 @@ public class TreeSpawning : MonoBehaviour
         for (int treeNo = 1; treeNo < treeCount; treeNo++)
         {
             Vector3 treeLocation = getSpawnLocation();
+            growing = !(growingTrees.Length >= maxGrowingTrees) & growing;
             if (treeLocation.y != 0) spawnAtLocation(playerNo, treeLocation, growing);//if height is set to 0 function was unable to find valid tree spawn location
         }
         return true;
