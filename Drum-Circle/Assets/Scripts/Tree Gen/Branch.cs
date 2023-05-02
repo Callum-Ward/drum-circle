@@ -146,8 +146,8 @@ public class Branch : MonoBehaviour
                 faces = 16;
                 break;
             case 1:
-                segments = 6;
-                faces = 10;
+                segments = 7;
+                faces = 14;
                 break;
             case 2:
                 segments = 3;
@@ -203,8 +203,6 @@ public class Branch : MonoBehaviour
         {
             minWidth = childA.width;
         }
-
-        //Debug.Log(segments.ToString() + ", " + faces.ToString());
 
         //for each sampled point of the curve
         for (int i = 0; i < pointsAlongCurve.Length; i++)

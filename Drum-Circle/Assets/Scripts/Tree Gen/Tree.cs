@@ -42,11 +42,8 @@ public class Tree : MonoBehaviour
     int depth = 1;
     float currentRotation = 0;
 
-    Mesh mesh = null;
-
     private void Awake()
     {
-        //mesh = GetComponent<MeshFilter>().mesh;
         lod = GetComponent<LOD>().lod;
         currentRotation = Random.Range(0, 360);
 
@@ -144,6 +141,11 @@ public class Tree : MonoBehaviour
 
     public void Grow(float scoreMul)
     {
+        if (this.isFullyGrown)
+        {
+            return;
+        }
+
         bool fullyGrownCheck = true;
         foreach( var br in branches )
         {
@@ -155,6 +157,12 @@ public class Tree : MonoBehaviour
 
         if (depth > maxDepth && fullyGrownCheck)
         {
+            lod = 0;
+            foreach(var br in branches)
+            {
+                var branch = br.GetComponent<Branch>();
+                branch.Grow(1);
+            }
             this.isFullyGrown = true;
         }
 
