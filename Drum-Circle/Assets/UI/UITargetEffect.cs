@@ -13,11 +13,15 @@ public class UITargetEffect : UIGlowEffect
 {
     private int swellStage;
     private float swellEffect;
+    private float swellEffectInc;
+    private float swellEffectDec;
 
     public UITargetEffect() : base()
     {
         this.swellStage = 0;
         this.swellEffect = 1f;
+        this.swellEffectInc = 0f;
+        this.swellEffectDec = 0f;
     }
 
     public void SetMode(string mode, float glowStrength = 0f)
@@ -26,6 +30,8 @@ public class UITargetEffect : UIGlowEffect
         {
             case "swell":
                 this.swellStage = 1;
+                this.swellEffectInc = 0.15f;
+                this.swellEffectDec = 0.05f;
                 break;
             case "winning":
                 if(this.overriding)
@@ -72,7 +78,7 @@ public class UITargetEffect : UIGlowEffect
         {
             if(this.swellEffect < 1.15f)
             {
-                this.swellEffect += 0.05f;
+                this.swellEffect += this.swellEffectInc;
             }
             else
             {
@@ -83,7 +89,7 @@ public class UITargetEffect : UIGlowEffect
         {
             if(this.swellEffect > 1f)
             {
-                this.swellEffect -= 0.05f;
+                this.swellEffect -= this.swellEffectDec;
             }
             else
             {

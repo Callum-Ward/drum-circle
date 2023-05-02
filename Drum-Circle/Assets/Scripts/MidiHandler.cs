@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.Layouts;
 public class MidiHandler : MonoBehaviour {
     private int playerCount = 3;
     public float[] midiInputVelocities;
-    private int noteNumberOffset = 44; //21;
+    private int noteNumberOffset = 21;
 
     void Awake()
     {
@@ -39,7 +39,15 @@ public class MidiHandler : MonoBehaviour {
                     note.device.description.product
                 )); */
 
-                midiInputVelocities[note.noteNumber - noteNumberOffset] = velocity;
+                //Re-configures note alignment if new MIDI device is used
+                int drumIndex = note.noteNumber - noteNumberOffset;
+                if(drumIndex < 0 || drumIndex > 5)
+                {
+                    drumIndex = 0;
+                    noteNumberOffset = (int)note.noteNumber;
+                }
+
+                midiInputVelocities[drumIndex] = velocity;
             };
 
             midiDevice.onWillNoteOff += (note) => {
