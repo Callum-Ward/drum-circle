@@ -39,7 +39,7 @@ public class TreeManager : MonoBehaviour
 
         else
         {
-            trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
+            var trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
             var growingTrees = new GameObject[] { };
             foreach (var t in trees)
             {
@@ -49,18 +49,18 @@ public class TreeManager : MonoBehaviour
                     growingTrees.Append(t);
                 }
             }
-            trees = growingTrees;
+            this.trees = growingTrees;
 
             if (hitStatus == true)
             {
                 
-                foreach (var t in trees)
+                foreach (var t in this.trees)
                 {
                     var tree = t.GetComponent<Tree>();
 
-                    tree.Grow(scoreManager.ScoreMultiplier[0] + growthRate);
+                    tree.Grow(scoreManager.ScoreMultiplier[0] * growthRate);
 
-                    tree.AddBranches();
+                    tree.AddBranches(0);
                 }
             }
         }
