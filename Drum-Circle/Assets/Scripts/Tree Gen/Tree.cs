@@ -136,6 +136,8 @@ public class Tree : MonoBehaviour
         else
         {
             rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve, 0.2f);
+            this.root = rootBranch;
+            branches.Add(root);
         }
     }
 

@@ -74,9 +74,35 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6183468412161132423}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d1fc0bc363cebe44bcc35cb281c2e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leafObj: {fileID: 919132149155446097, guid: d6620394e1e4f4942962bc52efa41866, type: 3}
+  parent: {fileID: 0}
+  childA: {fileID: 0}
+  childB: {fileID: 0}
+  growth: {x: 0, y: 0, z: 0}
+  basis: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  isLeaf: 1
+  isFullyGrown: 0
+  maxLength: 0
+  length: 0
+  maxWidth: 0
+  width: 0
+  mesh: {fileID: 0}
+--- !u!114 &4704783180884351187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6183468412161132423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dcefe910946f3247a9f45f12826db2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leafObj: {fileID: 919132149155446097, guid: d6620394e1e4f4942962bc52efa41866, type: 3}
