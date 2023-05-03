@@ -19,8 +19,8 @@ public class Branch : MonoBehaviour
     public GameObject leafObj;
 
     public Branch parent = null;
-    public Branch childA  = null;
-    public Branch childB  = null;
+    public Branch childA = null;
+    public Branch childB = null;
 
     [HideInInspector] public Vector3 growth;
     [HideInInspector] public Vector3 basis;
@@ -39,15 +39,15 @@ public class Branch : MonoBehaviour
     private Vector3[] pointsAlongCurve;
 
     public Mesh mesh;
-    new Renderer renderer;
 
     protected Vector3[] vertices = new Vector3[] { };
     private Vector2[] uv = new Vector2[] { };
     private int[] triangles = new int[] { };
-    
+
 
     //[SerializeField] int leavesNo = 5;
-    [HideInInspector] public struct leaf
+    [HideInInspector]
+    public struct leaf
     {
         public GameObject leafObj;
         public Vector3 position;
@@ -57,7 +57,6 @@ public class Branch : MonoBehaviour
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
-        renderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -70,10 +69,10 @@ public class Branch : MonoBehaviour
             }*/
         }
     }
-    
+
     /*Set up branch parameters*/
-    public void SetBranch(GameObject tree, Vector3 growth, Vector3 basis, Vector3 position, 
-        float width, Curve curve)
+    public void SetBranch(GameObject tree, Vector3 growth, Vector3 basis, Vector3 position,
+        float width, Curve curve, float growthPhase)
     {
         this.tree = tree.GetComponent<Tree>();
 
@@ -91,25 +90,25 @@ public class Branch : MonoBehaviour
 
         SetLeaves();
 
-        Place(tree);
+        Place(tree, growthPhase);
     }
 
     /*Set up branch parameters*/
     public void SetBranch(GameObject tree, Branch parent, Vector3 growth, Vector3 basis, Vector3 position,
-        float width, Curve curve)
+        float width, Curve curve, float growthPhase)
     {
         this.parent = parent;
 
-        SetBranch(tree, growth, basis, position, width, curve);
+        SetBranch(tree, growth, basis, position, width, curve, growthPhase);
     }
 
     /*Places branch in place*/
-    public void Place(GameObject tree)
+    public void Place(GameObject tree, float growthPhase)
     {
         this.transform.parent = tree.transform;
         this.transform.position = position;
 
-        length = 0;
+        length = growthPhase * maxLength;
     }
 
     /*Set the children of a brnach*/
@@ -128,28 +127,27 @@ public class Branch : MonoBehaviour
 
         //SetLeaves();
 
-        if(!isFullyGrown)
+        if (!isFullyGrown)
         {
             length += maxLength / 1000 * scoreMul;
-            
+
             width = length * maxWidth;
 
 
             if (length >= maxLength) isFullyGrown = true;
         }
 
-        int segments = 0;
-        int faces = 0;
-
+        int segments;
+        int faces;
         switch (tree.lod)
         {
             case 0:
                 segments = 10;
-                faces = 16; 
+                faces = 16;
                 break;
             case 1:
-                segments = 6;
-                faces = 10;
+                segments = 7;
+                faces = 14;
                 break;
             case 2:
                 segments = 3;
@@ -170,7 +168,7 @@ public class Branch : MonoBehaviour
         mesh.uv = uv;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-        
+
         if (isLeaf)
         {
             UpdateLeavesPosition();
@@ -206,8 +204,6 @@ public class Branch : MonoBehaviour
             minWidth = childA.width;
         }
 
-        //Debug.Log(segments.ToString() + ", " + faces.ToString());
-
         //for each sampled point of the curve
         for (int i = 0; i < pointsAlongCurve.Length; i++)
         {
@@ -218,7 +214,7 @@ public class Branch : MonoBehaviour
 
             //special case for the last point since it has no points ahead to
             //calculate the tangent
-            if(i == pointsAlongCurve.Length - 1)
+            if (i == pointsAlongCurve.Length - 1)
             {
                 tangent = pointsAlongCurve[i] - pointsAlongCurve[i - 1];
                 tangent = tangent.normalized;
@@ -263,7 +259,7 @@ public class Branch : MonoBehaviour
                     //tangent vector with a magnitude equal to the width of the segment
                     var vertex = Quaternion.AngleAxis(angle, tangent) * norm;
                     vertex *= segmentWidth;
-                    vertex += (length/maxLength) *  pointsAlongCurve[i];
+                    vertex += (length / maxLength) * pointsAlongCurve[i];
 
                     newVertices[j] = vertex;
 
@@ -275,7 +271,7 @@ public class Branch : MonoBehaviour
             // new layers need to be rotated so that the don't 'pinch' the mesh
 
             //the first layer does not need to be rotated
-            if ( i == 0 )
+            if (i == 0)
             {
                 vertices = newVertices;
             }
@@ -283,10 +279,10 @@ public class Branch : MonoBehaviour
             else
             {
                 var rotatedNewVertices = new Vector3[faces];
-                
+
                 var lastLayer = new Vector3[faces];
                 Array.Copy(vertices, vertices.Length - faces, lastLayer, 0, faces);
-                
+
 
                 //we need to find the 2 vertecies that are closest between the new layer
                 //and the last layer of the mesh
@@ -316,7 +312,7 @@ public class Branch : MonoBehaviour
         }
 
         triangles = new int[] { };
-        
+
         //each segment has a number of faces
         for (int i = 0; i < segments; i++)
         {
@@ -368,10 +364,10 @@ public class Branch : MonoBehaviour
 
     public virtual void UpdateLeavesPosition()
     {
-        foreach( var leaf in leaves )
+        foreach (var leaf in leaves)
         {
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
-            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7 /* * (maxLength / tree.length)*/;
         }
     }
 }
