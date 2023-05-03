@@ -45,7 +45,8 @@ public class UITargetEffect : UIGlowEffect
                 this.glowColorMin = new Color(0.25f, 0.2f, 0.01f, 0.4f);
                 this.glowColorMax = new Color(0.5f, 0.4f, 0.02f, 0.6f);
                 this.glowStrength = glowStrength;
-                this.glowRate = 0.05f;
+                this.glowIncRate = 0.05f;
+                this.glowDecRate = 0.05f;
                 this.repeat = true;
                 this.overriding = false;
                 if(this.glowStage == 0)
@@ -57,7 +58,8 @@ public class UITargetEffect : UIGlowEffect
                 this.glowColorMin = new Color(0f, 0.3f, 0f, 0.4f);
                 this.glowColorMax = new Color(0f, 0.5f, 0f, 0.6f);
                 this.glowStrength = glowStrength;
-                this.glowRate = 0.05f;
+                this.glowIncRate = 0.05f;
+                this.glowDecRate = 0.05f;
                 this.repeat = true;
                 this.overriding = true;
                 this.glowStage = 1;
@@ -65,7 +67,8 @@ public class UITargetEffect : UIGlowEffect
             case "none":
                 this.glowColorMin = new Color(0f, 0f, 0f, 0.4f);
                 this.glowStrength = 0f;
-                this.glowRate = 0f;
+                this.glowIncRate = 0f;
+                this.glowDecRate = 0f;
                 this.repeat = false;
                 this.overriding = false;
                 break;

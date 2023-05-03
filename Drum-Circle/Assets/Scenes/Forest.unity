@@ -2068,6 +2068,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: sceneNumber
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
       propertyPath: treeSpawner
       value: 
       objectReference: {fileID: 0}
@@ -2145,7 +2149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6552784209143238119, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
       propertyPath: m_Name
-      value: Rhythm Logic
+      value: RhythmLogic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
@@ -3646,6 +3650,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -465.41895
       objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: background.Name
+      value: background
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: background.clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 37f19e1e3dcecb547bce1ab02787b958, type: 3}
     - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
       propertyPath: sounds.Array.size
       value: 5
@@ -5413,6 +5425,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e74816f584c974a4db489a6ee5e14461, type: 3}
+--- !u!1001 &4351000424666424892
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4351000423538833576, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: fireball
+      value: 
+      objectReference: {fileID: 6483298876692731938, guid: ba1effbfba8cb3048b77f30500907469, type: 3}
+    - target: {fileID: 4351000423538833576, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: platform
+      value: 
+      objectReference: {fileID: 1537377284}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 207.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 178
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833577, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351000423538833583, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: m_Name
+      value: FireballSpawner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
 --- !u!1001 &7668978042677610786
 PrefabInstance:
   m_ObjectHideFlags: 0

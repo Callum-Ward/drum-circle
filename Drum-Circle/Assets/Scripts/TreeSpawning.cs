@@ -128,7 +128,7 @@ public class TreeSpawning : MonoBehaviour
         return new Vector3(pointInCircle.x, Terrain.activeTerrain.SampleHeight(new Vector3(pointInCircle.x, 0, pointInCircle.y)) + Terrain.activeTerrain.transform.position.y, pointInCircle.y);
         //return new Vector3(pointInCircle.x, 0, pointInCircle.y);
     }
-    private Vector3 getSpawnLocation() //specifies tree spawning strategy for each scene
+    public Vector3 getSpawnLocation() //specifies tree spawning strategy for each scene
     {
         Vector3 treePos = new Vector3();
         bool validLocation = false;

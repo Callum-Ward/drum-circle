@@ -43,7 +43,6 @@ public class RhythmSpawner : MonoBehaviour
     private GameObject enaTree;
 
     private GameObject[] targetAreas;
-
     private BeatTransfer beatTransfer;
     private bool soloFlag;
 
@@ -52,7 +51,7 @@ public class RhythmSpawner : MonoBehaviour
     {
         audioAnalyser = GameObject.Find("AudioAnalysis").GetComponent<AudioAnalyser>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
-        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+        beatmapScript = GameObject.Find("RhythmLogic").GetComponent<BeatmapScript>();
 
         window = beatmapScript.window;
         windowtime = beatmapScript.windowtime;
