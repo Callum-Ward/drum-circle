@@ -44,6 +44,7 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public AudioAnalyser audioAnalyser;
     [HideInInspector] public AudioManager audioManager;
     [HideInInspector] public BeatManager beatManager;
+    [HideInInspector] public FireballSpawner fireballSpawner;
     [HideInInspector] public RhythmSpawner beatSpawner;
     [HideInInspector] public TreeSpawning treeSpawner;
     [HideInInspector] public MidiHandler midiHandler;
@@ -65,7 +66,7 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareOnset = 30f;
 
     public int playerCount = 3;
-    [HideInInspector] public int sceneNumber;
+    public int sceneNumber;
 
     void Awake()
     {
@@ -74,6 +75,7 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        fireballSpawner = GameObject.Find("FireballSpawner").GetComponent<FireballSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
@@ -154,7 +156,6 @@ public class BeatmapScript : MonoBehaviour
             //treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
         }
 
-        treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
     }
 
     private void handleTerrainBeatResponse()
@@ -257,6 +258,7 @@ public class BeatmapScript : MonoBehaviour
                         setEnvironmentTriggers(i*2);
                     }
                     beatUI.hitSwell(i*2);
+                    fireballSpawner.spawn(i);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
@@ -269,6 +271,7 @@ public class BeatmapScript : MonoBehaviour
                         // Enviroment triggers etc. right drum hit on target
                     }
                     beatUI.hitSwell(i*2 + 1);
+                    fireballSpawner.spawn(i);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }

@@ -93,7 +93,7 @@ public class BeatUI : MonoBehaviour
    
         guiStyle.fontSize = 60;
 
-        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+        beatmapScript = GameObject.Find("RhythmLogic").GetComponent<BeatmapScript>();
         beatTargetLocation = beatmapScript.beatTargetLocation;
 
         playerTags = new Label[] {playerTag1, playerTag2, playerTag3};

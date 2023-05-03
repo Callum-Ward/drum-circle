@@ -34,7 +34,8 @@ public class UILaneEffect : UIGlowEffect
                 this.glowColorMin = new Color(glowStrength * 0.01f, 0f, 0f, 0.4f + glowStrength * 0.025f);
                 this.glowColorMax = new Color(glowStrength * 0.05f, 0f, 0f, 0.4f + glowStrength * 0.05f);
                 this.glowStrength = glowStrength;
-                this.glowRate = 0.1f;
+                this.glowIncRate = 1f;
+                this.glowDecRate = 0.1f;
                 this.shaking = true;
                 this.repeat = false;
                 this.overriding = false;
@@ -55,7 +56,8 @@ public class UILaneEffect : UIGlowEffect
                 this.glowColorMin = new Color(0f, 0.12f, 0f, 0.5f);
                 this.glowColorMax = new Color(0f, glowStrength * 0.04f, 0f, 0.4f + glowStrength * 0.02f);
                 this.glowStrength = glowStrength;
-                this.glowRate = 0.05f;
+                this.glowIncRate = 0.05f;
+                this.glowDecRate = 0.05f;
                 this.shaking = false;
                 this.repeat = true;
                 this.overriding = false;
@@ -68,7 +70,8 @@ public class UILaneEffect : UIGlowEffect
                 this.glowColorMin = new Color(0f, 0.3f, 0f, 0.4f);
                 this.glowColorMax = new Color(0f, 0.5f, 0f, 0.6f);
                 this.glowStrength = glowStrength;
-                this.glowRate = 0.05f;
+                this.glowIncRate = 0.05f;
+                this.glowDecRate = 0.05f;
                 this.shaking = false;
                 this.repeat = true;
                 this.overriding = true;
@@ -77,7 +80,8 @@ public class UILaneEffect : UIGlowEffect
             case "none":
                 this.glowColorMin = new Color(0f, 0f, 0f, 0.4f);
                 this.glowStrength = 0f;
-                this.glowRate = 0f;
+                this.glowIncRate = 0f;
+                this.glowDecRate = 0f;
                 this.shaking = false;
                 this.repeat = false;
                 this.overriding = false;
