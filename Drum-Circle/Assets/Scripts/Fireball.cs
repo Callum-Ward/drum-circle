@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
-    public GameObject explosionVFX;
-    public BeatmapScript bms;
-    private Vector3 heading;
+    [HideInInspector] public TreeSpawning treeSpawner;
 
-    public void setHeading(Vector3 heading)
+    public GameObject explosionVFX;
+
+    public float speed = 12f;
+    public float rotationSpeed = 60f;
+
+    private Vector3 heading;
+    private int playerIndex;
+
+    public void StartUp(int playerIndex)
     {
-        this.heading = heading;
+        this.playerIndex = playerIndex;
+        this.heading = treeSpawner.getSpawnLocation();
     }
 
-    void Start()
+    void Awake()
     {
-        bms = GameObject.Find("RhythmLogic").GetComponent<BeatmapScript>();
+        treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
     }
 
     void Update()
@@ -23,15 +30,15 @@ public class Fireball : MonoBehaviour
         if(heading != null)
         {
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            rb.velocity = transform.forward * speed;
             var rotation = Quaternion.LookRotation(heading - transform.position);
-            Debug.Log("WHOH" + rotation);
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotation, 95f * Time.deltaTime));
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime));
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
-        bms.ST();
+        treeSpawner.spawnAtLocation(playerIndex+1, heading, true);
     }
 }

@@ -42,7 +42,7 @@ ParticleSystem:
   m_GameObject: {fileID: 6483298875388526891}
   serializedVersion: 8
   lengthInSec: 5
-  simulationSpeed: 1
+  simulationSpeed: 1.2
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.9618751, b: 0, a: 1}
+      maxColor: {r: 1, g: 0.5424528, b: 0.7457507, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -986,16 +986,16 @@ ParticleSystem:
           time: 0
           value: 0
           inSlope: 0
-          outSlope: 1
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 1
-          value: 1
+          time: 0.2911682
+          value: 0.8108101
           inSlope: 1
-          outSlope: 0
+          outSlope: 1
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
@@ -1305,8 +1305,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.23484676, b: 0, a: 1}
-        key1: {r: 1, g: 0.84654653, b: 0, a: 1}
+        key0: {r: 1, g: 0, b: 0.7741265, a: 1}
+        key1: {r: 1, g: 0.8766371, b: 0.19339621, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -3380,7 +3380,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    range: {x: 0, y: 1}
+    range: {x: 0, y: 5}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -4897,5 +4897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7096dcb9857dfd4db140d3210c5d91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  treeSpawner: {fileID: 0}
   explosionVFX: {fileID: 0}
-  bms: {fileID: 0}
+  speed: 10
+  rotationSpeed: 60

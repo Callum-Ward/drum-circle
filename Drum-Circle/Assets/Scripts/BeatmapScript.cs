@@ -158,12 +158,6 @@ public class BeatmapScript : MonoBehaviour
 
     }
 
-    public void ST()
-    {
-        treeSpawner.spawnTree(0, 2, new Color(0, 0, 0), true);
-        Debug.Log("ST");
-    }
-
     private void handleTerrainBeatResponse()
     {
          /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
@@ -264,7 +258,7 @@ public class BeatmapScript : MonoBehaviour
                         setEnvironmentTriggers(i*2);
                     }
                     beatUI.hitSwell(i*2);
-                    fireballSpawner.spawn(treeSpawner.getSpawnLocation());
+                    fireballSpawner.spawn(i);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
@@ -277,7 +271,7 @@ public class BeatmapScript : MonoBehaviour
                         // Enviroment triggers etc. right drum hit on target
                     }
                     beatUI.hitSwell(i*2 + 1);
-                    fireballSpawner.spawn(treeSpawner.getSpawnLocation());
+                    fireballSpawner.spawn(i);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }

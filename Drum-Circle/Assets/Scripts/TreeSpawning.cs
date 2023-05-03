@@ -88,7 +88,7 @@ public class TreeSpawning : MonoBehaviour
         return playerTreeCount[playerNo - 1];
     }
 
-    private void spawnAtLocation(int playerNo, Vector3 location, bool growing)
+    public void spawnAtLocation(int playerNo, Vector3 location, bool growing)
     {
         GameObject newTree;
         if (growing)
