@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour {
     public int[] oneShotMap;
     public int persistentLayerIndex;
 
-    public float longestTime = 0;
+    // public float longestTime = 0;
 
     public static AudioManager instance;
     private Sound fadeIn = null;
@@ -90,9 +90,9 @@ public class AudioManager : MonoBehaviour {
     {
         s.source.Play();
         activeSources.Add(s.source);
-        if(s.clip.length > longestTime) {
-            longestTime = s.clip.length;
-        }
+        // if(s.clip.length > longestTime) {
+        //     longestTime = s.clip.length;
+        // }
     }
 
     float VolumeTrack(Sound s, float volume)

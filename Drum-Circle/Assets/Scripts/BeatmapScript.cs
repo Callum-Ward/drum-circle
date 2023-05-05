@@ -68,6 +68,9 @@ public class BeatmapScript : MonoBehaviour
     public int playerCount = 3;
     public int sceneNumber;
 
+    private LoadScreen loadScreen;
+    Dictionary<string, float> scenelength = new Dictionary<string, float>();
+
     void Awake()
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
@@ -101,6 +104,12 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassAmount = 0.5f;
 
         this.freestyleHandler.setScene(this.sceneNumber);
+
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.LoadScreenFadeOut();
+        scenelength.Add("Forest", 214);
+        scenelength.Add("Mountains", 288);
+        scenelength.Add("Beach", 271);
     }
 
     private void registerHit(int queueIndex, MoveBeatUI beat, int oneShotIndex, float velocity)
@@ -294,12 +303,32 @@ public class BeatmapScript : MonoBehaviour
 
         beatUI.startLevelUI();
 
+        //Manually exit level at any time
+        if (Input.GetKey(KeyCode.Escape)) {            
+            // StartCoroutine(sceneSwitch("2MissionSelect"));
+            loadScreen.EndScreenFade();
+        }
+
         float countdown = introDelay - introTimer;
 
-        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
-        // if(timer > 0 ) {            
-            SceneManager.LoadScene("2MissionSelect");
-        }
+        //Get current scene, if end of scene's track has finished then display scores and go back to level select if drum is tapped
+        Scene scene = SceneManager.GetActiveScene(); 
+        if(timer > scenelength[scene.name]) {    
+            loadScreen.EndScreenFade();          
+            if(timer > scenelength[scene.name]+5) {
+                if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
+                {
+                    midiHandler.clearMidiInputVelocities(0);
+                    StartCoroutine(sceneSwitch("2MissionSelect"));                
+                }
+                else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
+                {
+                    midiHandler.clearMidiInputVelocities(1);
+                    StartCoroutine(sceneSwitch("2MissionSelect"));                
+                }
+            }
+        }    
+        
 
         // if(introTimer <= introDelay) 
         // {
@@ -345,6 +374,12 @@ public class BeatmapScript : MonoBehaviour
             }            
             timer += Time.deltaTime;
         }
+    }
+
+    IEnumerator sceneSwitch(string mission) {
+        loadScreen.LoadScreenFadeIn();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(mission);
     }
 
     void beatHit(int queueNo, MoveBeatUI beatSide, int oneShotIndex, float velocity) {

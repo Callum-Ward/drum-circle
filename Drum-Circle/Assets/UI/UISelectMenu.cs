@@ -49,16 +49,14 @@ public class UISelectMenu : MonoBehaviour
         loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
         loadScreen.LoadScreenFadeOut();
     }
-
-    public void missionChoice(string mission) {
+    
+    IEnumerator sceneSwitch(string mission) {
+        loadScreen.LoadScreenFadeIn();
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(mission);
     }
 
     public void Update() {
-    
-        //handleDrumInput();
-
-
         if (mTimer <= 0) {
             mTimer = 0f;
         }
@@ -67,13 +65,13 @@ public class UISelectMenu : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Alpha1)) {
-            missionChoice("Forest");
+            StartCoroutine(sceneSwitch("Forest"));
         }
         if (Input.GetKey(KeyCode.Alpha2)) {
-            missionChoice("Mountains");
+            StartCoroutine(sceneSwitch("Mountains"));
         }
         if (Input.GetKey(KeyCode.Alpha3)) {
-            missionChoice("Beach");
+            StartCoroutine(sceneSwitch("Beach"));
         }
 
         
@@ -95,19 +93,19 @@ public class UISelectMenu : MonoBehaviour
             midiHandler.clearMidiInputVelocities(1);
             buttons[buttonSelection].style.unityBackgroundImageTintColor = confirmColor;
                     if (buttonSelection == 0) {
-                        missionChoice("Forest");
+                        StartCoroutine(sceneSwitch("Forest"));
                     }
                     if (buttonSelection == 1) {
-                        missionChoice("Mountains");
+                        StartCoroutine(sceneSwitch("Mountains"));
                     }
                     if (buttonSelection == 2) {
-                        missionChoice("Beach");
+                        StartCoroutine(sceneSwitch("Beach"));
                     }
         }
         
-        forestButton.RegisterCallback<ClickEvent>(evt => missionChoice("Forest"));
-        mountainButton.RegisterCallback<ClickEvent>(evt => missionChoice("Mountains"));
-        beachButton.RegisterCallback<ClickEvent>(evt => missionChoice("Beach"));
+        forestButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Forest"));
+        mountainButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Mountains"));
+        beachButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Beach"));
     }
 
     private void handleDrumInput()
