@@ -484,6 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab793732eeca47540855f4bbb2e1dfe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sections: []
 --- !u!114 &953753007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,7 +500,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: a45b48fae550dfb48880329481f72c71, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: ac0acd2a452fc6446b95c0c0ce6e32d9, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 1
 --- !u!4 &953753008
 Transform:
   m_ObjectHideFlags: 0

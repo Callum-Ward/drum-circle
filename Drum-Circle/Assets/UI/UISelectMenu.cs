@@ -12,6 +12,7 @@ public class UISelectMenu : MonoBehaviour
 {    
     private VisualElement selectMenu;
     private MessageListener messageListener;
+    private LoadScreen loadScreen;
     private float mTimer = 0f;
     private int buttonSelection = 0;
     private int[] drumInputStrengths;
@@ -45,6 +46,8 @@ public class UISelectMenu : MonoBehaviour
         // originalColor = forestButton.resolvedStyle.backgroundColor;
         originalColor = Color.white;
         forestButton.style.unityBackgroundImageTintColor = highlightColor;
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.LoadScreenFadeOut();
     }
 
     public void missionChoice(string mission) {
