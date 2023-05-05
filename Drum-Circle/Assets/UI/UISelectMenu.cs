@@ -20,8 +20,8 @@ public class UISelectMenu : MonoBehaviour
     private int noteNumberOffset = 21;
 
     private Color originalColor;
-    private Color highlightColor = Color.white;
-    private Color confirmColor = Color.green;
+    private Color highlightColor = Color.green;
+    private Color confirmColor = Color.blue;
 
     VisualElement forestButton;
     VisualElement mountainButton;
@@ -43,8 +43,8 @@ public class UISelectMenu : MonoBehaviour
         beachButton = selectMenu.Q<VisualElement>("BeachButton");
         buttons = new VisualElement[] {forestButton, mountainButton, beachButton};
         // originalColor = forestButton.resolvedStyle.backgroundColor;
-        originalColor = Color.grey;
-        forestButton.style.backgroundColor = highlightColor;
+        originalColor = Color.white;
+        forestButton.style.unityBackgroundImageTintColor = highlightColor;
     }
 
     public void missionChoice(string mission) {
@@ -77,20 +77,20 @@ public class UISelectMenu : MonoBehaviour
         if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
         {
             midiHandler.clearMidiInputVelocities(0);
-            buttons[buttonSelection].style.backgroundColor = originalColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = originalColor;
             if(buttonSelection == 2) {
                 buttonSelection = 0;
             }
             else {
                 buttonSelection += 1;
             }
-            buttons[buttonSelection].style.backgroundColor = highlightColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = highlightColor;
             Debug.Log("CurrentSelection: " + buttonSelection);
         }
         else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
         {
             midiHandler.clearMidiInputVelocities(1);
-            buttons[buttonSelection].style.backgroundColor = confirmColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = confirmColor;
                     if (buttonSelection == 0) {
                         missionChoice("Forest");
                     }
