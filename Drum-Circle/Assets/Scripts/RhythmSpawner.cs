@@ -167,6 +167,7 @@ public class RhythmSpawner : MonoBehaviour
                 spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
+                if(playerIndex == 0){Debug.Log("spawn at " + j.ToString() + "ms");}
                 return (playerIndex + 1) - note.left;
             }
         }

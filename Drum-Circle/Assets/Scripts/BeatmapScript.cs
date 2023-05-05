@@ -297,56 +297,57 @@ public class BeatmapScript : MonoBehaviour
 
         float countdown = introDelay - introTimer;
 
-        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
-        // if(timer > 0 ) {            
+        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {                  
             SceneManager.LoadScene("2MissionSelect");
         }
 
-        // if(introTimer <= introDelay) 
-        // {
-        //     introTimer += Time.deltaTime;
-        // }
+        if (introTimer <= introDelay && !running)
+        {
+            introTimer += Time.deltaTime;
+        }
+        else if(!running)
+        {
+            running = true;
+            waypointMover.startMove();
+        }
 
-        // if(introTimer > introDelay)
-        {//Start the timer
-            if (introTimer <= introDelay && audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
+        if(running)
+        {
+            if(timer < delay)
             {
-                introTimer += Time.deltaTime;
-                beatSpawner.spawnOnTime(timer, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(timer + inputDelay, useMidiFile);
+                checkDrumHit();
             }
             //Play all layers of music simultaneously
-            else if(audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
+            else if(audioManager.activeSources.Count <= 1)
             {
-                audioManager.PlayAllDrumTracks();
-                audioManager.PlayAllLayerTracks();
-
-                // timer = 0f;
-                introTimer = 0f;
-                running = true;
-                waypointMover.startMove();
+                audioManager.PlayDrumTrack(0);
+                //audioManager.PlayAllLayerTracks();
             }
             //Drum hit functionality
-            else if(tutorialScript.tutorialComplete == true)
+            else
             {
-                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[1].time + delay + inputDelay, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(timer + delay + inputDelay, useMidiFile);
                 
                 checkDrumHit();
                 freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time);
+            
             }
-
-            if(countdown <= 5 && countdown > 4) {
-                beatUI.IntroTimerStart();
-            }
-            else if (introDelay - introTimer <= 4 && countdown > 0) {
-                beatUI.IntroTimerUpdate(countdown);
-            }
-            else if (countdown <= 0) {
-                beatUI.IntroTimerStop();
-                introTimer = 10f;
-            }            
-            timer += Time.deltaTime;
         }
+
+        if(countdown <= 5 && countdown > 4) {
+            beatUI.IntroTimerStart();
+        }
+        else if (introDelay - introTimer <= 4 && countdown > 0) {
+            beatUI.IntroTimerUpdate(countdown);
+        }
+        else if (countdown <= 0) {
+            beatUI.IntroTimerStop();
+            introTimer = 10f;
+        }  
+        timer += Time.deltaTime;          
     }
+
 
     void beatHit(int queueNo, MoveBeatUI beatSide, int oneShotIndex, float velocity) {
         if (beatSide.window == true)
