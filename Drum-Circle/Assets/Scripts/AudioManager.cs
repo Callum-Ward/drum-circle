@@ -15,18 +15,21 @@ public class AudioManager : MonoBehaviour {
     public int[] oneShotMap;
     public int persistentLayerIndex;
 
-    public float longestTime = 0;
+    // public float longestTime = 0;
 
     public static AudioManager instance;
     private Sound fadeIn = null;
     private Sound fadeOut = null;
     private string fadeSpeed = null;
+    private float volLimit = 1f;
 
     public AudioSource activeSource;
 
     public List<AudioSource> activeSources;
 
     private System.Random random;
+
+    public AudioSource audioSource;
 
     void initialiseSound(Sound s)
     {
@@ -71,6 +74,8 @@ public class AudioManager : MonoBehaviour {
 
         activeSources = new List<AudioSource>();
         random = new System.Random();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     //Update is called every frame.
@@ -78,65 +83,91 @@ public class AudioManager : MonoBehaviour {
     {
         if (fadeIn != null)
         {
-            FadeInTrack(fadeIn, fadeSpeed);
+            FadeInTrack(fadeIn, fadeSpeed, volLimit);
         }
         if (fadeOut != null)
         {
-            FadeOutTrack(fadeOut);
+            FadeOutTrack(fadeOut, fadeSpeed, volLimit);
         }
     }
 
-    void PlayTrack(Sound s)
+    public float sourceDuration(int index) {
+        return audioSource.time;
+    }
+
+    public void PlaySingle(string name) {
+        Sound s = Array.Find(drumTracks, sound => sound.Name == name);
+        s.source.Play();
+    }
+    public void StopSingle(string name) {
+        Sound s = Array.Find(drumTracks, sound => sound.Name == name);
+        s.source.Stop();
+    }
+
+    public void PlayTrack(Sound s)
     {
         s.source.Play();
         activeSources.Add(s.source);
-        if(s.clip.length > longestTime) {
-            longestTime = s.clip.length;
-        }
+        // if(s.clip.length > longestTime) {
+        //     longestTime = s.clip.length;
+        // }
     }
 
-    float VolumeTrack(Sound s, float volume)
+    public float VolumeTrack(Sound s, float volume)
     {
         s.source.volume = volume;
         return s.source.volume;
     }
 
      //Starts a fade in based on passed speed (Fast/Slow)
-    void FadeInTrack(Sound s, string speed)
+    public void FadeInTrack(Sound s, string speed, float limit = 1)
     {
+        fadeOut = null;
         if (speed == "fast")
         {
-            s.source.volume = s.source.volume + 0.5f;
+            s.source.volume = s.source.volume + (limit*Time.deltaTime)*5;
             fadeSpeed = speed;
         }
         else if (speed == "slow")
         {
-            s.source.volume = s.source.volume + 0.1f;
+            s.source.volume = s.source.volume + (limit*Time.deltaTime);
             fadeSpeed = speed;
         }
         
-        if (s.source.volume == 1f)
+        if (s.source.volume >= limit)
         {
+            s.source.volume = limit;
             fadeIn = null;
         }
         else
         {
+            volLimit = limit;
             fadeIn = s;
         }
     }
 
     //Fades out music.
-    void FadeOutTrack(Sound s)
+    public void FadeOutTrack(Sound s, string speed ="fast", float limit = 1)
     {
         fadeIn = null;
-        s.source.volume = s.source.volume - 0.33f;
-        if (s.source.volume == 0f)
+        if(speed == "fast") {
+            s.source.volume = s.source.volume - (limit*Time.deltaTime)*3;
+            fadeSpeed = speed;
+        }
+        if(speed == "slow") {
+            s.source.volume = s.source.volume - (limit*Time.deltaTime);
+            fadeSpeed = speed;
+        }
+
+        if (s.source.volume <= 0f)
         {
+            s.source.volume = 0f;
             fadeOut = null;
         }
         else
         {
             fadeOut = s;
+            volLimit = limit;
         }
     }
 

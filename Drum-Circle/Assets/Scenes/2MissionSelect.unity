@@ -484,6 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab793732eeca47540855f4bbb2e1dfe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sections: []
 --- !u!114 &953753007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,7 +500,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: a45b48fae550dfb48880329481f72c71, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: ac0acd2a452fc6446b95c0c0ce6e32d9, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 1
 --- !u!4 &953753008
 Transform:
   m_ObjectHideFlags: 0
@@ -702,3 +703,84 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1832246128
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4684175371274465926, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -218.7394
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -149.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -232.70947
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442160, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.data[0].Name
+      value: Forest
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 65995b21b0370f64c8de4afa035edc00, type: 3}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.data[0].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.data[0].volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684175371587442175, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
+      propertyPath: drumTracks.Array.data[0].FileName
+      value: Forest_Full.wav
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c279a0408b8c94648a970d3ea6c435b4, type: 3}
