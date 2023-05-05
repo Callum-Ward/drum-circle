@@ -305,8 +305,7 @@ public class BeatmapScript : MonoBehaviour
 
         //Manually exit level at any time
         if (Input.GetKey(KeyCode.Escape)) {            
-            // StartCoroutine(sceneSwitch("2MissionSelect"));
-            loadScreen.EndScreenFade();
+            StartCoroutine(sceneSwitch("2MissionSelect"));
         }
 
         float countdown = introDelay - introTimer;
