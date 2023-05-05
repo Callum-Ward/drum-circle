@@ -26,7 +26,7 @@ public class BeatmapScript : MonoBehaviour
     private bool hitR = false;
     private float[] shakeTimer = new float[3] {0f, 0f, 0f};
     
-    private bool useMidiFile = true;
+    public bool useMidiFile;
 
     [HideInInspector] public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
@@ -81,7 +81,7 @@ public class BeatmapScript : MonoBehaviour
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
-        waypointMover = GameObject.Find("Platform_Skull_03").GetComponent<WaypointMover>();
+        waypointMover = GameObject.Find("platform").GetComponent<WaypointMover>();
 
         treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
@@ -255,10 +255,11 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
+                        fireballSpawner.spawn(i);
                         setEnvironmentTriggers(i*2);
                     }
                     beatUI.hitSwell(i*2);
-                    fireballSpawner.spawn(i);
+
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
@@ -268,10 +269,10 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
+                        fireballSpawner.spawn(i);
                         // Enviroment triggers etc. right drum hit on target
                     }
                     beatUI.hitSwell(i*2 + 1);
-                    fireballSpawner.spawn(i);
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }
