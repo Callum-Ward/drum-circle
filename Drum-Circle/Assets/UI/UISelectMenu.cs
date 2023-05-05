@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
+using UnityEngine.Audio;
 
 public class UISelectMenu : MonoBehaviour
 {    
@@ -19,6 +20,8 @@ public class UISelectMenu : MonoBehaviour
     private int playerCount = 3;
     public string[] sections;
     private int noteNumberOffset = 21;
+    float audioTimer = 0;
+    bool stopTrack = false;
 
     private Color originalColor;
     private Color highlightColor = Color.green;
@@ -30,8 +33,10 @@ public class UISelectMenu : MonoBehaviour
     VisualElement[] buttons;
 
     private MidiHandler midiHandler;
+    AudioManager audioManager;
 
     public void Awake() {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
         // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
@@ -72,6 +77,28 @@ public class UISelectMenu : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Alpha3)) {
             StartCoroutine(sceneSwitch("Beach"));
+        }
+
+        if (stopTrack == false) {
+            if(buttonSelection == 0) {
+                var track = Array.Find(audioManager.drumTracks, sound => sound.Name == "Forest");
+                if(audioTimer == 0f) {
+                    audioManager.PlaySingle("Forest");
+                    // audioManager.VolumeTrack(track, 0f);
+                    audioManager.FadeInTrack(track, "slow", 0.5f);
+                }
+                else if(audioTimer >= 15f) {
+                    audioTimer = 0f;
+                    audioManager.StopSingle("Forest");
+                }
+                else if(audioManager.audioSource.time >= 13.5f) {
+                    audioManager.FadeOutTrack(track, "slow", 0.5f);
+                }
+                if(audioTimer < 15f) {
+                    audioTimer += Time.deltaTime;
+                }
+            }
+            Debug.Log("Source time: "+ audioTimer);
         }
 
         
