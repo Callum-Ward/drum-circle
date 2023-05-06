@@ -13013,6 +13013,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 210279053, guid: 019b917704c3c29478d778e143d411d2, type: 3}
   m_PrefabInstance: {fileID: 837668837}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &837668840 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 210279056, guid: 019b917704c3c29478d778e143d411d2, type: 3}
+  m_PrefabInstance: {fileID: 837668837}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837668838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbc87427f920af448f2f0bb11095f62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &837874160
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33369,7 +33380,7 @@ PrefabInstance:
     - target: {fileID: -2585456846894910089, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: KinectDevice
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 837668840}
     - target: {fileID: 989911260545853805, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: m_RootOrder
       value: 1
