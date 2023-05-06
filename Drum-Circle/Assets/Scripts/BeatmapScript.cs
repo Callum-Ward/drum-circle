@@ -350,8 +350,9 @@ public class BeatmapScript : MonoBehaviour
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
             {
-                audioManager.PlayDrumTrack(2);
-                //audioManager.PlayAllLayerTracks();
+                audioManager.PlayDrumTrack(0);
+                //audioManager.PlayAllDrumTracks();
+                audioManager.PlayAllLayerTracks();
             }
             //Drum hit functionality
             else

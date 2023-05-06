@@ -186,6 +186,7 @@ public class RhythmSpawner : MonoBehaviour
                 spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
+                if(playerIndex == 0){Debug.Log("spwn on " + j);}
                 return (playerIndex + 1) - note.left;
             }
         }
@@ -232,8 +233,6 @@ public class RhythmSpawner : MonoBehaviour
 
         int index = (int)(Math.Round(time, 2) * 100);
         int timeInMills = (int)Math.Ceiling(time * 1000);
-
-        Debug.Log("SCT " + timeInMills);
         
         for(int i = 0; i < this.playerCount; i++)
         {

@@ -1675,6 +1675,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4000012910057650, guid: d3a86a245c874f341815b25579c74e3e, type: 3}
   m_PrefabInstance: {fileID: 120227155}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &126311989
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1511330527}
+    m_Modifications:
+    - target: {fileID: 175112828293585606, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_Name
+      value: EndScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -244.47879
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -240.79999
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -252.41895
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+--- !u!4 &126311990 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 175112828293585624, guid: 667214c6c3c18484fa556ec89eb607e4, type: 3}
+  m_PrefabInstance: {fileID: 126311989}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &129607744
 GameObject:
   m_ObjectHideFlags: 0
@@ -19259,6 +19321,7 @@ Transform:
   - {fileID: 1203664278}
   - {fileID: 1673306954}
   - {fileID: 407420576}
+  - {fileID: 126311990}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20007,46 +20070,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 987352620}
     m_Modifications:
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: delay
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: sceneNumber
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: useMidiFile
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -201.29439
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -138.35304
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -223.95433
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238119, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_Name
-      value: RhythmLogic
-      objectReference: {fileID: 0}
     - target: {fileID: 7814550879322299297, guid: 32da1b8d44ec8d0488598f3d3abc8772, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -20094,6 +20117,50 @@ PrefabInstance:
     - target: {fileID: 7814550879322299299, guid: 32da1b8d44ec8d0488598f3d3abc8772, type: 3}
       propertyPath: m_Name
       value: ScoreManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: delay
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: introDelay
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: sceneNumber
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: useMidiFile
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -201.29439
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -138.35304
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -223.95433
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238119, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_Name
+      value: RhythmLogic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
@@ -21299,6 +21366,10 @@ PrefabInstance:
       propertyPath: background.clip
       value: 
       objectReference: {fileID: 8300000, guid: 1eb104a2a94be4d4dbc74d88937bc94c, type: 3}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: background.volume
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: drumTracks.Array.data[0].clip
       value: 
