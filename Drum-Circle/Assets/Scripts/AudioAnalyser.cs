@@ -85,7 +85,7 @@ public class AudioAnalyser : MonoBehaviour {
         }
     }
 
-    private Tuple<int, int> getNotesInformation(IEnumerable<Note> notes)
+    private Tuple<int, int, IDictionary<int, bool>> getNotesInformation(IEnumerable<Note> notes)
     {
         List<int> noteNumbers = new List<int>();
         List<int> noteVelocities = new List<int>();
@@ -112,7 +112,15 @@ public class AudioAnalyser : MonoBehaviour {
 
         int medianNoteNumber = noteNumbers[noteNumbers.Count / 2];
         int medianVelocity = noteVelocities[noteVelocities.Count / 2];
-        return Tuple.Create(medianNoteNumber, medianVelocity);
+
+        List<int> noteNumbersDistinct = noteNumbers.Distinct().ToList();
+        IDictionary<int, bool> drumSideMap = new Dictionary<int, bool>();
+        for(int i = 0; i < noteNumbersDistinct.Count; i++ )
+        {
+            drumSideMap.Add(noteNumbersDistinct[i], i % 2 == 0);
+        }
+
+        return Tuple.Create(medianNoteNumber, medianVelocity, drumSideMap);
     }
 
     public TrackMidi loadTrackMidi(string name)
@@ -131,9 +139,10 @@ public class AudioAnalyser : MonoBehaviour {
 
         IEnumerable<Note> notes = midiFile.GetNotes();
 
-        Tuple<int, int> notesInformation = getNotesInformation(notes);
+        Tuple<int, int, IDictionary<int, bool>> notesInformation = getNotesInformation(notes);
         int medianNoteNumber = notesInformation.Item1;
         int medianVelocity = notesInformation.Item2;
+        IDictionary<int, bool> drumSideMap = notesInformation.Item3;
 
         foreach(Note note in notes)
         {
@@ -141,7 +150,7 @@ public class AudioAnalyser : MonoBehaviour {
             int timeInMills = time.Minutes * 60000 + time.Seconds * 1000 + time.Milliseconds;
             midi.timestampedNotes[timeInMills] = new TimestampedNote();
             midi.timestampedNotes[timeInMills].noteNumber = (int)(note.NoteNumber);
-            midi.timestampedNotes[timeInMills].left = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 0;
+            midi.timestampedNotes[timeInMills].left = drumSideMap[(int)(note.NoteNumber)] ? 1 : 0;
             midi.timestampedNotes[timeInMills].noteSize = (int)(note.Velocity) >= medianVelocity ? 2 : 1;
         }
 

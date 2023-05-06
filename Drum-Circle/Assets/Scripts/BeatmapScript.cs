@@ -350,16 +350,16 @@ public class BeatmapScript : MonoBehaviour
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
             {
-                audioManager.PlayDrumTrack(0);
+                audioManager.PlayDrumTrack(2);
                 //audioManager.PlayAllLayerTracks();
             }
             //Drum hit functionality
             else
             {
-                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[1].time + delay + inputDelay, useMidiFile);
-                
+                float averagedTime = ((audioManager.activeSources[1].time + delay + timer) / 2f) + inputDelay;
+                int queueIndex  = beatSpawner.spawnOnTime(averagedTime, useMidiFile);
                 checkDrumHit();
-                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time + delay + inputDelay);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
             
             }
         }

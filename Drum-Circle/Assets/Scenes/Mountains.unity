@@ -1825,6 +1825,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 210279053, guid: 019b917704c3c29478d778e143d411d2, type: 3}
   m_PrefabInstance: {fileID: 133495033}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &133495036 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 210279056, guid: 019b917704c3c29478d778e143d411d2, type: 3}
+  m_PrefabInstance: {fileID: 133495033}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133495034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbc87427f920af448f2f0bb11095f62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &137332187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2948,7 +2959,7 @@ PrefabInstance:
     - target: {fileID: -2585456846894910089, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: platform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2129614926}
     - target: {fileID: -2585456846894910089, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: Offset1.y
       value: 1
@@ -2976,7 +2987,7 @@ PrefabInstance:
     - target: {fileID: -2585456846894910089, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: KinectDevice
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 133495036}
     - target: {fileID: 989911260545853805, guid: 88091e23bb4152d4885160675257bee7, type: 3}
       propertyPath: m_RootOrder
       value: 1
