@@ -133,7 +133,7 @@ public class BeatmapScript : MonoBehaviour
     private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Miss(Mathf.FloorToInt(queueIndex/2));
-        audioManager.VolumeDrumTrack(queueIndex / 2, 0f);
+        //audioManager.VolumeDrumTrack(queueIndex / 2, 0f);
         if (beat.timer >= (delay * 0.85))
         {
             beatManager.BeatDelete(queueIndex, false);
@@ -356,10 +356,10 @@ public class BeatmapScript : MonoBehaviour
             //Drum hit functionality
             else
             {
-                int queueIndex  = beatSpawner.spawnOnTime(timer + delay + inputDelay, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[1].time + delay + inputDelay, useMidiFile);
                 
                 checkDrumHit();
-                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time + delay + inputDelay);
             
             }
         }
