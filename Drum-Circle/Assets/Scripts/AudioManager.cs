@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour {
     public AudioSource activeSource;
 
     public List<AudioSource> activeSources;
+    private List<int> activeLayerIndices;
 
     private System.Random random;
 
@@ -200,7 +201,6 @@ public class AudioManager : MonoBehaviour {
             Debug.LogWarning("Invalid index for additive layers");
             return;
         }
-
         PlayTrack(additiveLayers[index]);
     }
 
@@ -338,6 +338,45 @@ public class AudioManager : MonoBehaviour {
                 FadeInLayerTrack(i, "slow");
             }
         }
+    }
+
+    public void AddLayer()
+    {
+        if(this.activeLayerIndices.Count == additiveLayers.Length)
+        {
+            return;
+        }
+
+        int index = random.Next() % additiveLayers.Length;
+        while(this.activeLayerIndices.Contains(index))
+        {
+            if(index < additiveLayers.Length)
+            {
+                index += 1;
+            }
+            else
+            {
+                index = 0;
+            }
+        }
+
+        this.activeLayerIndices.Add(index);
+        FadeInLayerTrack(index, "slow");
+        Debug.Log("Faded In Layer " + index.ToString());
+    }
+
+    public void RemoveLayer()
+    {
+        if(this.activeLayerIndices.Count == 0)
+        {
+            return;
+        }
+
+        int index = random.Next() % activeLayerIndices.Count;
+        int value = this.activeLayerIndices[index];
+        this.activeLayerIndices.Remove(value);
+        FadeOutLayerTrack(value);
+        Debug.Log("Faded Out Layer " + value.ToString());
     }
 
 }

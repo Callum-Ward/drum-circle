@@ -47,6 +47,7 @@ public class ScoreManager : MonoBehaviour
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
+                audioManager.AddLayer();
             }
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
             endScore.Q<Label>(scores[i]).text = playerScores[i].ToString();
@@ -62,6 +63,7 @@ public class ScoreManager : MonoBehaviour
         ScoreMultiplier[player] = 1;
         //Debug.Log("Miss registered");
         //audioManager.FadeOut("layer2");
+        audioManager.RemoveLayer();
     }
 
     //Increments counters on hit and calculates multiplier increase.

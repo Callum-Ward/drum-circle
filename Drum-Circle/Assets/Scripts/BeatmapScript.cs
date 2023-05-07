@@ -130,7 +130,7 @@ public class BeatmapScript : MonoBehaviour
     private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Miss(Mathf.FloorToInt(queueIndex/2));
-        //audioManager.VolumeDrumTrack(queueIndex / 2, 0f);
+        audioManager.VolumeDrumTrack(queueIndex / 2, 0f);
         if (beat.timer >= (delay * 0.85))
         {
             beatManager.BeatDelete(queueIndex, false);
