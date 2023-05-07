@@ -73,7 +73,7 @@ public class ScoreManager : MonoBehaviour
         ComboCount[player]++;
         playerScores[player] += Mathf.RoundToInt(Mathf.Pow((proximity * 1000f), 1.25f));
 
-        if (ScoreMultiplier[player] < 5 && ComboCounter[player] >= 10)
+        if (ScoreMultiplier[player] < 5 && ComboCounter[player] >= 5) //10
         {
             ComboCounter[player] = 0;
             ScoreMultiplier[player]++;

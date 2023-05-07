@@ -74,6 +74,7 @@ public class AudioManager : MonoBehaviour {
         initialiseSound(background);
 
         activeSources = new List<AudioSource>();
+        activeLayerIndices = new List<int>();
         random = new System.Random();
 
         audioSource = GetComponent<AudioSource>();
@@ -131,7 +132,7 @@ public class AudioManager : MonoBehaviour {
         }
         else if (speed == "slow")
         {
-            s.source.volume = s.source.volume + (limit*Time.deltaTime);
+            s.source.volume = s.source.volume + (limit*Time.deltaTime) * 0.5f;
             fadeSpeed = speed;
         }
         
@@ -194,21 +195,23 @@ public class AudioManager : MonoBehaviour {
     }
 
 
-    public void PlayLayerTrack(int index)
+    public void PlayLayerTrack(int index, float volume)
     {
         if(index >= additiveLayers.Length)
         {
             Debug.LogWarning("Invalid index for additive layers");
             return;
         }
-        PlayTrack(additiveLayers[index]);
+        Sound s = additiveLayers[index];
+        s.source.volume = volume;
+        PlayTrack(s);
     }
 
-    public void PlayAllLayerTracks()
+    public void PlayAllLayerTracks(float volume)
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            PlayLayerTrack(i);
+            PlayLayerTrack(i, volume);
         }
     }
 

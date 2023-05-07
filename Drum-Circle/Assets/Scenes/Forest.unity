@@ -4762,6 +4762,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1083192823}
     m_Modifications:
     - target: {fileID: 4351000423538833576, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
+      propertyPath: drum
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: bd27078cfc75e104d82038ba56d3f3ce, type: 3}
+    - target: {fileID: 4351000423538833576, guid: 327da06f86aa84f41869f88fd118bd96, type: 3}
       propertyPath: fireball
       value: 
       objectReference: {fileID: 6483298876692731938, guid: ba1effbfba8cb3048b77f30500907469, type: 3}

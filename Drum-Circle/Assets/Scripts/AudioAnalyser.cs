@@ -118,7 +118,7 @@ public class AudioAnalyser : MonoBehaviour {
         IDictionary<int, bool> drumSideMap = new Dictionary<int, bool>();
         for(int i = 0; i < noteNumbersDistinct.Count; i++ )
         {
-            drumSideMap.Add(noteNumbersDistinct[i], i % 2 == 0);
+            drumSideMap.Add(noteNumbersDistinct[i], i % 3 == 0 || i % 5 == 0);
         }
 
         return Tuple.Create(medianNoteNumber, medianVelocity, drumSideMap);
@@ -162,7 +162,7 @@ public class AudioAnalyser : MonoBehaviour {
             midi.timestampedNotes[timeInMills].noteSize = (int)(note.Velocity) >= medianVelocity ? 2 : 1;
         }
 
-        Debug.Log("MIDI: " + sb.ToString());
+        //Debug.Log("MIDI: " + sb.ToString());
 
         return midi;
     }

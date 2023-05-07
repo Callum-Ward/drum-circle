@@ -14229,15 +14229,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: playerJsonFiles.Array.data[0]
-      value: DD_L3_P1_json
+      value: DD_L3_P1_2_json
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: playerJsonFiles.Array.data[1]
-      value: DD_L3_P2_json
+      value: DD_L3_P2_2_json
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: playerJsonFiles.Array.data[2]
-      value: DD_L3_P3_json
+      value: DD_L3_P3_2_json
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: playerMidiFiles.Array.data[0]

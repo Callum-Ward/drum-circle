@@ -245,7 +245,8 @@ public class BeatmapScript : MonoBehaviour
             try{
                 var beat = beatManager.beatQueues[drumIndex].Peek();
                 return beatHit((drumIndex), beat.obj.GetComponent<MoveBeatUI>(), beat.oneShotIndex, velocity);
-            } catch {
+            } catch (Exception e) {
+                Debug.Log(e);
             }
         }
         return false;
@@ -346,8 +347,9 @@ public class BeatmapScript : MonoBehaviour
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
             {
+                //audioManager.PlayDrumTrack(2);
                 audioManager.PlayAllDrumTracks();
-                //audioManager.PlayAllLayerTracks();
+                audioManager.PlayAllLayerTracks(0f);
             }
             //Drum hit functionality
             else
