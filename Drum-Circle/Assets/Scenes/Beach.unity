@@ -42538,6 +42538,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2576496563298124001, guid: a881ee296f84fbb4f979f2902cfe58e0, type: 3}
+      propertyPath: m_TargetDisplay
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2576496563298124007, guid: a881ee296f84fbb4f979f2902cfe58e0, type: 3}
       propertyPath: m_Name
       value: Left Camera
@@ -42915,6 +42919,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 8080668397751195388, guid: 364afd0db8545f947888c2977b77f02e, type: 3}
+      propertyPath: m_TargetDisplay
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8080668397751195389, guid: 364afd0db8545f947888c2977b77f02e, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -43118,6 +43126,10 @@ PrefabInstance:
     - target: {fileID: 8897642386921422122, guid: fde877674fb839544a93699d72f95ca8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897642386921422123, guid: fde877674fb839544a93699d72f95ca8, type: 3}
+      propertyPath: m_TargetDisplay
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fde877674fb839544a93699d72f95ca8, type: 3}
