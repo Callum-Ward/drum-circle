@@ -66,6 +66,8 @@ public class BeatmapScript : MonoBehaviour
     public int playerCount = 3;
     public int sceneNumber;
 
+    private bool firstHit = false;
+
     private LoadScreen loadScreen;
     Dictionary<string, float> scenelength = new Dictionary<string, float>();
 
@@ -252,8 +254,9 @@ public class BeatmapScript : MonoBehaviour
         return false;
     }
 
-    private void checkDrumHit()
+    private bool checkDrumHit()
     {
+        bool hit = false;
         for(int i = 0; i < this.playerCount; i++)
             {
                 //Register left drum hit and perform code
@@ -263,6 +266,7 @@ public class BeatmapScript : MonoBehaviour
                     {
                         fireballSpawner.spawn(i);
                         setEnvironmentTriggers(i*2);
+                        hit = true;
                     }
                     beatUI.hitSwell(i*2);
 
@@ -276,12 +280,14 @@ public class BeatmapScript : MonoBehaviour
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
                         // Enviroment triggers etc. right drum hit on target
+                        hit = true;
                     }
                     beatUI.hitSwell(i*2 + 1);
                     //freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }
             }
+            return hit;
     }
 
     // Start is called before the first frame update
@@ -333,7 +339,6 @@ public class BeatmapScript : MonoBehaviour
         else if(!running)
         {
             running = true;
-            waypointMover.startMove();
             timer = 0f;
         }
 
@@ -356,7 +361,12 @@ public class BeatmapScript : MonoBehaviour
             {
                 float averagedTime = ((audioManager.activeSources[1].time + delay + timer) / 2f) + inputDelay;
                 int queueIndex  = beatSpawner.spawnOnTime(averagedTime);
-                checkDrumHit();
+                bool hit = checkDrumHit();
+                if(hit && !firstHit)
+                {
+                    waypointMover.startMove();
+                    firstHit = true;
+                }
                 //freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
             
             }
