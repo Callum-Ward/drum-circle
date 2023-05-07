@@ -20,8 +20,18 @@ public class OakBranch : Branch
         l.leafObj.transform.rotation = Quaternion.LookRotation(growth, growth - basis);
         l.leafObj.transform.Rotate(0, 90, 0);
 
+        var r = Random.Range(-45, 45);
+        l.leafObj.transform.Rotate(0, 0, r);
+
         leaves = leaves.Concat(new leaf[] { l }).ToArray();
     }
 
-
+    public override void UpdateLeavesPosition()
+    {
+        foreach (var leaf in leaves)
+        {
+            leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7f /* * (maxLength / tree.length)*/;
+        }
+    }
 }

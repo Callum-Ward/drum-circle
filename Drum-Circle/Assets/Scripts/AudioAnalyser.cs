@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using UnityEngine.Audio;
 using UnityEngine;
@@ -51,7 +52,7 @@ public class AudioAnalyser : MonoBehaviour {
     public string[] playerMidiFiles;
 
     private long ticks = 123;
-
+    public int[] midiOffsets;
 
     public void setPlayerCount(int playerCount)
     {
@@ -85,7 +86,7 @@ public class AudioAnalyser : MonoBehaviour {
         }
     }
 
-    private Tuple<int, int> getNotesInformation(IEnumerable<Note> notes)
+    private Tuple<int, int, IDictionary<int, bool>> getNotesInformation(IEnumerable<Note> notes)
     {
         List<int> noteNumbers = new List<int>();
         List<int> noteVelocities = new List<int>();
@@ -112,10 +113,18 @@ public class AudioAnalyser : MonoBehaviour {
 
         int medianNoteNumber = noteNumbers[noteNumbers.Count / 2];
         int medianVelocity = noteVelocities[noteVelocities.Count / 2];
-        return Tuple.Create(medianNoteNumber, medianVelocity);
+
+        List<int> noteNumbersDistinct = noteNumbers.Distinct().ToList();
+        IDictionary<int, bool> drumSideMap = new Dictionary<int, bool>();
+        for(int i = 0; i < noteNumbersDistinct.Count; i++ )
+        {
+            drumSideMap.Add(noteNumbersDistinct[i], i % 3 == 0 || i % 5 == 0);
+        }
+
+        return Tuple.Create(medianNoteNumber, medianVelocity, drumSideMap);
     }
 
-    public TrackMidi loadTrackMidi(string name)
+    public TrackMidi loadTrackMidi(string name, int midiOffset)
     {
         string path = "./Assets/Music/PlayerMidis/" + name + ".mid";
 
@@ -124,26 +133,36 @@ public class AudioAnalyser : MonoBehaviour {
         MidiFile midiFile = MidiFile.Read(path);
         TempoMap tempoMap = midiFile.GetTempoMap();
         TimeSpan midiFileDuration = midiFile.GetDuration<MetricTimeSpan>();
-        int durationInMills = midiFileDuration.Minutes * 60000 + midiFileDuration.Seconds * 1000 + midiFileDuration.Milliseconds;
+        int durationInMills = midiFileDuration.Minutes * 60000 + midiFileDuration.Seconds * 1000 + midiFileDuration.Milliseconds + midiOffset;
 
         midi.midiFileDuration = midiFileDuration;
         midi.timestampedNotes = new TimestampedNote[durationInMills];
 
         IEnumerable<Note> notes = midiFile.GetNotes();
 
-        Tuple<int, int> notesInformation = getNotesInformation(notes);
+        Tuple<int, int, IDictionary<int, bool>> notesInformation = getNotesInformation(notes);
         int medianNoteNumber = notesInformation.Item1;
         int medianVelocity = notesInformation.Item2;
+        IDictionary<int, bool> drumSideMap = notesInformation.Item3;
+
+        
+        StringBuilder sb = new StringBuilder();
 
         foreach(Note note in notes)
         {
             TimeSpan time = note.TimeAs<MetricTimeSpan>(tempoMap);
-            int timeInMills = time.Minutes * 60000 + time.Seconds * 1000 + time.Milliseconds;
+            int timeInMills = time.Minutes * 60000 + time.Seconds * 1000 + time.Milliseconds + midiOffset;
+
+            sb.Append(timeInMills);
+            sb.Append(", ");
+
             midi.timestampedNotes[timeInMills] = new TimestampedNote();
             midi.timestampedNotes[timeInMills].noteNumber = (int)(note.NoteNumber);
-            midi.timestampedNotes[timeInMills].left = (int)(note.NoteNumber) >= medianNoteNumber ? 1 : 0;
+            midi.timestampedNotes[timeInMills].left = drumSideMap[(int)(note.NoteNumber)] ? 1 : 0;
             midi.timestampedNotes[timeInMills].noteSize = (int)(note.Velocity) >= medianVelocity ? 2 : 1;
         }
+
+        //Debug.Log("MIDI: " + sb.ToString());
 
         return midi;
     }
@@ -153,7 +172,7 @@ public class AudioAnalyser : MonoBehaviour {
         this.playerMidis = new TrackMidi[this.playerCount];
         for(int i = 0; i < this.playerCount; i++)
         {
-            TrackMidi m = loadTrackMidi(this.playerMidiFiles[i]);
+            TrackMidi m = loadTrackMidi(this.playerMidiFiles[i], this.midiOffsets[i]);
             this.playerMidis[i] = m;
         }
     }

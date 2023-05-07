@@ -25,7 +25,7 @@ public class RhythmSpawner : MonoBehaviour
     private const float spawnScale = 1.25f;
 
     private const int beatmapWidth = 5;
-    private const int midiGridOffset = 10;
+    private const int midiGridOffset = 30;
     public float windowtime = 0.3f;
     public float window = 0f;
     public float delay = 2.0f;
@@ -45,6 +45,8 @@ public class RhythmSpawner : MonoBehaviour
     private GameObject[] targetAreas;
     private BeatTransfer beatTransfer;
     private bool soloFlag;
+
+    public bool[] useMidi;
 
     // Start is called before the first frame update
     void Start()
@@ -154,6 +156,25 @@ public class RhythmSpawner : MonoBehaviour
         StartCoroutine(spawnWithDelayCoroutine(pos, left, oneShotIndex, size, delay));
     }
 
+    private IEnumerator spawnFromMidiCo(int timeInMills, int playerIndex)
+    {
+        int lb = timeInMills > prevTimesInMillis[playerIndex] + midiGridOffset ? timeInMills - midiGridOffset : prevTimesInMillis[playerIndex] + 1;
+        int ub =  timeInMills + midiGridOffset >= audioAnalyser.playerMidis[playerIndex].timestampedNotes.Length ? audioAnalyser.playerMidis[playerIndex].timestampedNotes.Length - 1 : timeInMills + midiGridOffset;
+
+        for(int j = lb; j <= ub; j++)
+        {
+            TimestampedNote? note = audioAnalyser.playerMidis[playerIndex].timestampedNotes[j];
+            if(note != null)
+            {
+                spawn(playerIndex + 1, note.left, note.noteSize);
+                prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
+                audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
+                yield return null;
+            }
+        }
+        yield return null;
+    }
+
     private int spawnFromMidi(int timeInMills, int playerIndex)
     {
         int lb = timeInMills > prevTimesInMillis[playerIndex] + midiGridOffset ? timeInMills - midiGridOffset : prevTimesInMillis[playerIndex] + 1;
@@ -167,7 +188,6 @@ public class RhythmSpawner : MonoBehaviour
                 spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
-                if(playerIndex == 0){Debug.Log("spawn at " + j.ToString() + "ms");}
                 return (playerIndex + 1) - note.left;
             }
         }
@@ -193,7 +213,7 @@ public class RhythmSpawner : MonoBehaviour
                 this.prevTimesInIndices[playerIndex] = i;
                 return playerIndex;
             }
-            if(timestampedOnsets[i].isOnset)
+            else if(timestampedOnsets[i].isOnset)
             {
                 StartCoroutine(WindowDelay(delay - windowtime/2));
                 spawn(playerIndex + 1, 0, size);
@@ -205,7 +225,7 @@ public class RhythmSpawner : MonoBehaviour
         return -1;
     }
 
-    public int spawnOnTime(float time, bool useMidi = false)
+    public int spawnOnTime(float time)
     {
         if(this.soloFlag)
         {
@@ -225,18 +245,13 @@ public class RhythmSpawner : MonoBehaviour
                 }
             }
 
-            if(useMidi)
+            if(useMidi[i])
             {
                 if(timeInMills <= prevTimesInMillis[i])
                 {
                     continue;
                 }
-
-                int queueIndex = spawnFromMidi(timeInMills, i);
-                if(queueIndex >= 0)
-                {
-                    return queueIndex;
-                }
+                StartCoroutine(spawnFromMidiCo(timeInMills, i));
             }
              else
             {

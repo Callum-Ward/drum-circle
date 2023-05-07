@@ -98,7 +98,7 @@ public class UISelectMenu : MonoBehaviour
                     audioTimer += Time.deltaTime;
                 }
             }
-            Debug.Log("Source time: "+ audioTimer);
+            //Debug.Log("Source time: "+ audioTimer);
         }
 
         

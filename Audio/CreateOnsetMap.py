@@ -10,9 +10,12 @@ files = [
     #('./PrettyWomanDrums.mp3', 'PrettyWomanDrums.json'),
     #('./Jormungandr.mp3', 'Jormungandr.json')
     #('./tutorial1.wav', 'tutorial1.json')
-    ('./DDC Oriental - Drum 1 - Taiko.wav', 'DD_L2_P1_json.json'),
-    ('./DDC Oriental - Drum 2 - Khol.wav', 'DD_L2_P2_json.json'),
-    ('./DDC Oriental - Drum 3 - Conga.wav', 'DD_L2_P3_json.json')
+    #('./DDC Oriental - Drum 1 - Taiko.wav', 'DD_L2_P1_json.json'),
+    #('./DDC Oriental - Drum 2 - Khol.wav', 'DD_L2_P2_json.json'),
+    #('./DDC Oriental - Drum 3 - Conga.wav', 'DD_L2_P3_json.json'),
+    ('./DD_L3_Player1_Stem.wav', 'DD_L3_P1_2_json.json'),
+    ('./DD_L3_Player2_Stem.wav', 'DD_L3_P2_2_json.json'),
+    ('./DD_L3_Player3_Stem.wav', 'DD_L3_P1_3_json.json')
 ]
 
 def print_progress_bar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -104,6 +107,6 @@ def main():
     #print_onset_map_from_json('./BiBDrumsBass-str.json')
     #create_onset_map('./BiBDrumsBass.mp3', 'BiBDrumsBass.json')
     for path, output in files:
-        create_onset_map(path, output)
+        create_onset_map(path, output, True)
 
 main()
