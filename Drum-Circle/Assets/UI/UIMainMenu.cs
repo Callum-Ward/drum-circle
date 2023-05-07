@@ -10,24 +10,25 @@ public class UIMainMenu : MonoBehaviour
 {
     private VisualElement mainMenu;
     private MessageListener messageListener;
+    private LoadScreen loadScreen;
     private int[] drumInputStrengths;
     private int playerCount = 3;
     public string[] sections;
     private int noteNumberOffset = 21;
+    float startGameV = 0;
+    bool fadeIn = false;
+    float value = 0;
 
     private MidiHandler midiHandler;
 
     public void Awake() {
         mainMenu = GameObject.Find("UIMainMenu").GetComponent<UIDocument>().rootVisualElement;
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
         // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
 
         drumInputStrengths = new int[playerCount*2];
-    }
-
-    public void startGame() {
-        SceneManager.LoadScene("2MissionSelect");
-    }
+    }    
 
     // Start is called before the first frame update
     void Start()
@@ -36,23 +37,29 @@ public class UIMainMenu : MonoBehaviour
     }
 
     private void OnButtonClick() {
-        startGame();
+        StartCoroutine(sceneSwitch());
     }
 
     public void Update() {
         VisualElement startButton = mainMenu.Q<VisualElement>("StartButton");
         if (Input.GetKey(KeyCode.LeftArrow)) {
-            startGame();
+            StartCoroutine(sceneSwitch());
         }
 
         for(int i = 0; i < 6; i++) {
             if(drumInputStrengths[i] > 0 || midiHandler.midiInputVelocities[i] > 0.0f) {
                 midiHandler.clearMidiInputVelocities(i);
-                startGame();
+                StartCoroutine(sceneSwitch());
             }
         }
 
         startButton.RegisterCallback<ClickEvent>(evt => OnButtonClick());
+    }
+
+    IEnumerator sceneSwitch() {
+        loadScreen.LoadScreenFadeIn();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("2MissionSelect");
     }
 
     private void handleDrumInput()

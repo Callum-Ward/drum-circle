@@ -93,7 +93,7 @@ public class BeatUI : MonoBehaviour
    
         guiStyle.fontSize = 60;
 
-        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+        beatmapScript = GameObject.Find("RhythmLogic").GetComponent<BeatmapScript>();
         beatTargetLocation = beatmapScript.beatTargetLocation;
 
         playerTags = new Label[] {playerTag1, playerTag2, playerTag3};
@@ -105,13 +105,6 @@ public class BeatUI : MonoBehaviour
 
         playerLanes = new VisualElement[] {Lane1, Lane2, Lane3};
         lanes = new VisualElement[] {Lane1L, Lane2L, Lane3L, Lane1R, Lane2R, Lane3R};
-
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                tags[i][j].visible = false;
-            }
-            // playerLanes[i].style.display = DisplayStyle.None;
-        }
 
         for(int i = 0; i < 6; i++){
             beatTargetEffects[i] = new UITargetEffect();
@@ -185,20 +178,12 @@ public class BeatUI : MonoBehaviour
         {
             screenWidth = root.Q<VisualElement>("ScreenContainer").resolvedStyle.width;
             screenHeight = root.Q<VisualElement>("ScreenContainer").resolvedStyle.height;
-            float tag1Center = playerTag1.resolvedStyle.width / 2;
-            float tag2Center = playerTag2.resolvedStyle.width / 2;
-            float tag3Center = playerTag3.resolvedStyle.width / 2;
 
             if(playerNo > 3 || playerNo < 1) {
                 Debug.Log("invalid player count");
             }
             else {
                 for (int i = 0; i < playerNo; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        tags[j][i].visible = true;
-                        tags[j][i].style.left = screenWidth*(i+1) /(playerNo+1) - (tags[j][i].resolvedStyle.width/2);
-                        tags[j][i].style.top = (screenHeight * (j+2) /(tags[j][i].resolvedStyle.height)) + j*5;
-                    }
                     playerLanes[i].style.display = DisplayStyle.Flex;    
                     beatSpawnContainer[i] = beatSpawnTemplate.Instantiate();
                     beatSpawnContainer[i+3] = beatSpawnTemplate.Instantiate();

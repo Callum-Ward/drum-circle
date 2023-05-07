@@ -13,7 +13,8 @@ public class UIGlowEffect
 {
     protected int glowStage;
     protected float glowStrength;
-    protected float glowRate;
+    protected float glowIncRate;
+    protected float glowDecRate;
     protected Color glowColorMin;
     protected Color glowColorMax;
     protected bool repeat;
@@ -22,7 +23,8 @@ public class UIGlowEffect
     public UIGlowEffect()
     {
         this.glowStage = 0;
-        this.glowRate = 0f;
+        this.glowIncRate = 0f;
+        this.glowDecRate = 0f;
         this.glowStrength = 0f;
         this.glowColorMin = new Color(0f, 0f, 0f, 0.4f);
         this.glowColorMax = new Color(0f, 0f, 0f, 0.4f);
@@ -42,10 +44,17 @@ public class UIGlowEffect
 
     public Color getNextGlowValue(Color currentGlow)
     {
-        float redInc = (this.glowColorMax.r - this.glowColorMin.r) * this.glowRate;
-        float greenInc = (this.glowColorMax.g - this.glowColorMin.g) * this.glowRate;
-        float blueInc = (this.glowColorMax.b - this.glowColorMin.b) * this.glowRate;
-        float alphaInc = (this.glowColorMax.a - this.glowColorMin.a) * this.glowRate;
+        if(this.glowStage == 0)
+        {
+            this.glowColorMax = new Color(0f, 0f, 0f, 0.4f);
+            return this.glowColorMax;
+        }
+        
+        float glowRate = this.glowStage == 1 ? this.glowIncRate : this.glowDecRate;
+        float redInc = (this.glowColorMax.r - this.glowColorMin.r) * glowRate;
+        float greenInc = (this.glowColorMax.g - this.glowColorMin.g) * glowRate;
+        float blueInc = (this.glowColorMax.b - this.glowColorMin.b) * glowRate;
+        float alphaInc = (this.glowColorMax.a - this.glowColorMin.a) * glowRate;
 
         if(this.glowStage == 1) 
         {

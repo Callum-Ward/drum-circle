@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Canvas" style="flex-grow: 1; align-items: center; justify-content: center; flex-direction: row; opacity: 0; background-color: rgba(0, 0, 0, 0.16);">
+        <ui:VisualElement name="Player1" style="min-width: 20%; min-height: 20%; flex-shrink: 1; max-width: 20%; max-height: 20%; justify-content: center; align-items: center; flex-grow: 1;">
+            <ui:Label text="Player 1: " display-tooltip-when-elided="true" name="Label" style="font-size: 40%; -unity-font-style: bold; color: rgb(255, 0, 0); -unity-text-align: upper-center;" />
+            <ui:Label display-tooltip-when-elided="true" name="Score1" enable-rich-text="false" style="font-size: 40%; -unity-font-style: bold; color: rgb(255, 0, 0); -unity-text-align: upper-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Player2" style="min-width: 20%; min-height: 20%; flex-shrink: 1; max-width: 20%; max-height: 20%; justify-content: center; align-items: center; flex-grow: 1;">
+            <ui:Label text="Player 2: " display-tooltip-when-elided="true" name="Label" style="font-size: 40%; -unity-font-style: bold; color: rgb(0, 0, 255); -unity-text-align: upper-center;" />
+            <ui:Label display-tooltip-when-elided="true" name="Score2" enable-rich-text="false" style="font-size: 40%; -unity-font-style: bold; color: rgb(0, 0, 255); -unity-text-align: upper-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Player3" style="min-width: 20%; min-height: 20%; flex-shrink: 1; max-width: 20%; max-height: 20%; justify-content: center; align-items: center; flex-grow: 1;">
+            <ui:Label text="Player 3: " display-tooltip-when-elided="true" name="Label" style="font-size: 40%; -unity-font-style: bold; color: rgb(255, 255, 0); -unity-text-align: upper-center;" />
+            <ui:Label display-tooltip-when-elided="true" name="Score3" enable-rich-text="false" style="font-size: 40%; -unity-font-style: bold; color: rgb(255, 255, 0); -unity-text-align: upper-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Team" style="min-width: 20%; min-height: 20%; flex-shrink: 1; max-width: 20%; max-height: 20%; justify-content: center; align-items: center; position: absolute; top: 20%;">
+            <ui:Label text="Team Score: " display-tooltip-when-elided="true" name="Label" enable-rich-text="true" style="font-size: 60%; -unity-font-style: bold; -unity-text-outline-color: rgb(0, 0, 0); color: rgb(0, 231, 51); -unity-text-outline-width: 0; -unity-text-align: upper-center;" />
+            <ui:Label display-tooltip-when-elided="true" name="ScoreT" enable-rich-text="false" style="font-size: 40%; -unity-font-style: bold; color: rgb(0, 231, 51); -unity-text-align: upper-center;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

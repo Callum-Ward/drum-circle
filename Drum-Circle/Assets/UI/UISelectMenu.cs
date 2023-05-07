@@ -7,21 +7,25 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
+using UnityEngine.Audio;
 
 public class UISelectMenu : MonoBehaviour
 {    
     private VisualElement selectMenu;
     private MessageListener messageListener;
+    private LoadScreen loadScreen;
     private float mTimer = 0f;
     private int buttonSelection = 0;
     private int[] drumInputStrengths;
     private int playerCount = 3;
     public string[] sections;
     private int noteNumberOffset = 21;
+    float audioTimer = 0;
+    bool stopTrack = false;
 
     private Color originalColor;
-    private Color highlightColor = Color.white;
-    private Color confirmColor = Color.green;
+    private Color highlightColor = Color.green;
+    private Color confirmColor = Color.blue;
 
     VisualElement forestButton;
     VisualElement mountainButton;
@@ -29,8 +33,10 @@ public class UISelectMenu : MonoBehaviour
     VisualElement[] buttons;
 
     private MidiHandler midiHandler;
+    AudioManager audioManager;
 
     public void Awake() {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
         // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
@@ -43,19 +49,19 @@ public class UISelectMenu : MonoBehaviour
         beachButton = selectMenu.Q<VisualElement>("BeachButton");
         buttons = new VisualElement[] {forestButton, mountainButton, beachButton};
         // originalColor = forestButton.resolvedStyle.backgroundColor;
-        originalColor = Color.grey;
-        forestButton.style.backgroundColor = highlightColor;
+        originalColor = Color.white;
+        forestButton.style.unityBackgroundImageTintColor = highlightColor;
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.LoadScreenFadeOut();
     }
-
-    public void missionChoice(string mission) {
+    
+    IEnumerator sceneSwitch(string mission) {
+        loadScreen.LoadScreenFadeIn();
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(mission);
     }
 
     public void Update() {
-    
-        //handleDrumInput();
-
-
         if (mTimer <= 0) {
             mTimer = 0f;
         }
@@ -64,47 +70,69 @@ public class UISelectMenu : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Alpha1)) {
-            missionChoice("Forest");
+            StartCoroutine(sceneSwitch("Forest"));
         }
         if (Input.GetKey(KeyCode.Alpha2)) {
-            missionChoice("Mountains");
+            StartCoroutine(sceneSwitch("Mountains"));
         }
         if (Input.GetKey(KeyCode.Alpha3)) {
-            missionChoice("Beach");
+            StartCoroutine(sceneSwitch("Beach"));
+        }
+
+        if (stopTrack == false) {
+            if(buttonSelection == 0) {
+                var track = Array.Find(audioManager.drumTracks, sound => sound.Name == "Forest");
+                if(audioTimer == 0f) {
+                    audioManager.PlaySingle("Forest");
+                    // audioManager.VolumeTrack(track, 0f);
+                    audioManager.FadeInTrack(track, "slow", 0.5f);
+                }
+                else if(audioTimer >= 15f) {
+                    audioTimer = 0f;
+                    audioManager.StopSingle("Forest");
+                }
+                else if(audioManager.audioSource.time >= 13.5f) {
+                    audioManager.FadeOutTrack(track, "slow", 0.5f);
+                }
+                if(audioTimer < 15f) {
+                    audioTimer += Time.deltaTime;
+                }
+            }
+            Debug.Log("Source time: "+ audioTimer);
         }
 
         
         if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
         {
             midiHandler.clearMidiInputVelocities(0);
-            buttons[buttonSelection].style.backgroundColor = originalColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = originalColor;
             if(buttonSelection == 2) {
                 buttonSelection = 0;
             }
             else {
                 buttonSelection += 1;
             }
-            buttons[buttonSelection].style.backgroundColor = highlightColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = highlightColor;
             Debug.Log("CurrentSelection: " + buttonSelection);
         }
         else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
         {
             midiHandler.clearMidiInputVelocities(1);
-            buttons[buttonSelection].style.backgroundColor = confirmColor;
+            buttons[buttonSelection].style.unityBackgroundImageTintColor = confirmColor;
                     if (buttonSelection == 0) {
-                        missionChoice("Forest");
+                        StartCoroutine(sceneSwitch("Forest"));
                     }
                     if (buttonSelection == 1) {
-                        missionChoice("Mountains");
+                        StartCoroutine(sceneSwitch("Mountains"));
                     }
                     if (buttonSelection == 2) {
-                        missionChoice("Beach");
+                        StartCoroutine(sceneSwitch("Beach"));
                     }
         }
         
-        forestButton.RegisterCallback<ClickEvent>(evt => missionChoice("Forest"));
-        mountainButton.RegisterCallback<ClickEvent>(evt => missionChoice("Mountains"));
-        beachButton.RegisterCallback<ClickEvent>(evt => missionChoice("Beach"));
+        forestButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Forest"));
+        mountainButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Mountains"));
+        beachButton.RegisterCallback<ClickEvent>(evt => sceneSwitch("Beach"));
     }
 
     private void handleDrumInput()

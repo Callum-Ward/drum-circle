@@ -48,7 +48,7 @@ public class MoveBeatUI : MonoBehaviour
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
-        beatmapScript = GameObject.Find("Rhythm Logic").GetComponent<BeatmapScript>();
+        beatmapScript = GameObject.Find("RhythmLogic").GetComponent<BeatmapScript>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement;
         screenHeight = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>().screenHeight;

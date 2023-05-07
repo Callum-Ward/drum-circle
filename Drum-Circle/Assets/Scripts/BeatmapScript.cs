@@ -26,7 +26,7 @@ public class BeatmapScript : MonoBehaviour
     private bool hitR = false;
     private float[] shakeTimer = new float[3] {0f, 0f, 0f};
     
-    private bool useMidiFile = true;
+    public bool useMidiFile;
 
     [HideInInspector] public int terrainBeatStage = 1;
     public float glowPower = 5.0f;
@@ -44,6 +44,7 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public AudioAnalyser audioAnalyser;
     [HideInInspector] public AudioManager audioManager;
     [HideInInspector] public BeatManager beatManager;
+    [HideInInspector] public FireballSpawner fireballSpawner;
     [HideInInspector] public RhythmSpawner beatSpawner;
     [HideInInspector] public TreeSpawning treeSpawner;
     [HideInInspector] public MidiHandler midiHandler;
@@ -65,7 +66,10 @@ public class BeatmapScript : MonoBehaviour
     private float beatShareOnset = 30f;
 
     public int playerCount = 3;
-    [HideInInspector] public int sceneNumber;
+    public int sceneNumber;
+
+    private LoadScreen loadScreen;
+    Dictionary<string, float> scenelength = new Dictionary<string, float>();
 
     void Awake()
     {
@@ -74,12 +78,13 @@ public class BeatmapScript : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         beatManager = GameObject.Find("BeatManager").GetComponent<BeatManager>();
         beatSpawner = GameObject.Find("BeatSpawner").GetComponent<RhythmSpawner>();
+        fireballSpawner = GameObject.Find("FireballSpawner").GetComponent<FireballSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         tutorialScript = GameObject.Find("TutorialLogic").GetComponent<TutorialScript>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
-        waypointMover = GameObject.Find("Platform_Skull_03").GetComponent<WaypointMover>();
+        waypointMover = GameObject.Find("platform").GetComponent<WaypointMover>();
 
         treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
@@ -99,6 +104,12 @@ public class BeatmapScript : MonoBehaviour
         terrain.terrainData.wavingGrassAmount = 0.5f;
 
         this.freestyleHandler.setScene(this.sceneNumber);
+
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.LoadScreenFadeOut();
+        scenelength.Add("Forest", 214);
+        scenelength.Add("Mountains", 288);
+        scenelength.Add("Beach", 271);
     }
 
     private void registerHit(int queueIndex, MoveBeatUI beat, int oneShotIndex, float velocity)
@@ -154,7 +165,6 @@ public class BeatmapScript : MonoBehaviour
             //treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
         }
 
-        treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
     }
 
     private void handleTerrainBeatResponse()
@@ -254,9 +264,11 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
+                        fireballSpawner.spawn(i);
                         setEnvironmentTriggers(i*2);
                     }
                     beatUI.hitSwell(i*2);
+
                     freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
@@ -266,6 +278,7 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
+                        fireballSpawner.spawn(i);
                         // Enviroment triggers etc. right drum hit on target
                     }
                     beatUI.hitSwell(i*2 + 1);
@@ -291,57 +304,83 @@ public class BeatmapScript : MonoBehaviour
 
         beatUI.startLevelUI();
 
-        float countdown = introDelay - introTimer;
-
-        if(timer > audioManager.longestTime+8 && audioManager.longestTime != 0 ) {            
-        // if(timer > 0 ) {            
-            SceneManager.LoadScene("2MissionSelect");
+        //Manually exit level at any time
+        if (Input.GetKey(KeyCode.Escape)) {            
+            StartCoroutine(sceneSwitch("2MissionSelect"));
         }
 
-        // if(introTimer <= introDelay) 
-        // {
-        //     introTimer += Time.deltaTime;
-        // }
+        float countdown = introDelay - introTimer;
 
-        // if(introTimer > introDelay)
-        {//Start the timer
-            if (introTimer <= introDelay && audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
+        //Get current scene, if end of scene's track has finished then display scores and go back to level select if drum is tapped
+        Scene scene = SceneManager.GetActiveScene(); 
+        if(timer > scenelength[scene.name]) {    
+            loadScreen.EndScreenFade();          
+            if(timer > scenelength[scene.name]+5) {
+                if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
+                {
+                    midiHandler.clearMidiInputVelocities(0);
+                    StartCoroutine(sceneSwitch("2MissionSelect"));                
+                }
+                else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
+                {
+                    midiHandler.clearMidiInputVelocities(1);
+                    StartCoroutine(sceneSwitch("2MissionSelect"));                
+                }
+            }
+        }    
+        
+
+        if (introTimer <= introDelay && !running)
+        {
+            introTimer += Time.deltaTime;
+        }
+        else if(!running)
+        {
+            running = true;
+            waypointMover.startMove();
+        }
+
+        if(running)
+        {
+            if(timer < delay)
             {
-                introTimer += Time.deltaTime;
-                beatSpawner.spawnOnTime(timer, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(timer + inputDelay, useMidiFile);
+                checkDrumHit();
             }
             //Play all layers of music simultaneously
-            else if(audioManager.activeSources.Count <= 1 && tutorialScript.tutorialComplete == true)
+            else if(audioManager.activeSources.Count <= 1)
             {
-                audioManager.PlayAllDrumTracks();
-                audioManager.PlayAllLayerTracks();
-
-                // timer = 0f;
-                introTimer = 0f;
-                running = true;
-                waypointMover.startMove();
+                audioManager.PlayDrumTrack(0);
+                //audioManager.PlayAllLayerTracks();
             }
             //Drum hit functionality
-            else if(tutorialScript.tutorialComplete == true)
+            else
             {
-                int queueIndex  = beatSpawner.spawnOnTime(audioManager.activeSources[1].time + delay + inputDelay, useMidiFile);
+                int queueIndex  = beatSpawner.spawnOnTime(timer + delay + inputDelay, useMidiFile);
                 
                 checkDrumHit();
                 freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, audioManager.activeSources[1].time);
+            
             }
-
-            if(countdown <= 5 && countdown > 4) {
-                beatUI.IntroTimerStart();
-            }
-            else if (introDelay - introTimer <= 4 && countdown > 0) {
-                beatUI.IntroTimerUpdate(countdown);
-            }
-            else if (countdown <= 0) {
-                beatUI.IntroTimerStop();
-                introTimer = 10f;
-            }            
-            timer += Time.deltaTime;
         }
+
+        if(countdown <= 5 && countdown > 4) {
+            beatUI.IntroTimerStart();
+        }
+        else if (introDelay - introTimer <= 4 && countdown > 0) {
+            beatUI.IntroTimerUpdate(countdown);
+        }
+        else if (countdown <= 0) {
+            beatUI.IntroTimerStop();
+            introTimer = 10f;
+        }  
+        timer += Time.deltaTime;          
+    }
+
+    IEnumerator sceneSwitch(string mission) {
+        loadScreen.LoadScreenFadeIn();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(mission);
     }
 
     void beatHit(int queueNo, MoveBeatUI beatSide, int oneShotIndex, float velocity) {
