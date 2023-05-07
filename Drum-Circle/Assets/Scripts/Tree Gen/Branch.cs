@@ -357,7 +357,7 @@ public class Branch : MonoBehaviour
             leaves[i].leafObj.transform.position = position + growth * length / maxLength;
             leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
 
-            var r = Random.Range(-40, 30);
+            var r = Random.Range(5, 120);
             leaves[i].leafObj.transform.Rotate(r, i * 360 / leavesNo, 0);
         }
     }
@@ -367,7 +367,7 @@ public class Branch : MonoBehaviour
         foreach (var leaf in leaves)
         {
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
-            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7 /* * (maxLength / tree.length)*/;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 0.22f /* * (maxLength / tree.length)*/;
         }
     }
 }

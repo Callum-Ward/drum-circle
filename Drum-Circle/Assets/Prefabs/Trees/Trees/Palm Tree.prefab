@@ -57,11 +57,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: width
-      value: 0.02
+      value: 0.005
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: length
-      value: 8
+      value: 6.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
+      propertyPath: maxDepth
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3693536449023071381, guid: d9f2cfc88082208408ac7b2ec4f86dc4, type: 3}
       propertyPath: branchObj
