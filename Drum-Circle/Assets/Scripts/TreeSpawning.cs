@@ -13,6 +13,7 @@ public class TreeSpawning : MonoBehaviour
 
     public GameObject staticTree;
     public GameObject growingTree;
+    [SerializeField] private Waypoints treeSpawns; //refernece to waypoints list
     public Transform platform;
     public camera_front cameraFront;
     public float scale;
@@ -24,8 +25,13 @@ public class TreeSpawning : MonoBehaviour
     private List<GameObject> treeObjs;
     private int[] playerTreeCount = {0,0,0};
     private List<Vector3> beachIslandSpawns;
-    private List<Vector2> treeLocations;
     private float radius;
+
+
+    //last tree to spawn
+    private Transform currentTree;
+    private int lastTreeIndex; 
+
 
     int validPlayerNo(int noPlayers)
     {
@@ -36,8 +42,9 @@ public class TreeSpawning : MonoBehaviour
 
     void Start()
     {
-        treeLocations = new List<Vector2>();
+       
         treeObjs = new List<GameObject>();
+        if (scene == 3)
         beachIslandSpawns = new List<Vector3>();
         beachIslandSpawns.Add(new Vector3(382, 50,307));  //spawn points encoded (x,radius,z)
 
@@ -88,6 +95,11 @@ public class TreeSpawning : MonoBehaviour
         return playerTreeCount[playerNo - 1];
     }
 
+    public Vector3 getLastTreeLocation()
+    {
+        return currentTree.position;
+    }
+
     public void spawnAtLocation(int playerNo, Vector3 location, bool growing)
     {
         GameObject newTree;
@@ -101,6 +113,7 @@ public class TreeSpawning : MonoBehaviour
         }
         playerTreeCount[playerNo - 1] += 1;
         treeObjs.Add(newTree);
+        currentTree = newTree.transform;
         Debug.Log("spawned tree at " + location);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
@@ -143,9 +156,6 @@ public class TreeSpawning : MonoBehaviour
                     float forestSpawnRadius = 30f;
                     treePos = getRandomSpawn(platform.transform.position, forestSpawnRadius, 4); //get spawn locaiton within spawn radius of platform min distance from platform set to 4
                     if (treePos.y < 24) validLocation = true; //prevents spawning tress on cliff faces and mountain tops
-                    break;
-                case 2://mountain
-
                     break;
                 case 3://beach spawning will choose the cloest island to the platform to spawn trees
 
@@ -198,14 +208,23 @@ public class TreeSpawning : MonoBehaviour
         //Debug.Log("pre spawn");
         playerNo = validPlayerNo(playerNo);
         if (treeCount < 1) treeCount = 1;
-
-
-        for (int treeNo = 1; treeNo < treeCount; treeNo++)
+        Vector3 treeLocation;
+        if (scene == 1 || scene ==3)
         {
-            Vector3 treeLocation = getSpawnLocation();
-            if (treeLocation.y != 0) spawnAtLocation(playerNo, treeLocation, growing);//if height is set to 0 function was unable to find valid tree spawn location
+            for (int treeNo = 1; treeNo < treeCount; treeNo++)
+            {
+                treeLocation = getSpawnLocation();
+                if (treeLocation.y != 0) spawnAtLocation(playerNo, treeLocation, growing);//if height is set to 0 function was unable to find valid tree spawn location
+            }
+            return true;
+        } else //mountain map uses preset spawning strategy
+        {
+            treeLocation = treeSpawns.GetNextWaypoint(currentTree).position;
+            treeLocation = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)) + Terrain.activeTerrain.transform.position.y, treeLocation.z);
+            spawnAtLocation(playerNo, treeLocation, growing);
+            return true;
         }
-        return true;
+
     }
 
      
