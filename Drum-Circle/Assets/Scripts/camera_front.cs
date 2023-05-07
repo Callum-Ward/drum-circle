@@ -26,14 +26,13 @@ public class camera_front : MonoBehaviour
         currentWaypoint = (platform.transform.position + (platformDistance * Vector3.Normalize(platform.transform.position - centre)));
         transform.position = new Vector3(currentWaypoint.x,currentWaypoint.y + yOffset, currentWaypoint.z); //Vector3.MoveTowards(transform.position, platform.transform.position, moveSpeed * Time.deltaTime);
         transform.LookAt(centre);
+
         leftCam.transform.position = transform.position;
-        leftCam.transform.rotation = Quaternion.Euler(transform.rotation.z, transform.rotation.y - sideCamRot, transform.rotation.x);
-        //leftCam.transform.rotation = transform.rotation;
-        //Debug.Log("A " + leftCam.transform.rotation);
-        leftCam.transform.Rotate(0, -sideCamRot, 0);
-        //Debug.Log("B " + leftCam.transform.rotation);
         rightCam.transform.position = transform.position;
-        rightCam.transform.rotation = transform.rotation;//Quaternion.Euler(transform.rotation.x, transform.rotation.y + rightCamRot, transform.rotation.z);
-        rightCam.transform.Rotate(0, sideCamRot, 0);
+
+        Vector3 leftRotation = new Vector3(0, transform.eulerAngles.y - sideCamRot, 0);
+        Vector3 rightRotation = new Vector3(0, transform.eulerAngles.y + sideCamRot, 0);
+        leftCam.transform.rotation = Quaternion.Euler(leftRotation);
+        rightCam.transform.rotation = Quaternion.Euler(rightRotation);
     }
 }

@@ -17,7 +17,7 @@ public class RhythmScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timer > 2)
+        /*if (timer > 2)
         {
             spawner.spawn(1, 1, 1);
             spawner.spawn(1, 0, 1);
@@ -30,7 +30,7 @@ public class RhythmScript : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
-        }
+        }*/
         
         
     }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TreeSpawning : MonoBehaviour
@@ -30,6 +32,8 @@ public class TreeSpawning : MonoBehaviour
 
     //last tree to spawn
     private Transform currentTree;
+    [HideInInspector] public bool pendingTree;
+    
     private int lastTreeIndex; 
 
 
@@ -44,43 +48,57 @@ public class TreeSpawning : MonoBehaviour
     {
        
         treeObjs = new List<GameObject>();
-        if (scene == 3)
-        beachIslandSpawns = new List<Vector3>();
-        beachIslandSpawns.Add(new Vector3(382, 50,307));  //spawn points encoded (x,radius,z)
+        if (scene == 3){
+            beachIslandSpawns = new List<Vector3>();
+            beachIslandSpawns.Add(new Vector3(382, 50,307));  //spawn points encoded (x,radius,z)
 
-        beachIslandSpawns.Add(new Vector3(349,12, 432 ));  
+            beachIslandSpawns.Add(new Vector3(349,12, 432 ));  
 
-        beachIslandSpawns.Add(new Vector3(255, 43,224));  
+            beachIslandSpawns.Add(new Vector3(255, 43,224));  
 
-        beachIslandSpawns.Add(new Vector3(436,80, 120));  
+            beachIslandSpawns.Add(new Vector3(436,80, 120));  
 
-        beachIslandSpawns.Add(new Vector3(639,43, 127));  
+            beachIslandSpawns.Add(new Vector3(639,43, 127));  
 
-        beachIslandSpawns.Add(new Vector3(544,29,250));  
+            beachIslandSpawns.Add(new Vector3(544,29,250));  
 
-        beachIslandSpawns.Add(new Vector3(217,70, 58));  
-        beachIslandSpawns.Add(new Vector3(117, 90, 86));  
-        beachIslandSpawns.Add(new Vector3(75,90, 250));  
+            beachIslandSpawns.Add(new Vector3(217,70, 58));  
+            beachIslandSpawns.Add(new Vector3(117, 90, 86));  
+            beachIslandSpawns.Add(new Vector3(75,90, 250));  
 
-        beachIslandSpawns.Add(new Vector3(147, 103,547));  
+            beachIslandSpawns.Add(new Vector3(147, 103,547));  
 
-        beachIslandSpawns.Add(new Vector3(350,101,609));  
-        beachIslandSpawns.Add(new Vector3(595,101,609));  
-        beachIslandSpawns.Add(new Vector3(650,101,503));  
-        beachIslandSpawns.Add(new Vector3(650,110,385));
+            beachIslandSpawns.Add(new Vector3(350,101,609));  
+            beachIslandSpawns.Add(new Vector3(595,101,609));  
+            beachIslandSpawns.Add(new Vector3(650,101,503));  
+            beachIslandSpawns.Add(new Vector3(650,110,385));
 
-        closestSpawn = new Vector3(0, 0, 0);
-        if (scene == 3)
-        {
+            closestSpawn = new Vector3(0, 0, 0);
+
             getSpawnLocation(); //update the closest spawn so when game starts cameras face closest island spawn
             cameraFront.centre = new Vector3(closestSpawn.x, waterLevel, closestSpawn.z);
         }
-
     }
 
-    public Vector3 getClosestSpawn()
+
+    public Tuple<Vector3, bool> getClosestSpawn()
     {
-        return closestSpawn;
+        if(scene != 2)
+        {
+            return new Tuple<Vector3, bool>(getSpawnLocation(), true);
+        }
+
+        Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);
+        if(currentTree == null)
+        {
+            return new Tuple<Vector3, bool>(nextWaypoint.position, true);
+        }
+        if(distanceSqrdFrom(platform.transform.position, currentTree.position) >= distanceSqrdFrom(platform.transform.position, nextWaypoint.position))
+        {
+            pendingTree = true;
+            return new Tuple<Vector3, bool>(nextWaypoint.position, true);
+        }
+        return new Tuple<Vector3, bool>(currentTree.position, false);
     }
 
     public void setScene(int sceneNo)
@@ -113,7 +131,9 @@ public class TreeSpawning : MonoBehaviour
         }
         playerTreeCount[playerNo - 1] += 1;
         treeObjs.Add(newTree);
+
         currentTree = newTree.transform;
+        pendingTree = false;
         Debug.Log("spawned tree at " + location);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
@@ -135,8 +155,8 @@ public class TreeSpawning : MonoBehaviour
     private Vector3 getRandomSpawn(Vector3 spawnCentre, float radius, float minDisFromCentre) //finds random locaition within radius from spawn centre 
     {
         if (minDisFromCentre < 0 || minDisFromCentre > radius) minDisFromCentre = 0;
-        float randCircum = Random.Range(-1.0f, 1.0f); //specify point on circumference of circle
-        float randDis = Random.Range(minDisFromCentre, radius); //scale point on circumference within specified range
+        float randCircum = UnityEngine.Random.Range(-1.0f, 1.0f); //specify point on circumference of circle
+        float randDis = UnityEngine.Random.Range(minDisFromCentre, radius); //scale point on circumference within specified range
         Vector2 pointInCircle = new Vector2(spawnCentre.x + randDis * Mathf.Sin(randCircum), spawnCentre.z + randDis * Mathf.Cos(randCircum)); //random point within specified range from spawn centre
         return new Vector3(pointInCircle.x, Terrain.activeTerrain.SampleHeight(new Vector3(pointInCircle.x, 0, pointInCircle.y)) + Terrain.activeTerrain.transform.position.y, pointInCircle.y);
         //return new Vector3(pointInCircle.x, 0, pointInCircle.y);
@@ -156,6 +176,20 @@ public class TreeSpawning : MonoBehaviour
                     float forestSpawnRadius = 30f;
                     treePos = getRandomSpawn(platform.transform.position, forestSpawnRadius, 4); //get spawn locaiton within spawn radius of platform min distance from platform set to 4
                     if (treePos.y < 24) validLocation = true; //prevents spawning tress on cliff faces and mountain tops
+                    break;
+                case 2:
+                    /* currentTree = treeSpawns.GetNextWaypoint(currentTree);
+                    if(currentTree == null){
+                        treePos = new Vector3(0f, 0f, 0f);
+                        break;
+                    }
+                    Debug.Log("Next Waypoint: " + currentTree.position);
+                    treePos = new Vector3(currentTree.position.x, Terrain.activeTerrain.SampleHeight(
+                        new Vector3(currentTree.position.x, 0, currentTree.position.z)) + Terrain.activeTerrain.transform.position.y, 
+                        currentTree.position.z
+                    );
+                    validLocation = true;
+                    pendingTree = false;*/
                     break;
                 case 3://beach spawning will choose the cloest island to the platform to spawn trees
 
@@ -209,22 +243,12 @@ public class TreeSpawning : MonoBehaviour
         playerNo = validPlayerNo(playerNo);
         if (treeCount < 1) treeCount = 1;
         Vector3 treeLocation;
-        if (scene == 1 || scene ==3)
+        for (int treeNo = 1; treeNo < treeCount; treeNo++)
         {
-            for (int treeNo = 1; treeNo < treeCount; treeNo++)
-            {
-                treeLocation = getSpawnLocation();
-                if (treeLocation.y != 0) spawnAtLocation(playerNo, treeLocation, growing);//if height is set to 0 function was unable to find valid tree spawn location
-            }
-            return true;
-        } else //mountain map uses preset spawning strategy
-        {
-            treeLocation = treeSpawns.GetNextWaypoint(currentTree).position;
-            treeLocation = new Vector3(treeLocation.x, Terrain.activeTerrain.SampleHeight(new Vector3(treeLocation.x, 0, treeLocation.y)) + Terrain.activeTerrain.transform.position.y, treeLocation.z);
-            spawnAtLocation(playerNo, treeLocation, growing);
-            return true;
+            treeLocation = getSpawnLocation();
+            if (treeLocation.y != 0) spawnAtLocation(playerNo, treeLocation, growing);//if height is set to 0 function was unable to find valid tree spawn location
         }
-
+        return true;
     }
 
      
