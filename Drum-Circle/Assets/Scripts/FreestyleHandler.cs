@@ -91,7 +91,7 @@ public class FreestyleHandler  {
         else if(this.activeSoloist == playerIndex)
         {
             audioManager.PlayDrumOneShot(playerIndex * 2 + drumIndex, velocity);
-            spawner.spawn(playerIndex + 1, 1 - drumIndex, velocity > 0.5f ? 2 : 1, 0, "rising");
+            //spawner.spawn(playerIndex + 1, 1 - drumIndex, velocity > 0.5f ? 2 : 1, 0, "rising");
         }
     }
 

@@ -46,6 +46,8 @@ public class RhythmSpawner : MonoBehaviour
     private BeatTransfer beatTransfer;
     private bool soloFlag;
 
+    public bool[] useMidi;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -186,7 +188,6 @@ public class RhythmSpawner : MonoBehaviour
                 spawn(playerIndex + 1, note.left, note.noteSize);
                 prevTimesInMillis[playerIndex] = j + midiGridOffset / 2;
                 audioAnalyser.playerMidis[playerIndex].timestampedNotes[j] = null;
-                if(playerIndex == 0){Debug.Log("spwn on " + j);}
                 return (playerIndex + 1) - note.left;
             }
         }
@@ -212,7 +213,7 @@ public class RhythmSpawner : MonoBehaviour
                 this.prevTimesInIndices[playerIndex] = i;
                 return playerIndex;
             }
-            if(timestampedOnsets[i].isOnset)
+            else if(timestampedOnsets[i].isOnset)
             {
                 StartCoroutine(WindowDelay(delay - windowtime/2));
                 spawn(playerIndex + 1, 0, size);
@@ -224,7 +225,7 @@ public class RhythmSpawner : MonoBehaviour
         return -1;
     }
 
-    public int spawnOnTime(float time, bool useMidi = false)
+    public int spawnOnTime(float time)
     {
         if(this.soloFlag)
         {
@@ -244,13 +245,12 @@ public class RhythmSpawner : MonoBehaviour
                 }
             }
 
-            if(useMidi)
+            if(useMidi[i])
             {
                 if(timeInMills <= prevTimesInMillis[i])
                 {
                     continue;
                 }
-
                 StartCoroutine(spawnFromMidiCo(timeInMills, i));
             }
              else

@@ -108,7 +108,7 @@ public class TutorialScript : MonoBehaviour
     {
         if(spawnFlag)
         {
-            beatSpawner.spawn(subStage + 1, 1, 1);
+            //beatSpawner.spawn(subStage + 1, 1, 1);
             currentTimeLimit = popupDurations[subStage];
             spawnFlag = false;
             subStage++;

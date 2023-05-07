@@ -2848,8 +2848,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
+      propertyPath: midiOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: analysisFile
       value: Conga_bip
+      objectReference: {fileID: 0}
+    - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
+      propertyPath: midiOffsets.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 660509474387851394, guid: acb7fd2f39f69694bac0ac303a648e28, type: 3}
       propertyPath: playerJsonFiles.Array.size
@@ -4811,6 +4819,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1083192823}
     m_Modifications:
+    - target: {fileID: 4481764004991704127, guid: ed8aa3d6ef1e9984d92bfa049ebc8e06, type: 3}
+      propertyPath: useMidi.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4481764004991704127, guid: ed8aa3d6ef1e9984d92bfa049ebc8e06, type: 3}
+      propertyPath: useMidi.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4481764004991704127, guid: ed8aa3d6ef1e9984d92bfa049ebc8e06, type: 3}
+      propertyPath: useMidi.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4481764004991704127, guid: ed8aa3d6ef1e9984d92bfa049ebc8e06, type: 3}
+      propertyPath: useMidi.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6052066404598195368, guid: ed8aa3d6ef1e9984d92bfa049ebc8e06, type: 3}
       propertyPath: m_Name
       value: BeatSpawner
