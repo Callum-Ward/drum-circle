@@ -125,7 +125,7 @@ public class BeatUI : MonoBehaviour
 
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal, int winningPlayer) {
         scoreTags[player].text = "Score: " + scoreVal;
-        comboTags[player].text = "Combo: " + comboVal + "\nMultiplier: " + multiVal;
+        comboTags[player].text = "Combo: " + comboVal + "\nx" + multiVal;
         if(comboVal > 0)
         {
             laneEffects[player].SetMode("combo", (float)comboVal);
