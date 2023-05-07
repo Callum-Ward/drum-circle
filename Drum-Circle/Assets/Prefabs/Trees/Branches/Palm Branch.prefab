@@ -54,7 +54,7 @@ PrefabInstance:
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: leafObj
       value: 
-      objectReference: {fileID: 1418097408302940385, guid: 46a01b33cfa59448db296e426b025832, type: 3}
+      objectReference: {fileID: 919132149155446097, guid: babf33195733b43f19095424f270a004, type: 3}
     - target: {fileID: 2915430925563637600, guid: e5dc6bc2215001547944d0db13264020, type: 3}
       propertyPath: texture
       value: 
