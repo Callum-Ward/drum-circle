@@ -52,8 +52,6 @@ public class UIMainMenu : MonoBehaviour
                 StartCoroutine(sceneSwitch());
             }
         }
-
-        startButton.RegisterCallback<ClickEvent>(evt => OnButtonClick());
     }
 
     IEnumerator sceneSwitch() {
