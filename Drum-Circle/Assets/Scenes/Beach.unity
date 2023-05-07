@@ -5428,8 +5428,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 620031236}
-  moveSpeed: 5
   switchDistance: 0.1
+  musicDuration: 233.833
 --- !u!4 &355362737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
@@ -18184,6 +18184,10 @@ PrefabInstance:
       propertyPath: rightCam
       value: 
       objectReference: {fileID: 8897642386763589644}
+    - target: {fileID: 4763178901847856987, guid: 1843cc65f83bdc04891fc9f6e7f67633, type: 3}
+      propertyPath: platformDistance
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5460794481169441435, guid: 1843cc65f83bdc04891fc9f6e7f67633, type: 3}
       propertyPath: m_Name
       value: CameraFront

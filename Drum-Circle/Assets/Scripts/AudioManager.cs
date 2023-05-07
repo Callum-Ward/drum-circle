@@ -382,4 +382,9 @@ public class AudioManager : MonoBehaviour {
         Debug.Log("Faded Out Layer " + value.ToString());
     }
 
+    public int addedLayersCount()
+    {
+        return this.activeLayerIndices.Count;
+    }
+
 }

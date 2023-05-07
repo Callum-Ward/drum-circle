@@ -43,6 +43,7 @@ public class ScoreManager : MonoBehaviour
             }
         }
 
+        int totalCombo = 0;
         for(int i = 0; i < 3; i++) {            
             if (ScoreMultiplier[i] > 2)
             {
@@ -51,7 +52,14 @@ public class ScoreManager : MonoBehaviour
             }
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
             endScore.Q<Label>(scores[i]).text = playerScores[i].ToString();
+            totalCombo += ComboCount[i];
         }
+        
+        if(totalCombo >= 5 * audioManager.addedLayersCount())
+        {
+            audioManager.AddLayer();
+        }
+
         endScore.Q<Label>("ScoreT").text = (playerScores[0] + playerScores[1] + playerScores[2]).ToString();
     }
 

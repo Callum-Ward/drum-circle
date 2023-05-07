@@ -36,9 +36,6 @@ public class BeatmapScript : MonoBehaviour
     private float windDecreaseRate = 0.001f;
     public float windFactor = 0.1f;
 
-    private float spawnTimer = 0f;
-    private float spawnInterval = 20f;
-
     private FreestyleHandler freestyleHandler;
 
     [HideInInspector] public ScoreManager scoreManager;
@@ -221,6 +218,7 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
+
     private void handleDrumInput()
     {
         
@@ -267,16 +265,7 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
-                        Debug.Log("ST " + spawnTimer);
-                        if(spawnTimer >= spawnInterval)
-                        {
-                            fireballSpawner.spawn(i, true);
-                            spawnTimer = 0f;
-                        }
-                        else
-                        {
-                            fireballSpawner.spawn(i, false);
-                        }
+                        fireballSpawner.spawn(i);
                         setEnvironmentTriggers(i*2);
                         hit = true;
                     }
@@ -291,16 +280,7 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
-                        Debug.Log("ST " + spawnTimer);
-                        if(spawnTimer >= spawnInterval)
-                        {
-                            fireballSpawner.spawn(i, true);
-                            spawnTimer = 0f;
-                        }
-                        else
-                        {
-                            fireballSpawner.spawn(i, false);
-                        }
+                        fireballSpawner.spawn(i);
                         // Enviroment triggers etc. right drum hit on target
                         hit = true;
                     }
@@ -388,13 +368,11 @@ public class BeatmapScript : MonoBehaviour
                 {
                     waypointMover.startMove();
                     firstHit = true;
-                    spawnTimer = 20f;
                 }
                 //freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
             
             }
-            timer += Time.deltaTime;
-            spawnTimer += Time.deltaTime;    
+            timer += Time.deltaTime;  
         }
 
         if(countdown <= 5 && countdown > 4) {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,29 +9,26 @@ public class Fireball : MonoBehaviour
 
     public GameObject explosionVFX;
 
-    public float speed = 120f;
-    public float rotationSpeed = 90f;
+    public float speed = 1200f;
+    public float rotationSpeed = 200f;
 
     private Vector3 heading;
-    private bool spawn;
+    private bool willSpawn;
     private int playerIndex;
 
-    public void StartUp(int playerIndex, bool spawn)
+    public void StartUp(int playerIndex)
     {
-        this.spawn = spawn;
         this.playerIndex = playerIndex;
-        Debug.Log("FST " + spawn);
-        if(spawn)
-        {
-            this.heading = treeSpawner.getSpawnLocation();
-            treeSpawner.spawnAtLocation(playerIndex+1, heading, true);
-        }
-        else
-        {
-            Debug.Log("getLatTreeLocation: " + this.heading);
 
-            this.heading = treeSpawner.getLastTreeLocation();
+        if(treeSpawner.pendingTree)
+        {
+            Destroy(gameObject);
+            return;
         }
+
+        Tuple<Vector3, bool> closestSpawn = treeSpawner.getClosestSpawn();
+        heading = closestSpawn.Item1;
+        willSpawn = closestSpawn.Item2;
     }
 
     void Awake()
@@ -52,7 +50,7 @@ public class Fireball : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Colliding at " + transform.position + " -> " + heading);
-        if(spawn)
+        if(willSpawn)
         {
             treeSpawner.spawnAtLocation(playerIndex+1, heading, true);
         }

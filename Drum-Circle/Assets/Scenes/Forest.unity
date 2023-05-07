@@ -3239,8 +3239,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 594649435}
-  moveSpeed: 5
   switchDistance: 0.1
+  musicDuration: 218.663
 --- !u!4 &1537377286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4426532876721426, guid: aa3f638fec520364c975f9d22cec12ce, type: 3}

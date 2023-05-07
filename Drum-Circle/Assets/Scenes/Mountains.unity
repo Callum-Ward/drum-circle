@@ -21183,50 +21183,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 987352620}
     m_Modifications:
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: delay
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: introDelay
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: sceneNumber
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: useMidiFile
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -201.29439
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -138.35304
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -223.95433
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552784209143238119, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
-      propertyPath: m_Name
-      value: RhythmLogic
-      objectReference: {fileID: 0}
     - target: {fileID: 7814550879322299297, guid: 32da1b8d44ec8d0488598f3d3abc8772, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -21274,6 +21230,50 @@ PrefabInstance:
     - target: {fileID: 7814550879322299299, guid: 32da1b8d44ec8d0488598f3d3abc8772, type: 3}
       propertyPath: m_Name
       value: ScoreManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: delay
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: introDelay
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: sceneNumber
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238114, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: useMidiFile
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -201.29439
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -138.35304
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238117, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -223.95433
+      objectReference: {fileID: 0}
+    - target: {fileID: 6552784209143238119, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
+      propertyPath: m_Name
+      value: RhythmLogic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 896770ae746561a41bee7bb1d2e59eab, type: 3}
@@ -27036,19 +27036,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.72126466
+      value: 0.7212648
       objectReference: {fileID: 0}
     - target: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00024020893
+      value: 0.00023923012
       objectReference: {fileID: 0}
     - target: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6926596
+      value: -0.69265944
       objectReference: {fileID: 0}
     - target: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000068014844
+      value: -0.000072712995
       objectReference: {fileID: 0}
     - target: {fileID: 1287291633486459302, guid: ee157df722dba0d4ab8ef0d10a04c67e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -27095,8 +27095,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 158270621}
-  moveSpeedMax: 5
   switchDistance: 0.1
+  musicDuration: 241.423
 --- !u!1 &2136069049
 GameObject:
   m_ObjectHideFlags: 0

@@ -159,7 +159,7 @@ public class RhythmSpawner : MonoBehaviour
     private IEnumerator spawnFromMidiCo(int timeInMills, int playerIndex)
     {
         int lb = timeInMills > prevTimesInMillis[playerIndex] + midiGridOffset ? timeInMills - midiGridOffset : prevTimesInMillis[playerIndex] + 1;
-        int ub =  timeInMills + midiGridOffset;
+        int ub =  timeInMills + midiGridOffset >= audioAnalyser.playerMidis[playerIndex].timestampedNotes.Length ? audioAnalyser.playerMidis[playerIndex].timestampedNotes.Length - 1 : timeInMills + midiGridOffset;
 
         for(int j = lb; j <= ub; j++)
         {

@@ -23,7 +23,7 @@ Game Logic
 
 Platform
 - Waypoints
-- Platform
+- Platform: Set music duration {218.663, 241.434, 233.833}
 
 Post Processing
 
