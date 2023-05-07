@@ -5,13 +5,14 @@ using UnityEngine;
 public class WaypointMover : MonoBehaviour
 {
     [SerializeField] private Waypoints waypoints; //refernece to waypoints list
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeedMax = 5f;
     [SerializeField] private float switchDistance = 0.1f;
 
     private Transform currentWaypoint;
     private Transform nextWaypoint;
 
     private bool start = false;
+    private float moveSpeed = 0f;
 
     // Start is called before the first frame update
 
@@ -31,8 +32,13 @@ public class WaypointMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(start == true)
+        if(start == true && currentWaypoint != null)
         {
+            if(moveSpeed < moveSpeedMax)
+            {
+                moveSpeed += 1f;
+            }
+
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position,currentWaypoint.position) < switchDistance)

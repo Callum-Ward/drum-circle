@@ -41,15 +41,14 @@ public class FireballSpawner : MonoBehaviour
         } */
     }
 
-    public void spawn(int playerIndex)
+    public void spawn(int playerIndex, bool spawn)
     {
         Vector3 pos = new Vector3(
                 platform.transform.position.x + platformOffsets[playerIndex].x,
                 platform.transform.position.y + platformOffsets[playerIndex].y,
                 platform.transform.position.z + platformOffsets[playerIndex].z
         );
-
         GameObject newFireball = Instantiate(fireball, pos, transform.rotation) as GameObject;
-        newFireball.GetComponent<Fireball>().StartUp(playerIndex);
+        newFireball.GetComponent<Fireball>().StartUp(playerIndex, spawn);
     }
 }
