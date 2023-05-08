@@ -343,7 +343,7 @@ public class BeatmapScript : MonoBehaviour
             {
                 //audioManager.PlayDrumTrack(2);
                 audioManager.PlayAllDrumTracks();
-                audioManager.PlayAllLayerTracks(0f);
+                audioManager.PlayAllLayerTracks(0.75f);
             }
             //Drum hit functionality
             else
