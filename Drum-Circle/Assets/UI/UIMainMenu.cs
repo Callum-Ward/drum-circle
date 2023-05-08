@@ -51,7 +51,6 @@ public class UIMainMenu : MonoBehaviour
                 StartCoroutine(sceneSwitch());
             }
         }
-
     }
 
     IEnumerator sceneSwitch() {

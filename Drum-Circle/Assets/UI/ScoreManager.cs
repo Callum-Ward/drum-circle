@@ -52,12 +52,15 @@ public class ScoreManager : MonoBehaviour
             }
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
             endScore.Q<Label>(scores[i]).text = playerScores[i].ToString();
-            totalCombo += ComboCount[i];
+            totalCombo += ScoreMultiplier[i];
         }
         
-        if(totalCombo >= 5 * audioManager.addedLayersCount())
+        if(totalCombo >= 2 + ((audioManager.addedLayersCount()+1) * 2))
         {
             audioManager.AddLayer();
+        }
+        else if (totalCombo < 2 + ((audioManager.addedLayersCount()) * 2) || totalCombo == 3) {
+            audioManager.RemoveLayer();
         }
 
         endScore.Q<Label>("ScoreT").text = (playerScores[0] + playerScores[1] + playerScores[2]).ToString();
@@ -69,9 +72,7 @@ public class ScoreManager : MonoBehaviour
         ComboCounter[player] = 0;
         ComboCount[player] = 0;
         ScoreMultiplier[player] = 1;
-        //Debug.Log("Miss registered");
-        //audioManager.FadeOut("layer2");
-        audioManager.RemoveLayer();
+        // audioManager.RemoveLayer();
     }
 
     //Increments counters on hit and calculates multiplier increase.
@@ -79,9 +80,9 @@ public class ScoreManager : MonoBehaviour
     {
         ComboCounter[player]++;
         ComboCount[player]++;
-        playerScores[player] += Mathf.RoundToInt(Mathf.Pow((proximity * 1000f), 1.25f));
+        playerScores[player] += Mathf.RoundToInt(proximity * 1000f)*ScoreMultiplier[player];
 
-        if (ScoreMultiplier[player] < 5 && ComboCounter[player] >= 5) //10
+        if (ScoreMultiplier[player] < 5 && ComboCounter[player] >= 4 * Mathf.Pow(2f, ScoreMultiplier[player]-1)) //10
         {
             ComboCounter[player] = 0;
             ScoreMultiplier[player]++;

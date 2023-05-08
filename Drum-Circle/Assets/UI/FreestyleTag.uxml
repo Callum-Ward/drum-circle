@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BeatSpawnUI.uss?fileID=7433441132597879392&amp;guid=d5759aa029c8ab8478300df6489bc595&amp;type=3#BeatSpawnUI" />
+    <ui:VisualElement name="ScreenContainer" style="width: auto; height: auto; justify-content: flex-start; flex-grow: 1; align-items: flex-start; flex-direction: row; flex-wrap: nowrap;">
+        <ui:VisualElement name="Lane1" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33%; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%; height: 100px;">
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement name="Lane1Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: column; align-items: center; background-color: rgba(25, 0, 0, 0); position: relative; width: 100%; height: 100%; left: 0; visibility: visible; overflow: visible; display: flex; translate: 0 0; justify-content: center; min-height: 100%;">
+                <ui:Label text="Player 1&#10;Freestyle!" display-tooltip-when-elided="true" name="P1Free" style="-unity-font-definition: url(&apos;project://database/Assets/UI/Viking%20Medium%20SDF.asset?fileID=11400000&amp;guid=cfd011a9220038a4da502ae1d0b49f8b&amp;type=2#Viking Medium SDF&apos;); color: rgba(0, 227, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center; opacity: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Lane2" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33%; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%; height: 100%;">
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+            <ui:VisualElement name="Lane2Container" style="min-width: auto; max-width: none; flex-grow: 1; flex-direction: column; align-items: center; background-color: rgba(0, 0, 25, 0); width: 100%; justify-content: center;">
+                <ui:Label text="Player 2&#10;Freestyle!" display-tooltip-when-elided="true" name="P2Free" style="-unity-font-definition: url(&apos;project://database/Assets/UI/Viking%20Medium%20SDF.asset?fileID=11400000&amp;guid=cfd011a9220038a4da502ae1d0b49f8b&amp;type=2#Viking Medium SDF&apos;); color: rgb(0, 227, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center; opacity: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; width: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Lane3" style="flex-grow: 1; max-width: none; max-height: none; min-height: 100%; min-width: 33%; flex-direction: row; align-items: stretch; justify-content: flex-start; visibility: visible; display: flex; width: 100%; height: 100%;">
+            <ui:VisualElement name="Lane3Container" style="min-width: 33%; max-width: 33%; flex-grow: 1; flex-direction: column; align-items: center; -unity-text-outline-width: 0; -unity-text-outline-color: rgb(0, 0, 0); background-color: rgba(25, 24, 0, 0); border-left-width: 5px; border-right-width: 5px; width: 33%; min-height: 100%; justify-content: center;">
+                <ui:Label text="Player 3&#10;Freestyle!" display-tooltip-when-elided="true" name="P3Free" style="-unity-font-definition: url(&apos;project://database/Assets/UI/Viking%20Medium%20SDF.asset?fileID=11400000&amp;guid=cfd011a9220038a4da502ae1d0b49f8b&amp;type=2#Viking Medium SDF&apos;); color: rgb(0, 227, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center; opacity: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; width: 33%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 33%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
