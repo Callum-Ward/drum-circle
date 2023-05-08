@@ -22535,6 +22535,10 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: drumTracks.Array.data[0].clip
       value: 
       objectReference: {fileID: 8300000, guid: 743eb9f1b1ae32443ba4f5dca7966f7e, type: 3}
@@ -22555,17 +22559,41 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[0].Name
+      value: layer1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: additiveLayers.Array.data[0].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 73480bea02b5c90499c90bcb2daff509, type: 3}
+      objectReference: {fileID: 8300000, guid: 9bd9ab68b81d50a4eac2a6700d58725e, type: 3}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[1].Name
+      value: layer2
+      objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: additiveLayers.Array.data[1].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 5f8c4722f9e192a42a60d75690c29064, type: 3}
+      objectReference: {fileID: 8300000, guid: 73480bea02b5c90499c90bcb2daff509, type: 3}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[2].Name
+      value: layer3
+      objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: additiveLayers.Array.data[2].clip
       value: 
+      objectReference: {fileID: 8300000, guid: 5f8c4722f9e192a42a60d75690c29064, type: 3}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[3].Name
+      value: layer4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[3].clip
+      value: 
       objectReference: {fileID: 8300000, guid: 8d7683f1a5008794d89935b9135f0bac, type: 3}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[3].pitch
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: additiveLayers.Array.data[0].volume
       value: 1
@@ -22576,6 +22604,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
       propertyPath: additiveLayers.Array.data[2].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7200548633039264702, guid: 4a28fc2a340908b4a86a5f1c3a33a577, type: 3}
+      propertyPath: additiveLayers.Array.data[3].volume
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

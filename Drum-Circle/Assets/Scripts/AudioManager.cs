@@ -211,8 +211,10 @@ public class AudioManager : MonoBehaviour {
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            PlayLayerTrack(i, volume);
+            PlayLayerTrack(i, i == 0 ? 1f : volume);
         }
+        this.activeLayerIndices.Add(0);
+
     }
 
     public void PlayOneShot(string name)
@@ -370,7 +372,7 @@ public class AudioManager : MonoBehaviour {
 
     public void RemoveLayer()
     {
-        if(this.activeLayerIndices.Count == 0)
+        if(this.activeLayerIndices.Count == 1)
         {
             return;
         }

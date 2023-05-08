@@ -55,7 +55,7 @@ public class UIMainMenu : MonoBehaviour
 
     IEnumerator sceneSwitch() {
         loadScreen.LoadScreenFadeIn();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.2);
         SceneManager.LoadScene("2MissionSelect");
     }
 

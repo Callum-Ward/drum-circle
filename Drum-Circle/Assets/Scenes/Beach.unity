@@ -43256,6 +43256,74 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[0].Name
+      value: layer1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: d61ef41aa8ca64843bb7ba76d370285f, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[1].Name
+      value: layer2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 7cfc23048b0600941b6149575e64eafa, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[2].Name
+      value: layer3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: d1a0111f818ea9c47a6032c741e3045b, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[3].Name
+      value: layer4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 050168ca4d79fab44b855dcc84d25647, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[4].Name
+      value: layer9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[4].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 68a0098353bb1964e8181dc52e086fbd, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[5].Name
+      value: layer9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[5].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 68a0098353bb1964e8181dc52e086fbd, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[6].Name
+      value: layer9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[6].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 68a0098353bb1964e8181dc52e086fbd, type: 3}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[7].Name
+      value: layer9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421770814357963576, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
+      propertyPath: additiveLayers.Array.data[7].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 68a0098353bb1964e8181dc52e086fbd, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb64534a5c8531b4cbce4345d35d74b1, type: 3}
 --- !u!4 &9216372519426609890
