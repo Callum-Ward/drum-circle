@@ -32,7 +32,8 @@ public class TreeSpawning : MonoBehaviour
 
     //last tree to spawn
     private Transform currentTree;
-    [HideInInspector] public int pendingTreeStage = 3;
+    [HideInInspector] public int pendingTreeStage = 3
+    ;
     private int pendingTreeDelay = 3;
     
     private int lastTreeIndex; 

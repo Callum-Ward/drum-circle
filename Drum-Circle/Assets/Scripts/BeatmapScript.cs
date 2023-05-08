@@ -14,7 +14,7 @@ public class BeatmapScript : MonoBehaviour
     public RhythmSpawner spawner;
     [HideInInspector] public float timer = 0.0f;
     [HideInInspector] public float window = 0f;
-    public float windowtime = 0.3f;
+    public float windowtime = 0.4f;
     public float delay = 2.0f;
     public float inputDelay = 0f;
     [HideInInspector] public float introTimer = 0f;

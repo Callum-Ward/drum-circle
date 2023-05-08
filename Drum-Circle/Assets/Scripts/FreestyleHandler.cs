@@ -43,7 +43,7 @@ public class FreestyleHandler  {
                     soloDurations = new float[]{10000f, 10000f};
                     break;
                 case 3: //beach
-                    soloSchedule = new float[]{153f, 180f, 206f, 10000f};
+                    soloSchedule = new float[]{15300f, 18000f, 20600f, 10000f};
                     soloDurations = new float[]{13f, 18f, 14f, 10000f};
                     break;
             }

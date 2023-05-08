@@ -57,7 +57,7 @@ public class UISelectMenu : MonoBehaviour
     
     IEnumerator sceneSwitch(string mission) {
         loadScreen.LoadScreenFadeIn();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.2f);
         SceneManager.LoadSceneAsync(mission);
     }
 
@@ -102,9 +102,9 @@ public class UISelectMenu : MonoBehaviour
         }
 
         
-        if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
+        if ((midiHandler.midiInputVelocities[2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)) && mTimer == 0f)
         {
-            midiHandler.clearMidiInputVelocities(0);
+            midiHandler.clearMidiInputVelocities(2);
             buttons[buttonSelection].style.unityBackgroundImageTintColor = originalColor;
             if(buttonSelection == 2) {
                 buttonSelection = 0;
@@ -115,9 +115,9 @@ public class UISelectMenu : MonoBehaviour
             buttons[buttonSelection].style.unityBackgroundImageTintColor = highlightColor;
             Debug.Log("CurrentSelection: " + buttonSelection);
         }
-        else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
+        else if ((midiHandler.midiInputVelocities[3] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)) && mTimer == 0f)
         {
-            midiHandler.clearMidiInputVelocities(1);
+            midiHandler.clearMidiInputVelocities(3);
             buttons[buttonSelection].style.unityBackgroundImageTintColor = confirmColor;
                     if (buttonSelection == 0) {
                         StartCoroutine(sceneSwitch("Forest"));

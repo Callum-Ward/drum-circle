@@ -53,8 +53,8 @@ public class UILaneEffect : UIGlowEffect
                 {
                     glowStrength = 15;
                 }
-                this.glowColorMin = new Color(0f, 0.12f, 0f, 0.5f);
-                this.glowColorMax = new Color(0f, glowStrength * 0.04f, 0f, 0.4f + glowStrength * 0.02f);
+                this.glowColorMin = new Color(0f, 0.12f, 0f, 0.4f);
+                this.glowColorMax = new Color(0f, glowStrength * 0.005f, 0f, 0.4f);
                 this.glowStrength = glowStrength;
                 this.glowIncRate = 0.05f;
                 this.glowDecRate = 0.05f;
