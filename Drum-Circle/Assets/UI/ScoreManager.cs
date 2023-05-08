@@ -48,18 +48,18 @@ public class ScoreManager : MonoBehaviour
             if (ScoreMultiplier[i] > 2)
             {
                 //audioManager.Volume("layer2", 1f);
-                audioManager.AddLayer();
+                //audioManager.AddLayer();
             }
             beatUI.updateScore(i, playerScores[i], ComboCount[i], ScoreMultiplier[i], maxScore.Item1);
             endScore.Q<Label>(scores[i]).text = playerScores[i].ToString();
             totalCombo += ScoreMultiplier[i];
         }
         
-        if(totalCombo >= 2 + ((audioManager.addedLayersCount()+1) * 2))
+        if(totalCombo >= 1 + ((audioManager.addedLayersCount()+1) * 3))
         {
             audioManager.AddLayer();
         }
-        else if (totalCombo < 2 + ((audioManager.addedLayersCount()) * 2) || totalCombo == 3) {
+        else if (totalCombo < 1 + ((audioManager.addedLayersCount()) * 2) || totalCombo == 3) {
             audioManager.RemoveLayer();
         }
 

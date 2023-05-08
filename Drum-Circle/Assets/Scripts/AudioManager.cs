@@ -124,7 +124,11 @@ public class AudioManager : MonoBehaviour {
      //Starts a fade in based on passed speed (Fast/Slow)
     public void FadeInTrack(Sound s, string speed, float limit)
     {
-        fadeOut = null;
+         if(fadeOut != null)
+        {
+            return;
+        }
+
         if (speed == "fast")
         {
             s.source.volume = s.source.volume + (limit*Time.deltaTime)*5;
@@ -151,7 +155,11 @@ public class AudioManager : MonoBehaviour {
     //Fades out music.
     public void FadeOutTrack(Sound s, string speed ="fast", float limit = 1)
     {
-        fadeIn = null;
+        if(fadeIn != null)
+        {
+            return;
+        }
+
         if(speed == "fast") {
             s.source.volume = s.source.volume - (limit*Time.deltaTime)*3;
             fadeSpeed = speed;
@@ -287,7 +295,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
 
-        FadeInTrack(drumTracks[index], speed);
+        FadeInTrack(drumTracks[index], speed, 1.0f);
     }
 
     public void FadeOutDrumTrack(int index)
@@ -355,7 +363,7 @@ public class AudioManager : MonoBehaviour {
         int index = this.activeLayerIndices.Count;
 
         this.activeLayerIndices.Add(index);
-        FadeInLayerTrack(index, "slow", 0.75f);
+        FadeInLayerTrack(index, "slow");
         Debug.Log("Faded In Layer " + index.ToString());
     }
 

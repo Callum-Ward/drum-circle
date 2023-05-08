@@ -87,11 +87,26 @@ public class TreeSpawning : MonoBehaviour
 
     public Tuple<Vector3, bool> getClosestSpawn()
     {
-        if(scene != 2)
+        if(scene == 1)
         {
            if(pendingTreeStage < pendingTreeDelay)
             {
                 pendingTreeStage += pendingTreeStage == -1 ? 0 : 1;
+                return new Tuple<Vector3, bool>(lastGeneratedLocation, false);
+            }
+            else
+            {
+                pendingTreeStage = -1;
+                lastGeneratedLocation = getSpawnLocation();
+                return new Tuple<Vector3, bool>(lastGeneratedLocation, true);
+            }
+        }
+        else if(scene == 3)
+        {
+           pendingTreeDelay = 2;
+           if(pendingTreeStage < pendingTreeDelay)
+            {
+                pendingTreeStage += 1;
                 return new Tuple<Vector3, bool>(lastGeneratedLocation, false);
             }
             else
