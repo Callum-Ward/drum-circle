@@ -108,7 +108,7 @@ public class BeatmapScript : MonoBehaviour
         loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
         loadScreen.LoadScreenFadeOut();
         scenelength.Add("Forest", 214);
-        scenelength.Add("Mountains", 288);
+        scenelength.Add("Mountains", 283);
         scenelength.Add("Beach", 271);
     }
 
