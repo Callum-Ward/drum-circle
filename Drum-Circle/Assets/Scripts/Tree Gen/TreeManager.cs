@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class TreeManager : MonoBehaviour
 {
-    [Range(0.1f, 3f)] public float growthRate = 1; 
+    [Range(0.1f, 15f)] public float growthRate = 1; 
     public GameObject[] trees;
     [SerializeField] bool testing = false;
 
@@ -40,7 +40,7 @@ public class TreeManager : MonoBehaviour
         else
         {
             var growingTrees = new List<GameObject>( GameObject.FindGameObjectsWithTag("Procedural Tree") );
-            foreach (var t in growingTrees)
+            foreach (var t in growingTrees.ToArray())
             {
                 var tree = t.GetComponent<Tree>();
                 if (tree.isFullyGrown)
