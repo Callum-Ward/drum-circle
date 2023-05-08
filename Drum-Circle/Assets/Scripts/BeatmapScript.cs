@@ -265,8 +265,8 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
-                        fireballSpawner.spawn(i);
-                        //treeSpawner.spawnTree(1, 1, new Color(0f,0f,0f), true );
+                        //fireballSpawner.spawn(i);
+                        treeSpawner.spawnTree(1, 2, new Color(0f,0f,0f), true );
                         setEnvironmentTriggers(i*2);
                         hit = true;
                     }
@@ -281,7 +281,8 @@ public class BeatmapScript : MonoBehaviour
                 {
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
-                        fireballSpawner.spawn(i);
+                        //fireballSpawner.spawn(i);
+                        treeSpawner.spawnTree(1, 2, new Color(0f,0f,0f), true );
                         // Enviroment triggers etc. right drum hit on target
                         hit = true;
                     }

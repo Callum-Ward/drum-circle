@@ -73,6 +73,7 @@ public class TreeSpawning : MonoBehaviour
             beachIslandSpawns.Add(new Vector3(650,101,503));  
             beachIslandSpawns.Add(new Vector3(650,110,385));
 
+
             closestSpawn = new Vector3(0, 0, 0);
 
             getSpawnLocation(); //update the closest spawn so when game starts cameras face closest island spawn
