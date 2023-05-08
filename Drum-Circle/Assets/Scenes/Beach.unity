@@ -7659,7 +7659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4285810861682418591, guid: 37240c54aa894f64b8ec71540b47e2e6, type: 3}
       propertyPath: growthRate
-      value: 2.07
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4285810861682418591, guid: 37240c54aa894f64b8ec71540b47e2e6, type: 3}
       propertyPath: trees.Array.size

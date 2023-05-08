@@ -334,11 +334,11 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    public void FadeInFromBackgroundLayer()
+    public void FadeInRemainingLayers()
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            if(i != persistentLayerIndex)
+            if(!this.activeLayerIndices.Contains(i))
             {
                 FadeInLayerTrack(i, "slow");
             }
@@ -372,12 +372,13 @@ public class AudioManager : MonoBehaviour {
 
     public void RemoveLayer()
     {
-        if(this.activeLayerIndices.Count == 1)
+        if(this.activeLayerIndices.Count <= 1)
         {
             return;
         }
 
         int index = random.Next() % activeLayerIndices.Count;
+        index = index == 0 ? 1 : index;
         int value = this.activeLayerIndices[index];
         this.activeLayerIndices.Remove(value);
         FadeOutLayerTrack(value);

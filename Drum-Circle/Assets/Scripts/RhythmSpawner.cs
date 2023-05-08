@@ -44,7 +44,7 @@ public class RhythmSpawner : MonoBehaviour
 
     private GameObject[] targetAreas;
     private BeatTransfer beatTransfer;
-    private bool soloFlag;
+    private int activeSoloist = -1;
 
     public bool[] useMidi;
 
@@ -98,19 +98,18 @@ public class RhythmSpawner : MonoBehaviour
             else {
                 this.beatTransfer.getProvider();
             }
-
-            this.soloFlag = false;
+            this.activeSoloist = -1;
             this.beatTransfer = newBeatTransfer;
         }
         else if(mode == "solo")
         {
             index = soloistIndex;
-            this.soloFlag = true;
+            this.activeSoloist = soloistIndex;
             this.beatTransfer = null;
         }
         else
         {
-            this.soloFlag = false;
+            this.activeSoloist = -1;
             this.beatTransfer = null;
         }
     }
@@ -227,10 +226,6 @@ public class RhythmSpawner : MonoBehaviour
 
     public int spawnOnTime(float time)
     {
-        if(this.soloFlag)
-        {
-            return - 1;
-        }
 
         int index = (int)(Math.Round(time, 2) * 100);
         int timeInMills = (int)Math.Ceiling(time * 1000);
@@ -243,6 +238,11 @@ public class RhythmSpawner : MonoBehaviour
                 {
                     continue;
                 }
+            }
+
+            if(this.activeSoloist == i)
+            {
+                continue;
             }
 
             if(useMidi[i])

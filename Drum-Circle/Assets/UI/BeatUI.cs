@@ -313,26 +313,6 @@ public class BeatUI : MonoBehaviour
             }
         }
 
-        /* if(gs == 0){
-            Color c = laneContainers[0].style.backgroundColor.value;
-            if(c.a < 0.6f){
-                laneContainers[0].style.backgroundColor = new Color(c.r + 0.02f, c.g, c.b, c.a + 0.01f);
-            }
-            else{
-                gs = 1;
-            }
-        }
-        else if(gs == 1){
-            Color c = laneContainers[0].style.backgroundColor.value;
-            if(c.a > 0.3f){
-                laneContainers[0].style.backgroundColor = new Color(c.r - 0.02f, c.g, c.b, c.a - 0.01f);
-            }
-            else{
-                gs = 0;
-            }
-        }*/
-
-
     }
 
         IEnumerator FadeOutCoroutine(Label label) {

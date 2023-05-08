@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Drum-Circle/Assets/UI/BlankScreen.uxml.meta
 guid: 075171cb2f0aca74b87d6bb0005c95c2
+========
+guid: ba8eb88730097bc4cae283116331b201
+>>>>>>>> patrick:Drum-Circle/Assets/UI/FreestyleTag.uxml.meta
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}

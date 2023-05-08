@@ -143,7 +143,7 @@ public class Branch : MonoBehaviour
         {
             case 0:
                 segments = 10;
-                faces = 16;
+                faces = 14;
                 break;
             case 1:
                 segments = 7;
