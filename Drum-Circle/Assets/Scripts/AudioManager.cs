@@ -211,8 +211,10 @@ public class AudioManager : MonoBehaviour {
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            PlayLayerTrack(i, volume);
+            PlayLayerTrack(i, i == 0 ? 1f : volume);
         }
+        this.activeLayerIndices.Add(0);
+
     }
 
     public void PlayOneShot(string name)
@@ -332,11 +334,11 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    public void FadeInFromBackgroundLayer()
+    public void FadeInRemainingLayers()
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            if(i != persistentLayerIndex)
+            if(!this.activeLayerIndices.Contains(i))
             {
                 FadeInLayerTrack(i, "slow");
             }
@@ -370,12 +372,13 @@ public class AudioManager : MonoBehaviour {
 
     public void RemoveLayer()
     {
-        if(this.activeLayerIndices.Count == 0)
+        if(this.activeLayerIndices.Count <= 1)
         {
             return;
         }
 
         int index = random.Next() % activeLayerIndices.Count;
+        index = index == 0 ? 1 : index;
         int value = this.activeLayerIndices[index];
         this.activeLayerIndices.Remove(value);
         FadeOutLayerTrack(value);

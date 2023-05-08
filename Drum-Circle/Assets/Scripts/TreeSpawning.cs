@@ -35,6 +35,7 @@ public class TreeSpawning : MonoBehaviour
     [HideInInspector] public bool pendingTree;
     
     private int lastTreeIndex; 
+    private Vector3 lastGeneratedLocation;
 
 
     int validPlayerNo(int noPlayers)
@@ -86,7 +87,16 @@ public class TreeSpawning : MonoBehaviour
     {
         if(scene != 2)
         {
-            return new Tuple<Vector3, bool>(getSpawnLocation(), true);
+            if(pendingTree)
+            {
+                return new Tuple<Vector3, bool>(lastGeneratedLocation, false);
+            }
+            else
+            {
+                pendingTree = true;
+                lastGeneratedLocation = getSpawnLocation();
+                return new Tuple<Vector3, bool>(lastGeneratedLocation, true);
+            }
         }
 
         Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);

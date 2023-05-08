@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.SceneManagement;
@@ -46,7 +47,6 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public RhythmSpawner beatSpawner;
     [HideInInspector] public TreeSpawning treeSpawner;
     [HideInInspector] public MidiHandler midiHandler;
-    [HideInInspector] public MessageListener messageListener;
     [HideInInspector] public Terrain terrain;
     [HideInInspector] public TutorialScript tutorialScript;
     [HideInInspector] public BeatUI beatUI;
@@ -81,7 +81,6 @@ public class BeatmapScript : MonoBehaviour
         fireballSpawner = GameObject.Find("FireballSpawner").GetComponent<FireballSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
-        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
         waypointMover = GameObject.Find("platform").GetComponent<WaypointMover>();
 
@@ -107,7 +106,7 @@ public class BeatmapScript : MonoBehaviour
         loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
         loadScreen.LoadScreenFadeOut();
         scenelength.Add("Forest", 214);
-        scenelength.Add("Mountains", 288);
+        scenelength.Add("Mountains", 283);
         scenelength.Add("Beach", 271);
     }
 
@@ -218,29 +217,6 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-
-    private void handleDrumInput()
-    {
-        
-        //Checks if there was an input in the data stream
-        for(int i = 0; i < playerCount*2; i++)
-        {
-            drumInputStrengths[i] = 0;
-        }
-        
-        string message = messageListener.message;
-        if (message != null)
-        {
-            sections = message.Split(":");
-           //Debug.Log(message);
-            if (sections.Length > 1)
-            {
-                drumInputStrengths[Int32.Parse(sections[0])] = Int32.Parse(sections[1]);
-            }
-            messageListener.message = null;
-        }
-    }
-
     private bool checkCorrectDrumHit(int drumIndex, float velocity)
     {
         if (beatManager.beatQueues[drumIndex].Count > 0) 
@@ -263,6 +239,7 @@ public class BeatmapScript : MonoBehaviour
                 //Register left drum hit and perform code
                 if ((drumInputStrengths[i*2] > 0 || midiHandler.midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
                 {
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiHandler.midiInputVelocities[i*2], 1.0f);
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
                         fireballSpawner.spawn(i);
@@ -272,13 +249,13 @@ public class BeatmapScript : MonoBehaviour
                     }
                     beatUI.hitSwell(i*2);
 
-                    //freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
 
                 //Register right drum hit and perform code
                 if ((drumInputStrengths[i*2 + 1] > 0 || midiHandler.midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiHandler.midiInputVelocities[i*2 + 1], 1.0f);
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
                         fireballSpawner.spawn(i);
@@ -287,7 +264,6 @@ public class BeatmapScript : MonoBehaviour
                         hit = true;
                     }
                     beatUI.hitSwell(i*2 + 1);
-                    //freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }
             }
@@ -299,20 +275,29 @@ public class BeatmapScript : MonoBehaviour
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
         audioManager.PlayBackgroundTrack();
+
+        
+        VisualElement ending = GameObject.Find("EndScore").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Canvas");
+        VisualElement beatSpawnUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("ScreenContainer");      
+        ending.style.opacity = new StyleFloat(0f);
+        beatSpawnUI.style.opacity = new StyleFloat(1f);
     }
 
     // Update is called once per frame
     void Update()
     {
         //13
-        //handleTerrainBeatResponse();
-        handleDrumInput();       
+        //handleTerrainBeatResponse();      
 
         beatUI.startLevelUI();
 
         //Manually exit level at any time
         if (Input.GetKey(KeyCode.Escape)) {            
             StartCoroutine(sceneSwitch("2MissionSelect"));
+        }
+
+        if (Input.GetKey(KeyCode.Alpha9)) {             
+            loadScreen.EndScreenFade();       
         }
 
         float countdown = introDelay - introTimer;
@@ -371,7 +356,7 @@ public class BeatmapScript : MonoBehaviour
                     waypointMover.startMove();
                     firstHit = true;
                 }
-                //freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
             
             }
             timer += Time.deltaTime;  

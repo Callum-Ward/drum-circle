@@ -37,7 +37,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                 {
                     CameraFPS = FPS.FPS30,
                     ColorResolution = ColorResolution.Off,
-                    DepthMode = DepthMode.NFOV_Unbinned,
+                    DepthMode = DepthMode.NFOV_2x2Binned,
                     WiredSyncMode = WiredSyncMode.Standalone,
                 });
 
@@ -46,7 +46,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                 var deviceCalibration = device.GetCalibration();
                 UnityEngine.Debug.Log("calibrated");
 
-                using (Tracker tracker = Tracker.Create(deviceCalibration, new TrackerConfiguration() { ProcessingMode = TrackerProcessingMode.Cpu, SensorOrientation = SensorOrientation.Default }))
+                using (Tracker tracker = Tracker.Create(deviceCalibration, new TrackerConfiguration() { ProcessingMode = TrackerProcessingMode.DirectML, SensorOrientation = SensorOrientation.Default }))
                 {
 
                     UnityEngine.Debug.Log("Body tracker created.");
@@ -70,7 +70,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                 IsRunning = true;
                                 // Get number of bodies in the current frame.
                                 currentFrameData.NumOfBodies = frame.NumberOfBodies;
-                                UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
+                                //UnityEngine.Debug.Log(currentFrameData.NumOfBodies);
 
                                 // Copy bodies.
                                 for (uint i = 0; i < currentFrameData.NumOfBodies; i++)

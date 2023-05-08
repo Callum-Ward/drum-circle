@@ -31,7 +31,7 @@ public class OakBranch : Branch
         foreach (var leaf in leaves)
         {
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
-            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 7f /* * (maxLength / tree.length)*/;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 15 /* * (maxLength / tree.length)*/;
         }
     }
 }
