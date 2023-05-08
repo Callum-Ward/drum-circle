@@ -41,7 +41,6 @@ public class UIMainMenu : MonoBehaviour
     }
 
     public void Update() {
-        VisualElement startButton = mainMenu.Q<VisualElement>("StartButton");
         if (Input.GetKey(KeyCode.LeftArrow)) {
             StartCoroutine(sceneSwitch());
         }

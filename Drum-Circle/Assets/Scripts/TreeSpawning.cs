@@ -73,6 +73,7 @@ public class TreeSpawning : MonoBehaviour
             beachIslandSpawns.Add(new Vector3(650,101,503));  
             beachIslandSpawns.Add(new Vector3(650,110,385));
 
+
             closestSpawn = new Vector3(0, 0, 0);
 
             getSpawnLocation(); //update the closest spawn so when game starts cameras face closest island spawn
@@ -89,16 +90,47 @@ public class TreeSpawning : MonoBehaviour
         }
 
         Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);
+        if(nextWaypoint == null)
+        {
+            Vector3 pos = new Vector3(
+                currentTree.position.x,
+                Terrain.activeTerrain.SampleHeight(new Vector3(currentTree.position.x, 0, currentTree.position.z)) + Terrain.activeTerrain.transform.position.y,
+                currentTree.position.z
+            );
+            return new Tuple<Vector3, bool>(pos, false);
+        }
+
+        
+        Vector3 nextPosition = new Vector3(
+            nextWaypoint.position.x,
+            Terrain.activeTerrain.SampleHeight(new Vector3(nextWaypoint.position.x, 0, nextWaypoint.position.z)) + Terrain.activeTerrain.transform.position.y,
+            nextWaypoint.position.z
+        );
+        
         if(currentTree == null)
         {
-            return new Tuple<Vector3, bool>(nextWaypoint.position, true);
+            pendingTree = true;
+            currentTree = nextWaypoint;
+            return new Tuple<Vector3, bool>(nextPosition, true);
         }
-        if(distanceSqrdFrom(platform.transform.position, currentTree.position) >= distanceSqrdFrom(platform.transform.position, nextWaypoint.position))
+
+        Vector3 currentPosition = new Vector3(
+            currentTree.position.x,
+            Terrain.activeTerrain.SampleHeight(new Vector3(currentTree.position.x, 0, currentTree.position.z)) + Terrain.activeTerrain.transform.position.y,
+            currentTree.position.z
+        );
+
+        if(pendingTree)
+        {
+            return new Tuple<Vector3, bool>(currentPosition, false);
+        }
+        if(3 * distanceSqrdFrom(platform.transform.position, currentPosition) >= distanceSqrdFrom(platform.transform.position, nextPosition))
         {
             pendingTree = true;
-            return new Tuple<Vector3, bool>(nextWaypoint.position, true);
+            currentTree = nextWaypoint;
+            return new Tuple<Vector3, bool>(nextPosition, true);
         }
-        return new Tuple<Vector3, bool>(currentTree.position, false);
+        return new Tuple<Vector3, bool>(currentPosition, false);
     }
 
     public void setScene(int sceneNo)
@@ -132,9 +164,8 @@ public class TreeSpawning : MonoBehaviour
         playerTreeCount[playerNo - 1] += 1;
         treeObjs.Add(newTree);
 
-        currentTree = newTree.transform;
         pendingTree = false;
-        Debug.Log("spawned tree at " + location);
+        Debug.Log("spawned tree at " + location + ", from " + platform.transform.position);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
     {
@@ -205,7 +236,7 @@ public class TreeSpawning : MonoBehaviour
                         }
                     }
                     treePos = getRandomSpawn(closestSpawn, closestSpawn.y,0);
-                    //Debug.Log(treePos);
+                    Debug.Log("Closest " + closestSpawn + ", platform " + platform.transform.position);
                     if (treePos.y > waterLevel) validLocation = true; //prevent trees spawning under water
                     break;
             }
