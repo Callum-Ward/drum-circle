@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cherry Branch
       objectReference: {fileID: 0}
+    - target: {fileID: 5843689298843814379, guid: 62e8fe4c93fafea4587bf8e0910ebad3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 5843689298843814380, guid: 62e8fe4c93fafea4587bf8e0910ebad3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Procedural Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 16
   m_IsActive: 1
 --- !u!4 &3693536449023071380
 Transform:
@@ -56,6 +56,7 @@ MonoBehaviour:
   lengthDecay: 0.33
   directionNoise: 0.58
   maxDepth: 1
+  isFullyGrown: 0
   lod: 0
 --- !u!33 &3693536448450299987
 MeshFilter:

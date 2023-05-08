@@ -17,7 +17,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 18
   m_IsActive: 1
 --- !u!4 &2915430925563637615
 Transform:
@@ -60,7 +60,6 @@ MonoBehaviour:
   maxWidth: 0
   width: 0
   mesh: {fileID: 0}
-  leavesNo: 2
 --- !u!33 &2915430925563637602
 MeshFilter:
   m_ObjectHideFlags: 0
