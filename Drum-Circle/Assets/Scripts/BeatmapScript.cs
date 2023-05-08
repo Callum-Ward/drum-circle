@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.SceneManagement;
@@ -299,6 +300,12 @@ public class BeatmapScript : MonoBehaviour
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
         audioManager.PlayBackgroundTrack();
+
+        
+        VisualElement ending = GameObject.Find("EndScore").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Canvas");
+        VisualElement beatSpawnUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("ScreenContainer");      
+        ending.style.opacity = new StyleFloat(0f);
+        beatSpawnUI.style.opacity = new StyleFloat(1f);
     }
 
     // Update is called once per frame
@@ -313,6 +320,10 @@ public class BeatmapScript : MonoBehaviour
         //Manually exit level at any time
         if (Input.GetKey(KeyCode.Escape)) {            
             StartCoroutine(sceneSwitch("2MissionSelect"));
+        }
+
+        if (Input.GetKey(KeyCode.Alpha9)) {             
+            loadScreen.EndScreenFade();       
         }
 
         float countdown = introDelay - introTimer;
