@@ -47,7 +47,6 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public RhythmSpawner beatSpawner;
     [HideInInspector] public TreeSpawning treeSpawner;
     [HideInInspector] public MidiHandler midiHandler;
-    [HideInInspector] public MessageListener messageListener;
     [HideInInspector] public Terrain terrain;
     [HideInInspector] public TutorialScript tutorialScript;
     [HideInInspector] public BeatUI beatUI;
@@ -82,7 +81,6 @@ public class BeatmapScript : MonoBehaviour
         fireballSpawner = GameObject.Find("FireballSpawner").GetComponent<FireballSpawner>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
-        messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
         waypointMover = GameObject.Find("platform").GetComponent<WaypointMover>();
 
@@ -219,29 +217,6 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
-
-    private void handleDrumInput()
-    {
-        
-        //Checks if there was an input in the data stream
-        for(int i = 0; i < playerCount*2; i++)
-        {
-            drumInputStrengths[i] = 0;
-        }
-        
-        string message = messageListener.message;
-        if (message != null)
-        {
-            sections = message.Split(":");
-           //Debug.Log(message);
-            if (sections.Length > 1)
-            {
-                drumInputStrengths[Int32.Parse(sections[0])] = Int32.Parse(sections[1]);
-            }
-            messageListener.message = null;
-        }
-    }
-
     private bool checkCorrectDrumHit(int drumIndex, float velocity)
     {
         if (beatManager.beatQueues[drumIndex].Count > 0) 
@@ -312,8 +287,7 @@ public class BeatmapScript : MonoBehaviour
     void Update()
     {
         //13
-        //handleTerrainBeatResponse();
-        handleDrumInput();       
+        //handleTerrainBeatResponse();      
 
         beatUI.startLevelUI();
 
