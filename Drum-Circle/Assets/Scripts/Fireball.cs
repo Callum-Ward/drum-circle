@@ -10,7 +10,7 @@ public class Fireball : MonoBehaviour
     public GameObject explosionVFX;
 
     public float speed = 1200f;
-    public float rotationSpeed = 200f;
+    public float rotationSpeed = 10f;
 
     private Vector3 heading;
     private bool willSpawn;
@@ -20,11 +20,6 @@ public class Fireball : MonoBehaviour
     {
         this.playerIndex = playerIndex;
 
-        if(treeSpawner.pendingTree)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
         Tuple<Vector3, bool> closestSpawn = treeSpawner.getClosestSpawn();
         heading = closestSpawn.Item1;

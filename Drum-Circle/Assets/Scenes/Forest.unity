@@ -184,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4285810861682418591, guid: 37240c54aa894f64b8ec71540b47e2e6, type: 3}
       propertyPath: growthRate
-      value: 2.07
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4285810861682418591, guid: 37240c54aa894f64b8ec71540b47e2e6, type: 3}
       propertyPath: trees.Array.size
@@ -4548,7 +4548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501614, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: width
-      value: 0.056
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501615, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: m_RootOrder
@@ -4556,15 +4556,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501615, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: m_LocalScale.x
-      value: 30
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501615, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: m_LocalScale.y
-      value: 30
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501615, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: m_LocalScale.z
-      value: 30
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7502112448817501615, guid: 559b766d5ce1fdd43a360f313686bd0c, type: 3}
       propertyPath: m_LocalPosition.x
