@@ -352,18 +352,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
 
-        int index = random.Next() % additiveLayers.Length;
-        while(this.activeLayerIndices.Contains(index))
-        {
-            if(index < additiveLayers.Length)
-            {
-                index += 1;
-            }
-            else
-            {
-                index = 0;
-            }
-        }
+        int index = this.activeLayerIndices.Count;
 
         this.activeLayerIndices.Add(index);
         FadeInLayerTrack(index, "slow");
@@ -377,9 +366,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
 
-        int index = random.Next() % activeLayerIndices.Count;
-        index = index == 0 ? 1 : index;
-        int value = this.activeLayerIndices[index];
+        int value = this.activeLayerIndices[this.activeLayerIndices.Count - 1];
         this.activeLayerIndices.Remove(value);
         FadeOutLayerTrack(value);
         Debug.Log("Faded Out Layer " + value.ToString());
