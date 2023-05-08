@@ -17754,7 +17754,7 @@ PrefabInstance:
       objectReference: {fileID: 4700879792446525854, guid: 8a4f5564a9d7b5e45a55fa529cf39d59, type: 3}
     - target: {fileID: 2586650214233617736, guid: e74816f584c974a4db489a6ee5e14461, type: 3}
       propertyPath: GrowingTrees
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2586650214233617742, guid: e74816f584c974a4db489a6ee5e14461, type: 3}
       propertyPath: m_Name

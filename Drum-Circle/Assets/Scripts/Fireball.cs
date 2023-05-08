@@ -44,7 +44,7 @@ public class Fireball : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colliding at " + transform.position + " -> " + heading);
+        //Debug.Log("Colliding at " + transform.position + " -> " + heading);
         if(willSpawn)
         {
             treeSpawner.spawnAtLocation(playerIndex+1, heading, true);

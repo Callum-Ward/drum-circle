@@ -88,8 +88,6 @@ public class TreeSpawning : MonoBehaviour
             return new Tuple<Vector3, bool>(getSpawnLocation(), true);
         }
 
-        
-
         Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);
         if(nextWaypoint == null)
         {
@@ -166,7 +164,7 @@ public class TreeSpawning : MonoBehaviour
         treeObjs.Add(newTree);
 
         pendingTree = false;
-        Debug.Log("spawned tree at " + location);
+        Debug.Log("spawned tree at " + location + ", from " + platform.transform.position);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
     {
@@ -237,7 +235,7 @@ public class TreeSpawning : MonoBehaviour
                         }
                     }
                     treePos = getRandomSpawn(closestSpawn, closestSpawn.y,0);
-                    //Debug.Log(treePos);
+                    Debug.Log("Closest " + closestSpawn + ", platform " + platform.transform.position);
                     if (treePos.y > waterLevel) validLocation = true; //prevent trees spawning under water
                     break;
             }
