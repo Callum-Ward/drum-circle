@@ -41,6 +41,7 @@ public class BeatUI : MonoBehaviour
 
     BeatmapScript beatmapScript;
     ScoreManager scoreManager;
+    VisualElement freestyleUI;
 
     TemplateContainer[] beatSpawnContainer = new TemplateContainer[6];
 
@@ -66,6 +67,7 @@ public class BeatUI : MonoBehaviour
     {
         root = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement;
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        freestyleUI = GameObject.Find("FreestyleUI").GetComponent<UIDocument>().rootVisualElement;
 
         playerTag1 = root.Q<Label>("Player1");
         playerTag2 = root.Q<Label>("Player2");
@@ -230,6 +232,30 @@ public class BeatUI : MonoBehaviour
         StartCoroutine(FadeOutCoroutine(introTimer));
     }
 
+    public void FreestyleUIStart(int PlayerNo) {
+        string player = "P" + (PlayerNo + 1).ToString() + "Free";
+        freestyleUI.Q<Label>(player).style.opacity = 1f;
+    }
+
+    public void FreestyleOtherPlayer(int PlayerNo) {
+        string player = "P" + (PlayerNo + 1).ToString() + "Free";
+        freestyleUI.Q<Label>(player).text = "Player " + PlayerNo.ToString() + "\n respond";
+        freestyleUI.Q<Label>(player).style.opacity = 1f;
+    }
+
+    public void FreestyleTimerStart(int PlayerNo, float time) {
+        string player = "P" + (PlayerNo + 1).ToString() + "Free";
+        freestyleUI.Q<Label>(player).text = Mathf.Ceil(time).ToString();
+    }
+
+    public void FreestyleTimerStop(int PlayerNo) {
+        string player = "P" + (PlayerNo + 1).ToString() + "Free";
+        freestyleUI.Q<Label>(player).text = "Play!";
+        StartCoroutine(FadeOutCoroutine(freestyleUI.Q<Label>(player)));
+    }
+
+    
+
     public void FreestyleNoticeStart(int playerIndex)
     {
         Debug.Log("FNS");
@@ -265,8 +291,14 @@ public class BeatUI : MonoBehaviour
     void Update() 
     {
         
-        if(Input.GetKey(KeyCode.UpArrow)) {
-            Lane1L.AddToClassList("glow-class:glow");
+        if(Input.GetKey(KeyCode.Alpha1)) {
+            FreestyleUIStart(0);
+        }
+        if(Input.GetKey(KeyCode.Alpha2)) {
+            FreestyleTimerStart(0, 16);
+        }
+        if(Input.GetKey(KeyCode.Alpha3)) {
+            FreestyleTimerStop(0);
         }
 
         if(start == 2)
