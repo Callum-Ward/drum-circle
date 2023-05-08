@@ -263,6 +263,7 @@ public class BeatmapScript : MonoBehaviour
                 //Register left drum hit and perform code
                 if ((drumInputStrengths[i*2] > 0 || midiHandler.midiInputVelocities[i*2] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
                 {
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiHandler.midiInputVelocities[i*2], 1.0f);
                     if (checkCorrectDrumHit(i*2, midiHandler.midiInputVelocities[i*2]))
                     {
                         fireballSpawner.spawn(i);
@@ -272,13 +273,13 @@ public class BeatmapScript : MonoBehaviour
                     }
                     beatUI.hitSwell(i*2);
 
-                    //freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 0, midiInputVelocities[i*2], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2);
                 }
 
                 //Register right drum hit and perform code
                 if ((drumInputStrengths[i*2 + 1] > 0 || midiHandler.midiInputVelocities[i*2 + 1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
+                    freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiHandler.midiInputVelocities[i*2 + 1], 1.0f);
                     if (checkCorrectDrumHit(i*2 + 1, midiHandler.midiInputVelocities[i*2 + 1]))
                     {
                         fireballSpawner.spawn(i);
@@ -287,7 +288,6 @@ public class BeatmapScript : MonoBehaviour
                         hit = true;
                     }
                     beatUI.hitSwell(i*2 + 1);
-                    //freestyleHandler.handleDrumHitFreestyle(beatSpawner, audioManager, audioAnalyser, i, 1, midiInputVelocities[i*2 + 1], 1.0f);
                     midiHandler.clearMidiInputVelocities(i * 2 + 1);
                 }
             }
@@ -371,7 +371,7 @@ public class BeatmapScript : MonoBehaviour
                     waypointMover.startMove();
                     firstHit = true;
                 }
-                //freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
+                freestyleHandler.handleFreestyle(beatSpawner, beatUI, audioManager, averagedTime);
             
             }
             timer += Time.deltaTime;  

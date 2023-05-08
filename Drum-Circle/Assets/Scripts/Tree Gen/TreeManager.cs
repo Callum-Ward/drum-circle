@@ -39,17 +39,16 @@ public class TreeManager : MonoBehaviour
 
         else
         {
-            var trees = GameObject.FindGameObjectsWithTag("Procedural Tree");
-            var growingTrees = new GameObject[] { };
-            foreach (var t in trees)
+            var growingTrees = new List<GameObject>( GameObject.FindGameObjectsWithTag("Procedural Tree") );
+            foreach (var t in growingTrees)
             {
                 var tree = t.GetComponent<Tree>();
-                if (!tree.isFullyGrown)
+                if (tree.isFullyGrown)
                 {
-                    growingTrees.Append(t);
+                    growingTrees.Remove(t);
                 }
             }
-            this.trees = growingTrees;
+            this.trees = growingTrees.ToArray();
 
             if (hitStatus == true)
             {
@@ -58,7 +57,14 @@ public class TreeManager : MonoBehaviour
                 {
                     var tree = t.GetComponent<Tree>();
 
-                    tree.Grow(scoreManager.ScoreMultiplier[0] * growthRate);
+                    float scoreMul = 0;
+                    foreach (var mul in scoreManager.ScoreMultiplier) {
+                        scoreMul += mul;
+                    }
+                    if (scoreMul < 3) scoreMul = 3;
+                    scoreMul = scoreMul / 3f;
+
+                    tree.Grow(scoreMul * growthRate);
 
                     tree.AddBranches(0);
                 }

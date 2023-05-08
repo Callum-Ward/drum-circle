@@ -4,5 +4,6 @@ IntelliJ IDEA
 
 # VS Code
 *.vscode
+Drum-Circle/Packages/*
 
 
