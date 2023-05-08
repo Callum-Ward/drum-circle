@@ -13,11 +13,24 @@ public class camera_front : MonoBehaviour
     public int yOffset = 4;
     private Vector3 currentWaypoint;
     private float moveSpeed = 5;
+    
 
 
     // Start is called before the first frame update
     void Start()
     {
+        currentWaypoint = (platform.transform.position + (platformDistance * Vector3.Normalize(platform.transform.position - centre)));
+        transform.position = new Vector3(currentWaypoint.x,currentWaypoint.y + yOffset, currentWaypoint.z); //Vector3.MoveTowards(transform.position, platform.transform.position, moveSpeed * Time.deltaTime);
+        transform.LookAt(centre);
+        leftCam.transform.position = transform.position;
+        rightCam.transform.position = transform.position;
+
+
+        Vector3 leftRotation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - sideCamRot, transform.eulerAngles.z);
+        Vector3 rightRotation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + sideCamRot, transform.eulerAngles.z);
+
+        leftCam.transform.rotation = Quaternion.Euler(leftRotation);
+        rightCam.transform.rotation = Quaternion.Euler(rightRotation);
      
     }
     // Update is called once per frame
@@ -27,12 +40,13 @@ public class camera_front : MonoBehaviour
         transform.position = new Vector3(currentWaypoint.x,currentWaypoint.y + yOffset, currentWaypoint.z); //Vector3.MoveTowards(transform.position, platform.transform.position, moveSpeed * Time.deltaTime);
         transform.LookAt(centre);
 
-        leftCam.transform.position = transform.position;
-        rightCam.transform.position = transform.position;
+        // leftCam.transform.position = transform.position;
+        // rightCam.transform.position = transform.position;
 
-        Vector3 leftRotation = new Vector3(0, transform.eulerAngles.y - sideCamRot, 0);
-        Vector3 rightRotation = new Vector3(0, transform.eulerAngles.y + sideCamRot, 0);
-        leftCam.transform.rotation = Quaternion.Euler(leftRotation);
-        rightCam.transform.rotation = Quaternion.Euler(rightRotation);
+        //Vector3 leftRotation = new Vector3(0, transform.eulerAngles.y - sideCamRot, 0);
+        //Vector3 rightRotation = new Vector3(0, transform.eulerAngles.y + sideCamRot, 0);
+
+        // leftCam.transform.rotation = Quaternion.Euler(leftRotation);
+        // rightCam.transform.rotation = Quaternion.Euler(rightRotation);
     }
 }

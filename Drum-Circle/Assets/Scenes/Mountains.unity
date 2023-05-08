@@ -1194,9 +1194,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 904699032}
   - {fileID: 2136069050}
-  - {fileID: 1749875154}
   - {fileID: 1893477891}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -13002,11 +13000,23 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 72001514}
+    m_TransformParent: {fileID: 2136069050}
     m_Modifications:
     - target: {fileID: 7682656106818492276, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_Name
       value: Left Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 7682656106818492280, guid: afe12002e55481346b07bac32e977a40, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7682656106818492280, guid: afe12002e55481346b07bac32e977a40, type: 3}
+      propertyPath: field of view
+      value: 62.190456
+      objectReference: {fileID: 0}
+    - target: {fileID: 7682656106818492280, guid: afe12002e55481346b07bac32e977a40, type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7682656106818492280, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_TargetDisplay
@@ -13018,15 +13028,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7682656106818492281, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 223.10907
+      value: 83.879074
       objectReference: {fileID: 0}
     - target: {fileID: 7682656106818492281, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.20587
+      value: 0.7558689
       objectReference: {fileID: 0}
     - target: {fileID: 7682656106818492281, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 251.17445
+      value: 92.41446
       objectReference: {fileID: 0}
     - target: {fileID: 7682656106818492281, guid: afe12002e55481346b07bac32e977a40, type: 3}
       propertyPath: m_LocalRotation.w
@@ -23579,7 +23589,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 72001514}
+    m_TransformParent: {fileID: 2136069050}
     m_Modifications:
     - target: {fileID: 7668978042587688839, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_Name
@@ -23587,19 +23597,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 223.10907
+      value: 83.879074
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.205868
+      value: 0.755867
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 251.17445
+      value: 92.41446
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_LocalRotation.w
@@ -23628,6 +23638,18 @@ PrefabInstance:
     - target: {fileID: 7668978042587688840, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668978042587688843, guid: 566c98250473f5440acf415abc99c161, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668978042587688843, guid: 566c98250473f5440acf415abc99c161, type: 3}
+      propertyPath: field of view
+      value: 62.190456
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668978042587688843, guid: 566c98250473f5440acf415abc99c161, type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7668978042587688843, guid: 566c98250473f5440acf415abc99c161, type: 3}
       propertyPath: m_TargetDisplay
@@ -25110,7 +25132,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 72001514}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1893477892
 MonoBehaviour:
@@ -27235,9 +27257,11 @@ Transform:
   m_LocalPosition: {x: 139.23, y: 29.45, z: 158.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 904699032}
+  - {fileID: 1749875154}
   m_Father: {fileID: 72001514}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2136069051
 MonoBehaviour:
@@ -27254,7 +27278,7 @@ MonoBehaviour:
   platform: {fileID: 2129614926}
   leftCam: {fileID: 904699031}
   rightCam: {fileID: 1749875155}
-  sideCamRot: 70
+  sideCamRot: 90
   centre: {x: 280, y: 19, z: 272}
   platformDistance: 10
   yOffset: 4
@@ -27312,7 +27336,7 @@ Camera:
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
   m_FocalLength: 20.78461
@@ -27324,7 +27348,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 70
+  field of view: 62.190456
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
