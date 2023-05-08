@@ -32,7 +32,8 @@ public class TreeSpawning : MonoBehaviour
 
     //last tree to spawn
     private Transform currentTree;
-    [HideInInspector] public bool pendingTree;
+    [HideInInspector] public int pendingTreeStage = 3;
+    private int pendingTreeDelay = 3;
     
     private int lastTreeIndex; 
     private Vector3 lastGeneratedLocation;
@@ -87,17 +88,19 @@ public class TreeSpawning : MonoBehaviour
     {
         if(scene != 2)
         {
-            if(pendingTree)
+           if(pendingTreeStage < pendingTreeDelay)
             {
+                pendingTreeStage += pendingTreeStage == -1 ? 0 : 1;
                 return new Tuple<Vector3, bool>(lastGeneratedLocation, false);
             }
             else
             {
-                pendingTree = true;
+                pendingTreeStage = -1;
                 lastGeneratedLocation = getSpawnLocation();
                 return new Tuple<Vector3, bool>(lastGeneratedLocation, true);
             }
         }
+        pendingTreeDelay = 1;
 
         Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);
         if(nextWaypoint == null)
@@ -119,7 +122,7 @@ public class TreeSpawning : MonoBehaviour
         
         if(currentTree == null)
         {
-            pendingTree = true;
+            pendingTreeStage = 0;
             currentTree = nextWaypoint;
             return new Tuple<Vector3, bool>(nextPosition, true);
         }
@@ -130,13 +133,13 @@ public class TreeSpawning : MonoBehaviour
             currentTree.position.z
         );
 
-        if(pendingTree)
+        if(pendingTreeStage < pendingTreeDelay)
         {
             return new Tuple<Vector3, bool>(currentPosition, false);
         }
         if(3 * distanceSqrdFrom(platform.transform.position, currentPosition) >= distanceSqrdFrom(platform.transform.position, nextPosition))
         {
-            pendingTree = true;
+            pendingTreeStage = 0;
             currentTree = nextWaypoint;
             return new Tuple<Vector3, bool>(nextPosition, true);
         }
@@ -174,7 +177,7 @@ public class TreeSpawning : MonoBehaviour
         playerTreeCount[playerNo - 1] += 1;
         treeObjs.Add(newTree);
 
-        pendingTree = false;
+        pendingTreeStage += 1;
         Debug.Log("spawned tree at " + location + ", from " + platform.transform.position);
     }
     private float distanceSqrdFrom(Vector3 start, Vector3 end)
