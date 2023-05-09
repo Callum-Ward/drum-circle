@@ -9,7 +9,7 @@ public class Fireball : MonoBehaviour
 
     public GameObject explosionVFX;
 
-    public float speed = 1200f;
+    public float speed = 1600f;
     public float rotationSpeed = 10f;
 
     private Vector3 heading;
