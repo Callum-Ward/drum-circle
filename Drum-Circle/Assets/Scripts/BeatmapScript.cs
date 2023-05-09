@@ -275,8 +275,9 @@ public class BeatmapScript : MonoBehaviour
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
         audioManager.PlayBackgroundTrack();
+    }
 
-        
+    private void resetUI() {        
         VisualElement ending = GameObject.Find("EndScore").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Canvas");
         VisualElement beatSpawnUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("ScreenContainer");      
         ending.style.opacity = new StyleFloat(0f);
@@ -337,6 +338,7 @@ public class BeatmapScript : MonoBehaviour
             {
                 int queueIndex  = beatSpawner.spawnOnTime(timer + inputDelay);
                 checkDrumHit();
+                resetUI();
             }
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
