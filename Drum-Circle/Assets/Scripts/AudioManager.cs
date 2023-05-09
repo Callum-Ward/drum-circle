@@ -219,7 +219,7 @@ public class AudioManager : MonoBehaviour {
     {
         for(int i = 0; i < additiveLayers.Length; i++)
         {
-            PlayLayerTrack(i, i == 0 ? volume : 0f);
+            PlayLayerTrack(i, i == 0 ? volume : volume);
         }
         this.activeLayerIndices.Add(0);
 
@@ -317,7 +317,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
 
-        FadeInTrack(additiveLayers[index], speed, 0.75f);
+        FadeInTrack(additiveLayers[index], speed, 0.5f);
     }
 
     public void FadeOutLayerTrack(int index)

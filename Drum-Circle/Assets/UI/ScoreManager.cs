@@ -55,12 +55,12 @@ public class ScoreManager : MonoBehaviour
             totalCombo += ScoreMultiplier[i];
         }
         
-        if(totalCombo >= 1 + ((audioManager.addedLayersCount()+1) * 3))
+        if(totalCombo >= 2 + ((audioManager.addedLayersCount()+1) * 2))
         {
             audioManager.AddLayer();
         }
-        else if (totalCombo < 1 + ((audioManager.addedLayersCount()) * 2) || totalCombo == 3) {
-            audioManager.RemoveLayer();
+        else if (totalCombo < 2 + ((audioManager.addedLayersCount()) * 2) || totalCombo == 3) {
+            //audioManager.RemoveLayer();
         }
 
         endScore.Q<Label>("ScoreT").text = (playerScores[0] + playerScores[1] + playerScores[2]).ToString();

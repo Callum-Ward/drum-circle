@@ -13,8 +13,8 @@ public class camera_front : MonoBehaviour
     public int yOffset = 4;
     public int scene;
     private Vector3 currentWaypoint;
-    private float moveSpeed = 15;
-    public float rotationSpeed = 5f;  // The speed of rotation
+    private float moveSpeed = 15f;
+    public float rotationSpeed = 1f;  // The speed of rotation
 
 
 

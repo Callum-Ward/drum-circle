@@ -54,6 +54,7 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public WaypointMover waypointMover;
     [HideInInspector] public string[] sections;
     [HideInInspector] public string receivedString;
+    main main;
     private const int beatmapWidth = 10;
 
 
@@ -83,6 +84,8 @@ public class BeatmapScript : MonoBehaviour
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         beatUI = GameObject.Find("BeatSpawnUI").GetComponent<BeatUI>();
         waypointMover = GameObject.Find("platform").GetComponent<WaypointMover>();
+        main = GameObject.Find("mainTracker").GetComponent<main>();
+
 
         treeManager = GameObject.Find("TreeManager").GetComponent<TreeManager>();
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
@@ -105,7 +108,7 @@ public class BeatmapScript : MonoBehaviour
 
         loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
         loadScreen.LoadScreenFadeOut();
-        scenelength.Add("Forest", 214);
+        scenelength.Add("Forest", 209);
         scenelength.Add("Mountains", 283);
         scenelength.Add("Beach", 271);
     }
@@ -297,9 +300,14 @@ public class BeatmapScript : MonoBehaviour
             StartCoroutine(sceneSwitch("2MissionSelect"));
         }
 
-        if (Input.GetKey(KeyCode.Alpha9)) {             
-            loadScreen.EndScreenFade();       
+        // if (Input.GetKey(KeyCode.Alpha9)) {             
+        //     loadScreen.EndScreenFade();       
+        // }
+        if (Input.GetKey(KeyCode.Alpha8)) {
+                resetUI();    
         }
+
+             
 
         float countdown = introDelay - introTimer;
 
@@ -307,14 +315,16 @@ public class BeatmapScript : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene(); 
         if(timer > scenelength[scene.name]) {    
             loadScreen.EndScreenFade();          
-            if(timer > scenelength[scene.name]+5) {
+            if(timer > scenelength[scene.name]+2) {
                 if ((drumInputStrengths[0] > 0 || midiHandler.midiInputVelocities[0] > 0.0f || Input.GetKeyDown(KeyCode.LeftArrow)))
                 {
+                    loadScreen.endIn = false;
                     midiHandler.clearMidiInputVelocities(0);
                     StartCoroutine(sceneSwitch("2MissionSelect"));                
                 }
                 else if ((drumInputStrengths[1] > 0 || midiHandler.midiInputVelocities[1] > 0.0f || Input.GetKeyDown(KeyCode.RightArrow)))
                 {
+                    loadScreen.endIn = false;
                     midiHandler.clearMidiInputVelocities(1);
                     StartCoroutine(sceneSwitch("2MissionSelect"));                
                 }
@@ -325,6 +335,7 @@ public class BeatmapScript : MonoBehaviour
         if (introTimer <= introDelay && !running)
         {
             introTimer += Time.deltaTime;
+            resetUI();     
         }
         else if(!running)
         {
@@ -338,7 +349,8 @@ public class BeatmapScript : MonoBehaviour
             {
                 int queueIndex  = beatSpawner.spawnOnTime(timer + inputDelay);
                 checkDrumHit();
-                resetUI();
+                resetUI();                
+                main.getTracker();
             }
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
@@ -365,10 +377,14 @@ public class BeatmapScript : MonoBehaviour
         }
 
         if(countdown <= 5 && countdown > 4) {
+            
+            resetUI();     
             beatUI.IntroTimerStart();
         }
         else if (introDelay - introTimer <= 4 && countdown > 0) {
             beatUI.IntroTimerUpdate(countdown);
+            
+                resetUI();     
         }
         else if (countdown <= 0) {
             beatUI.IntroTimerStop();

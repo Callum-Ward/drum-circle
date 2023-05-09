@@ -122,7 +122,7 @@ public class TrackerHandler : MonoBehaviour
 
         // render the bodies
         for (int i = 0; i < closestBodies.Length; i++) {
-            UnityEngine.Debug.Log(i);
+            //UnityEngine.Debug.Log(i);
             Body skeleton = trackerFrameData.Bodies[closestBodies[i]];
             int index = findIndexFromId(trackerFrameData, (int)skeleton.Id);
             // UnityEngine.Debug.Log(index + ": " + closestBodies[i].dist);

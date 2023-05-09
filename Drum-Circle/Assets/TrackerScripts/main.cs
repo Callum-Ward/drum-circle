@@ -9,6 +9,7 @@ public class main : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         //tracker ids needed for when there are two trackers
         const int TRACKER_ID = 0;
         m_skeletalTrackingProvider = new SkeletalTrackingProvider(TRACKER_ID);
@@ -26,6 +27,10 @@ public class main : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void getTracker() {
+        m_tracker = GameObject.Find("tracker");
     }
 
     void OnApplicationQuit()

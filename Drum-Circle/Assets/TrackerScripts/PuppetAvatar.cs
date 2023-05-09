@@ -49,6 +49,7 @@ public class PuppetAvatar : MonoBehaviour
             default: return HumanBodyBones.LastBone;
         }
     }
+
     private void Start()
     {
         PuppetAnimator1 = transform.GetChild(0).GetComponent<Animator>();

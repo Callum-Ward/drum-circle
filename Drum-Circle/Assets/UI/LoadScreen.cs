@@ -16,8 +16,8 @@ public class LoadScreen : MonoBehaviour
     bool load = false;
     float timer = 0;
 
-    bool endIn = false;
-    bool endout = false;
+    public bool endIn = false;
+    public bool endout = false;
 
     // Start is called before the first frame update
     void Awake()
