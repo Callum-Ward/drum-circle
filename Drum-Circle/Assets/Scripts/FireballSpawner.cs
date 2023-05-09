@@ -7,6 +7,7 @@ public class FireballSpawner : MonoBehaviour
     public GameObject platform;
     public GameObject fireball;
     public GameObject drum;
+    public GameObject cam;
 
     private GameObject[] drums = new GameObject[3];
     private Vector3[] platformOffsets = {new Vector3(-1f, 2f, 2f), new Vector3(0f, 2f, 0f), new Vector3(3f, 1f, 2f)};
@@ -48,7 +49,7 @@ public class FireballSpawner : MonoBehaviour
                 platform.transform.position.y + platformOffsets[playerIndex].y,
                 platform.transform.position.z + platformOffsets[playerIndex].z
         );
-        GameObject newFireball = Instantiate(fireball, pos, transform.rotation) as GameObject;
+        GameObject newFireball = Instantiate(fireball, pos, cam.transform.rotation) as GameObject;
         newFireball.GetComponent<Fireball>().StartUp(playerIndex);
     }
 }
