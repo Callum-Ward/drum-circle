@@ -55,15 +55,15 @@ public class TreeSpawning : MonoBehaviour
             beachIslandSpawns = new List<Vector3>();
             beachIslandSpawns.Add(new Vector3(382, 50,307));  //spawn points encoded (x,radius,z)
 
-            beachIslandSpawns.Add(new Vector3(349,12, 432 ));  
+            beachIslandSpawns.Add(new Vector3(349,24, 432 ));  //12
 
-            beachIslandSpawns.Add(new Vector3(255, 43,224));  
+            beachIslandSpawns.Add(new Vector3(255, 86,224));  //43
 
             beachIslandSpawns.Add(new Vector3(436,80, 120));  
 
-            beachIslandSpawns.Add(new Vector3(639,43, 127));  
+            beachIslandSpawns.Add(new Vector3(639,86, 127));  //43
 
-            beachIslandSpawns.Add(new Vector3(544,29,250));  
+            beachIslandSpawns.Add(new Vector3(544,58,250));  //29
 
             beachIslandSpawns.Add(new Vector3(217,70, 58));  
             beachIslandSpawns.Add(new Vector3(117, 90, 86));  
@@ -119,6 +119,9 @@ public class TreeSpawning : MonoBehaviour
         pendingTreeDelay = 1;
 
         Transform nextWaypoint = treeSpawns.GetNextWaypoint(currentTree);
+        ////
+        nextWaypoint = treeSpawns.GetNextWaypoint(nextWaypoint);
+        ////
         if(nextWaypoint == null)
         {
             Vector3 pos = new Vector3(
