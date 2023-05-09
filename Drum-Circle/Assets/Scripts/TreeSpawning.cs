@@ -29,11 +29,10 @@ public class TreeSpawning : MonoBehaviour
     private List<Vector3> beachIslandSpawns;
     private float radius;
 
-
     //last tree to spawn
     private Transform currentTree;
-    [HideInInspector] public int pendingTreeStage = 3
-    ;
+    [HideInInspector] public int pendingTreeStage = 3;
+    
     private int pendingTreeDelay = 3;
     
     private int lastTreeIndex; 
@@ -256,8 +255,7 @@ public class TreeSpawning : MonoBehaviour
                     break;
                 case 3://beach spawning will choose the cloest island to the platform to spawn trees
 
-                    float minDistance = 20000; //squared distance to spawn location 
-                    
+                    float minDistance = 99999; //squared distance to spawn location 
                     foreach (Vector3 spawnLoc in beachIslandSpawns)
                     {
                         float distance = distanceSqrdFrom(platform.position, spawnLoc);
@@ -285,8 +283,10 @@ public class TreeSpawning : MonoBehaviour
         }
         if (scene == 3 && oldClosestSpawn != closestSpawn)
         {
-            cameraFront.centre = new Vector3(closestSpawn.x, waterLevel, closestSpawn.z);
-            Debug.Log("Camera center updated");
+            Vector3 newCentre = new Vector3(closestSpawn.x, Terrain.activeTerrain.SampleHeight(new Vector3(closestSpawn.x, 0, closestSpawn.z)) + Terrain.activeTerrain.transform.position.y, closestSpawn.z);
+            cameraFront.centre = newCentre;
+
+            Debug.Log("Camera center updated" +  newCentre);
 
         }
 

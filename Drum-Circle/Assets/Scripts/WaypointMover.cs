@@ -15,6 +15,7 @@ public class WaypointMover : MonoBehaviour
     private float moveSpeed = 0f;
     private float moveSpeedMax;
 
+
     // Start is called before the first frame update
 
     void Start()
