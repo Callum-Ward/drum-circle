@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/1MainMenu.unity
     guid: 1a7d6a6c80a77b74b95c984a6b4dd410
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/2MissionSelect.unity
     guid: 96a967f849b20d44eb6b6e1b3cd80fd0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/3MissionOption.unity
     guid: d67a99bc797d97e4b958dd8444c41661
   - enabled: 1
