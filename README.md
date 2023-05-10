@@ -1,50 +1,8 @@
-SCENE SETUP HIERARCHY
+Display cameras are (2,3,4) for (front,left,right)
 
-Audio
-- AA: Ensure correct midis
-- AM: Ensure correct tracks
+Use left right arrow keysi in place of left right drum or MIDI controller with 6 inputs
+(hitting the smallest 'note number' note on the controller should configure the midi handler to use that as player 1's left drum)
 
-avatars
 
-Cameras
-- LC
-- MC: Set camera_front scipt, platform, LC, RC, Side Camera Rotation = 98.5
-- RC: 
-- CameraHandler
-
-Directional Light
-
-Game Logic
-- BeatManager: delete dlay 0.15
-- BeatSpawner
-- FireballSpawner: set platform, Fireball prefab
-- RhythmLogic: delay 6
-- TutorialLogic
-
-Platform
-- Waypoints
-- Platform: Set music duration {218.663, 241.434, 233.833}
-
-Post Processing
-
-Serial Controller
-
-Terrain
-
-Terrain Objects/Assets
-- ...
-
-Tracker
-- tracker
-- mainTracker: set tracker
-
-Trees
-- Tree manager: growth rate 2.07
-- Tree spawner: set proc tree, non-proc tree, platform, camera front, min gap 1.5, scene no.
-
-UI
-- BeatSpawnUI: set template: beatTarget2
-- RhythmTarget
-- ScoreManager
 
 

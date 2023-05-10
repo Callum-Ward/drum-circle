@@ -39,6 +39,9 @@ def print_progress_bar (iteration, total, prefix = '', suffix = '', decimals = 1
     if iteration == total: 
         print()
 
+
+# Creates timestamped map of beat onsets from audio file, denoting each one as an underlying 'beat' or onset, as well onset strength (velocity/volume)
+
 def create_onset_map(path, output, read_onset_strengths=False):
     hop_length = 512
     x, sr = librosa.load(path)

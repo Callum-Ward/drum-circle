@@ -101,9 +101,9 @@ public class BeatmapScript : MonoBehaviour
         drumInputStrengths = new int[this.playerCount*2];
         midiInputVelocities = new float[this.playerCount*2];
 
-        //terrain.terrainData.wavingGrassSpeed = 0.5f;
-        //terrain.terrainData.wavingGrassStrength = 0.5f;
-        //terrain.terrainData.wavingGrassAmount = 0.5f;
+          terrain.terrainData.wavingGrassSpeed = 0.5f;
+        terrain.terrainData.wavingGrassStrength = 0.5f;
+        terrain.terrainData.wavingGrassAmount = 0.5f;
 
         this.freestyleHandler.setScene(this.sceneNumber);
 
