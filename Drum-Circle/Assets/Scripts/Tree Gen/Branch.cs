@@ -1,16 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Net;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-using UnityEngine.Splines;
-using static UnityEngine.GraphicsBuffer;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 public class Branch : MonoBehaviour
@@ -44,10 +34,7 @@ public class Branch : MonoBehaviour
     private Vector2[] uv = new Vector2[] { };
     private int[] triangles = new int[] { };
 
-
-    //[SerializeField] int leavesNo = 5;
-    [HideInInspector]
-    public struct leaf
+    [HideInInspector] public struct leaf
     {
         public GameObject leafObj;
         public Vector3 position;
@@ -57,17 +44,6 @@ public class Branch : MonoBehaviour
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
-    }
-
-    private void Update()
-    {
-        if (!isLeaf)
-        {
-            /*foreach(leaf leaf in leaves)
-            {
-                leaf.leafObj.SetActive(false);
-            }*/
-        }
     }
 
     /*Set up branch parameters*/
@@ -118,6 +94,23 @@ public class Branch : MonoBehaviour
         childB = b;
     }
 
+    /*Return the distance form the start of this branch to the end of the leaf beanch
+    by going through the a children*/
+    float LengthToEnd()
+    {
+        float lengthToEnd = length;
+        var branch = this;
+
+        //recursively go through all the a children and add their length
+        while (branch.childA != null)
+        {
+            branch = branch.childA;
+            lengthToEnd += branch.length;
+        }
+
+        return lengthToEnd;
+    }
+
     /*Grow the branch*/
     public void Grow(float scoreMul)
     {
@@ -125,25 +118,24 @@ public class Branch : MonoBehaviour
 
         maxWidth = widthMul * LengthToEnd();
 
-        //SetLeaves();
-
         if (!isFullyGrown)
         {
+            // Increase length and width
             length += maxLength / 1000 * scoreMul;
-
             width = length * maxWidth;
 
-
+            // If length matches the maximum length, mark the branch as fully grown.
             if (length >= maxLength) isFullyGrown = true;
         }
-
+        
+        // Set the number of segments and faces based on the level of detail
         int segments;
         int faces;
         switch (tree.lod)
         {
             case 0:
                 segments = 10;
-                faces = 14;
+                faces = 16;
                 break;
             case 1:
                 segments = 7;
@@ -163,6 +155,7 @@ public class Branch : MonoBehaviour
                 break;
         }
 
+        // Update mesh
         GenerateMesh(segments, faces);
         mesh.vertices = vertices;
         mesh.uv = uv;
@@ -171,25 +164,11 @@ public class Branch : MonoBehaviour
 
         if (isLeaf)
         {
-            UpdateLeavesPosition();
+            UpdateLeaves();
         }
     }
 
-    float LengthToEnd()
-    {
-        float lengthToEnd = length;
-        var branch = this;
-
-        while (branch.childA != null)
-        {
-            branch = branch.childA;
-            lengthToEnd += branch.length;
-        }
-
-        return lengthToEnd;
-    }
-
-    /* Generate the branch's mesh */
+    /*Generate the branch's mesh*/
     void GenerateMesh(int segments, int faces)
     {
         vertices = new Vector3[] { };
@@ -335,7 +314,8 @@ public class Branch : MonoBehaviour
         }
     }
 
-
+    /*Set the leaves' position*/
+    /*This is for palm leaves*/
     public virtual void SetLeaves()
     {
         int leavesNo = 30;
@@ -351,23 +331,31 @@ public class Branch : MonoBehaviour
 
         for (int i = 0; i < leavesNo; i++)
         {
+            // Each leaf is placed at the and of the branch and
+            // is perpendicular to the branch rotation.
             leaves[i].position = growth;
             leaves[i].leafObj.transform.parent = this.gameObject.transform;
             leaves[i].leafObj.transform.localScale = Vector3.zero;
             leaves[i].leafObj.transform.position = position + growth * length / maxLength;
             leaves[i].leafObj.transform.rotation = Quaternion.LookRotation(growth - basis, growth);
 
+            // Each leaf is rotated around the growth vector to ensure full coverage and has
+            // a random y rotation.
             var r = Random.Range(5, 120);
             leaves[i].leafObj.transform.Rotate(r, i * 360 / leavesNo, 0);
         }
     }
 
-    public virtual void UpdateLeavesPosition()
+    /*Update the leaves' position and size*/
+    /*This is for palm leaves*/
+    public virtual void UpdateLeaves()
     {
         foreach (var leaf in leaves)
         {
+            //make sure the position scales with the length of the branch and the size of the
+            //leaf grows with the branch and if has the apropriate scaling for a palm tree
             leaf.leafObj.transform.position = position + leaf.position * length / maxLength;
-            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 0.22f /* * (maxLength / tree.length)*/;
+            leaf.leafObj.transform.localScale = Vector3.one * length / maxLength * 0.22f;
         }
     }
 }

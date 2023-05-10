@@ -1,20 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Numerics;
-using UnityEngine.Rendering;
 
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = UnityEngine.Quaternion;
-using System.Net.Security;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
-using UnityEngine.XR;
-using UnityEngine.Splines;
-using static UnityEditor.PlayerSettings;
-using System.Security.Policy;
-using System.IO.IsolatedStorage;
 
 public class Tree : MonoBehaviour
 {
@@ -28,8 +17,8 @@ public class Tree : MonoBehaviour
     [Range(0.0f, 90.0f)] public float orientation = 45.0f;
     [Range(0.0f, 180.0f)] public float rotation = 137.5f;
 
-    [Range (0.0f, 1.0f)] public float lengthDecay = 0.33f;
-    [Range (0.0f, 1.0f)] public float directionNoise;
+    [Range(0.0f, 1.0f)] public float lengthDecay = 0.33f;
+    [Range(0.0f, 1.0f)] public float directionNoise;
 
     [SerializeField] float maxDepth = 10;
     public bool isFullyGrown = false;
@@ -44,6 +33,7 @@ public class Tree : MonoBehaviour
 
     private void Awake()
     {
+        // On instantiation get the lod level and randomise the rotation
         lod = GetComponent<LOD>().lod;
         currentRotation = Random.Range(0, 360);
 
@@ -52,11 +42,12 @@ public class Tree : MonoBehaviour
 
     private void Update()
     {
+        //needed for the branches' mesh generation
         lod = GetComponent<LOD>().lod;
     }
 
     /*Returns random value between the min and max according to normal distribution*/
-    float RandomNormal( float min=-1, float max=1 )
+    float RandomNormal(float min = -1, float max = 1)
     {
         float u, v, s;
 
@@ -72,18 +63,24 @@ public class Tree : MonoBehaviour
 
         float mean = (min + max) / 2;
         float sigma = (max - mean) / 3;
-        
+
         return Mathf.Clamp(std * sigma + mean, min, max);
     }
 
     /* Wrapper for RandomNormal(min, max)*/
-    float RandomNormal( float range )
+    float RandomNormal(float range)
     {
         return RandomNormal(-range, range);
     }
-    
+
+    /* Returns the curve of the branch*/
     Curve GetBranchCurve(Vector3 start, Vector3 end)
     {
+        // The controll points of the branch are set along the growth vector when direction
+        // noise is set to 0. The distance between control point 1 and start is somwhere 
+        // between none and 2 thirds of the groth vector, and likewise between the second 
+        // controll point and the end.
+
         var cp1_xangle = RandomNormal(directionNoise) * 45;
         var cp1_zangle = RandomNormal(directionNoise) * 45;
         var cp1 = start + (start + end) * RandomNormal(0f, 0.66f);
@@ -99,12 +96,12 @@ public class Tree : MonoBehaviour
 
     /*Initialise new tree and set the first branch*/
     void InitialiseTree()
-        {
+    {
         //The startitng position of the branch is the position of the tree
         var pos = this.transform.position;
 
         //The basis vector is up
-        var basis = Vector3.up * length; 
+        var basis = Vector3.up * length;
 
         //Genarate the rotation vector by sampling a normal distribution
         var xangle = RandomNormal(directionNoise) * 90;
@@ -119,37 +116,51 @@ public class Tree : MonoBehaviour
 
         var curve = GetBranchCurve(Vector3.zero, growth);
 
+
+        // If the tree has branches i.e. not a palm tree
         if (maxDepth > 0)
         {
+            // We want the trees to soawn in in the shape of a tree and not growning from nothing
+
+            // Set the root branch to generate fully grown
             rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve, 1);
             rootBranch.isFullyGrown = false;
 
             this.root = rootBranch;
             branches.Add(root);
+
+            // Grow to generate the root branch's mesh
             Grow(1);
 
             rootBranch.isFullyGrown = true;
 
+            // Add branches to be half grown
             AddBranches(0.5f);
+            // Grow to generate their mesh
             Grow(1);
         }
         else
         {
+            //If it is a palm tree, we want to spawn it in half grown
             rootBranch.SetBranch(this.transform.gameObject, growth, basis, pos, width, curve, 0.5f);
             this.root = rootBranch;
             branches.Add(root);
         }
     }
 
+    /* Grow the tree */
     public void Grow(float scoreMul)
     {
+        //If the tree is fully grown return early,
         if (this.isFullyGrown)
         {
             return;
         }
 
+        // Go through all the branches and ccheck if they are grown.
+        // If one of them is not fully grown it means the tree is not fully grown
         bool fullyGrownCheck = true;
-        foreach( var br in branches )
+        foreach (var br in branches)
         {
             var branch = br.GetComponent<Branch>();
 
@@ -157,26 +168,20 @@ public class Tree : MonoBehaviour
             if (!branch.isFullyGrown) fullyGrownCheck = false;
         }
 
+        // If all the branches are fully grown and the tree has reached max depth, regenerate
+        // the branches' meshes at the highest level of detail and mark the tree as fully grown.
         if (depth > maxDepth && fullyGrownCheck)
         {
             lod = 0;
-            foreach(var br in branches)
+            foreach (var br in branches)
             {
                 var branch = br.GetComponent<Branch>();
                 branch.Grow(1);
             }
             this.isFullyGrown = true;
         }
-
-       //   CalculateTreeLength();
-
-        /*var treeMesh = GenerateMesh(root);
-        
-        mesh.vertices = treeMesh.vertices;
-        mesh.triangles = treeMesh.triangles;
-        mesh.RecalculateNormals();*/
     }
-    
+
     /*Adds a new set of branches to the tree*/
     public void AddBranches(float growthPhase)
     {
@@ -192,11 +197,11 @@ public class Tree : MonoBehaviour
         var addedBranches = false;
 
         foreach (var br in branches)
-            {
+        {
             var branch = br.GetComponent<Branch>();
 
             //only fully grown leaf branches can grow new branches
-            if ( !(branch.isLeaf && branch.isFullyGrown) ) continue;
+            if (!(branch.isLeaf && branch.isFullyGrown)) continue;
 
 
             //Set up branch A
@@ -225,7 +230,7 @@ public class Tree : MonoBehaviour
 
             //the basis vector of branch B is at an angle from the parent specified by this.orientation
             //and is rotated around it by an angle specified by this.rotation
-            var basisB = Quaternion.Euler(this.orientation, currentRotation, 0) * 
+            var basisB = Quaternion.Euler(this.orientation, currentRotation, 0) *
                 Vector3.Normalize(branch.growth) * bLength;
 
             //set up a noise vector
@@ -234,7 +239,7 @@ public class Tree : MonoBehaviour
             var noiseB = new Vector3(xangleB, 0, zangleB);
 
             var growthB = Quaternion.Euler(noiseB) * basisB;
-           
+
             var curveB = GetBranchCurve(Vector3.zero, growthB);
 
 
@@ -250,7 +255,7 @@ public class Tree : MonoBehaviour
             //Set them as the current branch's children
             branch.SetChildren(branchA, branchB);
 
-            branchA.SetBranch(this.transform.gameObject ,branch, growthA, basisA, posA, width, curveA, growthPhase);
+            branchA.SetBranch(this.transform.gameObject, branch, growthA, basisA, posA, width, curveA, growthPhase);
             branchB.SetBranch(this.transform.gameObject, branch, growthB, basisB, posB, width, curveB, growthPhase);
 
             newBranches.Add(a);
@@ -264,59 +269,9 @@ public class Tree : MonoBehaviour
             addedBranches = true;
         }
         //increment the depth
-        if(addedBranches) depth++;
+        if (addedBranches) depth++;
 
         branches = branches.Concat(newBranches).ToList();
     }
-
-    void CalculateTreeLength()
-    {
-        var branch = root;
-        var length = root.length;
-
-        while(branch.childA != null)
-        {
-            branch = branch.childA;
-            length += branch.length;
-        }
-
-        totalLength = length;
-    }
-
-    /*Mesh GenerateMesh(Branch branch)
-    {
-        var mesh = branch.mesh;
-
-        var vertices = mesh.vertices;
-
-        var triangles = mesh.triangles;
-
-        if (!branch.isLeaf)
-        {
-            var meshA = GenerateMesh(branch.childA);
-            var meshB = GenerateMesh(branch.childB);
-
-            var verticesA = meshA.vertices;
-            //verticesA = verticesA.Select(x => x + branch.growth).ToArray();
-
-            var trianglesA = meshA.triangles;
-            trianglesA = trianglesA.Select(x => x + mesh.vertices.Length).ToArray();
-
-            var verticesB = meshB.vertices;
-            //verticesB = verticesB.Select(x => x + branch.childB.position).ToArray();
-
-            var trianglesB = meshB.triangles;
-            trianglesB = trianglesB.Select(x => x + mesh.vertices.Length + meshA.vertices.Length).ToArray();
-
-            vertices = vertices.Concat(verticesA).Concat(verticesB).ToArray();
-            triangles = triangles.Concat(trianglesA).Concat(trianglesB).ToArray();
-        }
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-
-        return mesh;
-    }*/
-
 
 }

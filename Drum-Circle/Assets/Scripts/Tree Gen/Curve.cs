@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.Splines;
 
 public class Curve
 {
@@ -22,6 +16,7 @@ public class Curve
         P3 = p3;
     }
 
+    /*Retrun a point that at t distance from p0 along a cubic Bezier curv*/
     Vector3 EvaluateCubicCurve(Vector3 a, Vector3 b, Vector3 c, float t)
     {
         var p0 = Vector3.Lerp(a, b, t);
@@ -29,6 +24,7 @@ public class Curve
         return Vector3.Lerp(p0, p1, t);
     }
 
+    /*Retrun a point that at t distance from p0 along the curve*/
     public Vector3 EvaluateCurve(float t)
     {
         var p0 = EvaluateCubicCurve(P0, P1, P2, t);
@@ -36,6 +32,7 @@ public class Curve
         return Vector3.Lerp(p0, p1, t);
     }
 
+    /*Return an aproximation for the length of the curve given a resolution*/
     public float GetCurveLength(int resolution)
     {
         float length = 0;
@@ -50,6 +47,7 @@ public class Curve
         return length;
     }
 
+    /*Return n+1 equidistant points along hte curve*/ 
     public Vector3[] GetPointsAlongCurve(int n)
     {
         float spacing = GetCurveLength(2 * n) / n;
@@ -89,6 +87,7 @@ public class Curve
         return points;
     }
 
+    /* Return a point that is at t% along the distance of the curve*/
     public Vector3 GetPointAlongCurve(float t)
     {
         int p = (int)(t * 100);
