@@ -12,7 +12,6 @@ using UnityEngine.Audio;
 public class UISelectMenu : MonoBehaviour
 {    
     private VisualElement selectMenu;
-    private MessageListener messageListener;
     private LoadScreen loadScreen;
     private float mTimer = 0f;
     private int buttonSelection = 0;
@@ -38,7 +37,6 @@ public class UISelectMenu : MonoBehaviour
     public void Awake() {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         selectMenu = GameObject.Find("UIMissionSelect").GetComponent<UIDocument>().rootVisualElement;
-        // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         drumInputStrengths = new int[playerCount*2];
     }
@@ -144,18 +142,6 @@ public class UISelectMenu : MonoBehaviour
         for(int i = 0; i < playerCount*2; i++)
         {
             drumInputStrengths[i] = 0;
-        }
-        
-        string message = messageListener.message;
-        if (message != null)
-        {
-            sections = message.Split(":");
-            //Debug.Log(message);
-            if (sections[0] == "on")
-            {
-                drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
-            }
-            messageListener.message = null;
         }
     }
 }

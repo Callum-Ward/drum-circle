@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class UIMainMenu : MonoBehaviour
 {
     private VisualElement mainMenu;
-    private MessageListener messageListener;
     private LoadScreen loadScreen;
     private int[] drumInputStrengths;
     private int playerCount = 3;
@@ -25,7 +24,6 @@ public class UIMainMenu : MonoBehaviour
         mainMenu = GameObject.Find("UIMainMenu").GetComponent<UIDocument>().rootVisualElement;
         midiHandler = GameObject.Find("MidiHandler").GetComponent<MidiHandler>();
         loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
-        // messageListener = GameObject.Find("SerialController").GetComponent<MessageListener>();
 
         drumInputStrengths = new int[playerCount*2];
     }    

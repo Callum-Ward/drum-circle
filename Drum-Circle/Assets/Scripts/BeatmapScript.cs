@@ -294,9 +294,7 @@ public class BeatmapScript : MonoBehaviour
             StartCoroutine(sceneSwitch("2MissionSelect"));
         }
 
-        // if (Input.GetKey(KeyCode.Alpha9)) {             
-        //     loadScreen.EndScreenFade();       
-        // }
+        //Manually reset UI if needed
         if (Input.GetKey(KeyCode.Alpha8)) {
                 resetUI();    
         }
