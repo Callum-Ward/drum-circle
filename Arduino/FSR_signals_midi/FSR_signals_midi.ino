@@ -33,6 +33,11 @@ int hitCount =0;
 
 CRGBPalette16 gPal[3];
 
+//-----------------
+// This version uses MIDI communication with Unity
+// For commented version look for FSR_drum_signals script
+//-----------------
+
 
 void setup() {
    FastLED.addLeds<CHIPSET, 0, COLOR_ORDER>(leds[0], NUM_LEDS).setCorrection( TypicalLEDStrip );

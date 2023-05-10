@@ -15,25 +15,28 @@ const int drumCount = 6;
 // Default 120, suggested range 50-200.
 #define SPARKING 200
 bool gReverseDirection = false;
-CRGB leds[drumCount][NUM_LEDS];
+CRGB leds[drumCount][NUM_LEDS]; //2D array to store LED values for all LEDS in each drums
 
-const int threshold = 920;
-const int peakDelay =25;
-const int bounceDelay=30;
-bool hits[drumCount];
-bool bounceReset[drumCount];
-int vals[drumCount];
-bool sent[drumCount];
-int maxVals[drumCount];
-unsigned long delayStart[drumCount];
+const int threshold = 920; //sensor output signal required to send a hit signal to Unity
+const int peakDelay =25; //constant time delay to extract a peak signal value within, used for forwarded veloctiy values
+const int bounceDelay=30; //bounce delay used to prevent double signals once player takes hand off sensor
+bool hits[drumCount]; //used to check when a drum has been hit and continue measuring delays
+bool bounceReset[drumCount]; //stores the bounce delay time and compared to bouceDelay
+int vals[drumCount]; //stores the current signal output from each sensor
+bool sent[drumCount]; //when a signal has been forwarded to Unity set true, then used to start bounce delay timer once singal below threshold
+int maxVals[drumCount]; //stores the current peak signal values each drum during a hit cycle
+unsigned long delayStart[drumCount]; // 
 unsigned long bounceStart[drumCount];
 int hitCount =0;
+
+//We created two versions of the final script, this version uses Serial communication the next used MIDI so we
+//could test the delays produced from each communcation type
 
 CRGBPalette16 gPal[3];
 
 
 void setup() {
-   FastLED.addLeds<CHIPSET, 0, COLOR_ORDER>(leds[0], NUM_LEDS).setCorrection( TypicalLEDStrip );
+   FastLED.addLeds<CHIPSET, 0, COLOR_ORDER>(leds[0], NUM_LEDS).setCorrection( TypicalLEDStrip ); //setup each LED strip communication channel
    FastLED.addLeds<CHIPSET, 1, COLOR_ORDER>(leds[1], NUM_LEDS).setCorrection( TypicalLEDStrip );
    FastLED.addLeds<CHIPSET, 2, COLOR_ORDER>(leds[2], NUM_LEDS).setCorrection( TypicalLEDStrip );
    FastLED.addLeds<CHIPSET, 3, COLOR_ORDER>(leds[3], NUM_LEDS).setCorrection( TypicalLEDStrip );
@@ -41,27 +44,24 @@ void setup() {
    FastLED.addLeds<CHIPSET, 5, COLOR_ORDER>(leds[5], NUM_LEDS).setCorrection( TypicalLEDStrip );
    FastLED.setBrightness( BRIGHTNESS );
 
-  gPal[0] = CRGBPalette16( CRGB::Black, CRGB::Red, CRGB::Orange, CRGB::White);
+  gPal[0] = CRGBPalette16( CRGB::Black, CRGB::Red, CRGB::Orange, CRGB::White); //set the fire colour palette for each drum
   gPal[1] = CRGBPalette16( CRGB::Black, CRGB::Blue, CRGB::Aqua,  CRGB::White);
   gPal[2] = CRGBPalette16( CRGB::Black, CRGB::Green, CRGB::Yellow, CRGB::White);
 
-
-
-  // put your setup code here, to run once:
-  for (int i=0;i<drumCount;i++) {
+  for (int i=0;i<drumCount;i++) { //intialise hit cycle values for each drum
     hits[i] = false;
     bounceReset[i]=false;
     maxVals[i] = 0;
     sent[i] = false;
   }
-  Serial.begin(115200);
+  Serial.begin(115200); 
 
   Serial.println("Setup complete");
   
 }
 
 
-int getHitStrength(int hitVal) {
+int getHitStrength(int hitVal) { //thresholding velocity values 
   if (hitVal > 920) {
     return 3;
   } else if (hitVal > 750) {
@@ -75,31 +75,31 @@ void loop() {
  
   Fire2012WithPalette(); // run simulation frame, using palette colors
   FastLED.show(); // display this frame
-  FastLED.delay(1000 / FRAMES_PER_SECOND);
+  FastLED.delay(1000 / FRAMES_PER_SECOND); //delay LED update 
   
-  for (auto i =0;i<drumCount;i++) {
+  for (auto i =0;i<drumCount;i++) { 
     
-    vals[i] = analogRead(i);
-    if (vals[i] > threshold && hits[i] == false) {
+    vals[i] = analogRead(i); //read from each sensor analogue pin 
+    if (vals[i] > threshold && hits[i] == false) { //trigger hit cycle if sensor value above threshold and is not already triggired
       hitLeds(i); //trigger leds to flash colour when hit
-      maxVals[i]=vals[i];
+      maxVals[i]=vals[i]; //initial max sensor value 
       hitCount++;
-      hits[i] = true;
-      delayStart[i] = millis();
+      hits[i] = true; //start hit cycle
+      delayStart[i] = millis(); //start delay for measuring max value
       //Serial.println("hit");
     } else if (hits[i]) {
       
-      if (vals[i] > maxVals[i] && !sent[i]) maxVals[i] = vals[i];
+      if (vals[i] > maxVals[i] && !sent[i]) maxVals[i] = vals[i]; //update max value before signal transmission to Unity
 
       if ( millis()-delayStart[i] >= peakDelay && !sent[i]) {
-        sent[i] = true; //signal that hit message is sent to computer
+        sent[i] = true; //signal that hit message has been sent to computer
         Serial.print(i);
         Serial.print(":");
-        Serial.println(maxVals[i]);
+        Serial.println(maxVals[i]); //pack drum number and max value recorded into serial line
         maxVals[i]=0; //reset max val for next hit
         
       }
-      if (sent[i] && vals[i] < threshold && bounceReset[i]==false) { //once signal sent and signal at rest and bounce delay hasn't started
+      if (sent[i] && vals[i] < threshold && bounceReset[i]==false) { //once signal sent and signal value below threshold and bounce delay hasn't started
         //Serial.println("bounce start");
         bounceStart[i]= millis(); //start bounce delay
         bounceReset[i]=true;
@@ -116,7 +116,7 @@ void loop() {
   }
   
 }
-void hitLeds(int drum) {
+void hitLeds(int drum) { //change drum LEDs to opposite colours when drum hit
   CRGB colour;
   if (drum >=4) {
     colour = CRGB::Blue;
@@ -134,7 +134,7 @@ void hitLeds(int drum) {
 }
 
 
-void Fire2012WithPalette()
+void Fire2012WithPalette() //Used to update fire animation for each LED strip
 {
 // Array of temperature readings at each simulation cell
   for (int player=0;player<3;player++) {

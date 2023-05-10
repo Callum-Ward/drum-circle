@@ -33,7 +33,11 @@ int hitCount =0;
 
 CRGBPalette16 gPal[3];
 
-
+//-----------------
+// This version removed the LEDs changing when each drum is hit
+// The delays involved when updating LEDs mid hit cycle introduced high latency
+// For commented version look for FSR_drum_signals script
+//-----------------
 void setup() {
    FastLED.addLeds<CHIPSET, 0, COLOR_ORDER>(leds[0], NUM_LEDS).setCorrection( TypicalLEDStrip );
    FastLED.addLeds<CHIPSET, 1, COLOR_ORDER>(leds[1], NUM_LEDS).setCorrection( TypicalLEDStrip );

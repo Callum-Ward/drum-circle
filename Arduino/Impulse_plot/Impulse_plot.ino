@@ -3,6 +3,9 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
 }
+
+//Used to test signal waveform produced from Pizeos and FSRs at the start of the project
+
 void loop() {
   // put your main code here, to run repeatedly:
   int val1 = analogRead(0);

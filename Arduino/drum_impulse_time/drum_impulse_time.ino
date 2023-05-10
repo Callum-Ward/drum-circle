@@ -3,6 +3,10 @@ int threshold = 500;
 bool hit = false;
 unsigned long delayStart = 0;
 int maxVal =0;
+
+//we used this script to measure the average time players held pressure
+//on the sensor above different threshold values and peak signal produced
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -12,7 +16,7 @@ void loop() {
   int val1 = analogRead(0);
   int val2 = analogRead(A1);
   int val3 = analogRead(A2);
-  if (val1 > maxVal) {
+  if (val1 > maxVal) { //extract 
     maxVal = val1;
   }
   if (val1 > threshold && hit==false) {

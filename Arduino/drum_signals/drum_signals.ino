@@ -7,6 +7,8 @@ int maxVals[1];
 unsigned long delayStart[1];
 int hitCount =0;
 
+//Arduino Uno early iteration using just a basic threshold approach with serial communication to Unity
+
 void setup() {
   // put your setup code here, to run once:
   for (bool &hit : hits) hit = false;
