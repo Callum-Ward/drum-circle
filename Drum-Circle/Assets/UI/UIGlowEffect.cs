@@ -32,7 +32,7 @@ public class UIGlowEffect
         this.overriding = false;
     }
 
-    
+    //Gets color between the base color of glow effect and the general base color to increase smoothness of transition
     public Color getTransitionColor(Color currentGlow)
     {
         float redInc = (this.glowColorMin.r - currentGlow.r) * 0.5f;
@@ -42,6 +42,8 @@ public class UIGlowEffect
         return new Color(currentGlow.r + redInc, currentGlow.g + greenInc, currentGlow.b + blueInc, currentGlow.a + alphaInc);
     }
 
+
+    //Gets the next color at this stage of the glow effect to apply to the required element
     public Color getNextGlowValue(Color currentGlow)
     {
         if(this.glowStage == 0)

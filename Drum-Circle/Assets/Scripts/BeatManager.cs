@@ -24,6 +24,7 @@ public class BeatManager : MonoBehaviour
             }
         }
 
+
     //Checks if beats need to be deleted every frame.
     void Update()
     {
@@ -41,11 +42,13 @@ public class BeatManager : MonoBehaviour
         }
     }
 
+
     //Sets the total number of players from main scene script
     public void setPlayerCount(int playerCount)
     {
         this.playerCount = playerCount;
     }
+
 
     //Queues for beats based on track.
     public void AddToQueue(int queueIndex, GameObject obj, int oneShotIndex)
@@ -55,6 +58,7 @@ public class BeatManager : MonoBehaviour
             beat.oneShotIndex = oneShotIndex;
             beatQueues[queueIndex].Enqueue(beat);
         }
+
 
     //Deletes beat from queue if queue isn't empty is available.
     public void BeatDelete(int queueIndex, bool highlight)
@@ -67,6 +71,7 @@ public class BeatManager : MonoBehaviour
             StartCoroutine(WindowDelay(deleteDelay, lastelem));
         }
     }
+
 
     //Coroutine to delay destruction of object after specified amount of time.
     IEnumerator WindowDelay(float time, GameObject o)

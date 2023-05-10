@@ -27,6 +27,8 @@ public class FreestyleHandler  {
         this.beatTransfer = null;
     }
 
+
+    //Sets solo points for each scene (only applicable to beach scene)
     public void setScene(int sceneNo)
     {
         if (sceneNo > 0 && sceneNo < 4)
@@ -43,28 +45,36 @@ public class FreestyleHandler  {
                     soloDurations = new float[]{10000f, 10000f};
                     break;
                 case 3: //beach
-                    soloSchedule = new float[]{15300f, 18000f, 20600f, 10000f};
+                    soloSchedule = new float[]{153f, 180f, 206f, 10000f};
                     soloDurations = new float[]{13f, 18f, 14f, 10000f};
                     break;
             }
         }
     }
 
+    // Checks if beat transfer is active
+
     public bool active()
     {
         return this.beatTransfer != null;
     }
 
+
+    // Checks if soloist in song is active
     public bool activeSolo()
     {
         return this.activeSoloist >= 0;
     }
 
+
+    // Gets index of player not involved in beach transfer
     public int nextPlayerIndex()
     {
         return this.beatTransfer.nextPlayer(this.playerCount);
     }
 
+
+    // Checks for drum beat miss in beat transfer
     public bool checkMiss(int queueNo)
     {
         if(this.beatTransfer != null)
@@ -74,6 +84,8 @@ public class FreestyleHandler  {
         return false;
     }
 
+
+    //Checks if currently in a beat transfer or solo section and plays the one shot/spawns a beat marker accordingly
     public void handleDrumHitFreestyle(
         RhythmSpawner spawner,
         AudioManager audioManager,
@@ -99,6 +111,8 @@ public class FreestyleHandler  {
         }
     }
 
+
+    //Called in main update cycle to handle entry and exit of freestyle modes
     public void handleFreestyle(RhythmSpawner spawner, BeatUI beatUI, AudioManager audioManager, float time)
     {
         if(time >= soloSchedule[scheduleIndex] && !this.activeSolo())

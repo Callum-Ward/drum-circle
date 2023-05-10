@@ -59,6 +59,8 @@ public class AudioAnalyser : MonoBehaviour {
         this.playerCount = playerCount;
     }
 
+
+    //Loads track onset map from JSON file
     private TrackJson loadTrackJson(string name)
     {
         string path = "./Assets/Music/PlayerJson/" + name + ".json";
@@ -76,6 +78,8 @@ public class AudioAnalyser : MonoBehaviour {
         return trackJson;
     }
 
+
+    //Loads track onset map from JSON file for each player
     public void loadAnalysisJson()
     {
         this.playerJson = new TrackJson[this.playerCount];
@@ -86,6 +90,8 @@ public class AudioAnalyser : MonoBehaviour {
         }
     }
 
+
+    //Finds average velocity, average note number and creates left/right drum map from series of notes
     private Tuple<int, int, IDictionary<int, bool>> getNotesInformation(IEnumerable<Note> notes)
     {
         List<int> noteNumbers = new List<int>();
@@ -124,6 +130,8 @@ public class AudioAnalyser : MonoBehaviour {
         return Tuple.Create(medianNoteNumber, medianVelocity, drumSideMap);
     }
 
+
+    //Loads and analysises track MIDI file, with pre-determined offset to align with timescale of song
     public TrackMidi loadTrackMidi(string name, int midiOffset)
     {
         string path = "./Assets/Music/PlayerMidis/" + name + ".mid";
@@ -167,6 +175,8 @@ public class AudioAnalyser : MonoBehaviour {
         return midi;
     }
 
+
+    //Loads and analysises track MIDI file for each players track
     public void loadAnalysisMidi()
     {
         this.playerMidis = new TrackMidi[this.playerCount];
@@ -177,35 +187,7 @@ public class AudioAnalyser : MonoBehaviour {
         }
     }
 
-    public int timeAtNearestNote(int playerIndex, int drumIndex, float time)
-    {
-        int buffer = 200;
-        int timeInMills = (int)Math.Ceiling(time * 1000);
-        for(int i = 0; i < buffer; i++)
-        {
-            TimestampedNote? note = this.playerMidis[playerIndex].timestampedNotes[timeInMills + i];
-            if(note != null)
-            {
-                if(1 - drumIndex == note.left)
-                {
-                    return timeInMills + i;
-                }
-            }
-
-            note = this.playerMidis[playerIndex].timestampedNotes[timeInMills - i];
-            if(note != null)
-            {
-                if(1 - drumIndex == note.left)
-                {
-                    return timeInMills - i;
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    // Awake is called before the Start method
+ 
     void Awake()
     {
         if (instance == null)

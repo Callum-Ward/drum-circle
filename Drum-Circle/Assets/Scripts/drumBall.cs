@@ -10,6 +10,7 @@ public class drumBall : MonoBehaviour
     SerialPort data_stream = new SerialPort("COM3", 9600);
     //MAC
     //SerialPort data_stream = new SerialPort("/dev/cu.usbmodem141301", 9600);
+    
     public string receivedString;
     public Rigidbody rb;
     public float speed=5;

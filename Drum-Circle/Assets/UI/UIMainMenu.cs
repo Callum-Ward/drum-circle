@@ -40,6 +40,8 @@ public class UIMainMenu : MonoBehaviour
         StartCoroutine(sceneSwitch());
     }
 
+    
+    //Checks MIDI input
     public void Update() {
         if (Input.GetKey(KeyCode.LeftArrow)) {
             StartCoroutine(sceneSwitch());
@@ -66,18 +68,6 @@ public class UIMainMenu : MonoBehaviour
         {
             drumInputStrengths[i] = 0;
         }
-        
-        // string message = messageListener.message;
-        // if (message != null)
-        // {
-        //     sections = message.Split(":");
-        //     //Debug.Log(message);
-        //     if (sections[0] == "on")
-        //     {
-        //         drumInputStrengths[Int32.Parse(sections[1])] = Int32.Parse(sections[3]);
-        //     }
-        //     messageListener.message = null;
-        // }
     }
 
 

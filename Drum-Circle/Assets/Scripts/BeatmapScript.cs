@@ -48,7 +48,6 @@ public class BeatmapScript : MonoBehaviour
     [HideInInspector] public TreeSpawning treeSpawner;
     [HideInInspector] public MidiHandler midiHandler;
     [HideInInspector] public Terrain terrain;
-    [HideInInspector] public TutorialScript tutorialScript;
     [HideInInspector] public BeatUI beatUI;
     [HideInInspector] public TreeManager treeManager;
     [HideInInspector] public WaypointMover waypointMover;
@@ -72,6 +71,8 @@ public class BeatmapScript : MonoBehaviour
     private LoadScreen loadScreen;
     Dictionary<string, float> scenelength = new Dictionary<string, float>();
 
+
+    // Assigns and configures key gameplay components upon level initialisation
     void Awake()
     {
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
@@ -113,6 +114,8 @@ public class BeatmapScript : MonoBehaviour
         scenelength.Add("Beach", 271);
     }
 
+
+    // Registers successfull drum hit on-beat
     private void registerHit(int queueIndex, MoveBeatUI beat, int oneShotIndex, float velocity)
     {
         scoreManager.Hit((windowtime / 2) - Mathf.Abs((windowtime / 2) - beat.windowScore), Mathf.FloorToInt(queueIndex/2));
@@ -131,6 +134,8 @@ public class BeatmapScript : MonoBehaviour
         treeManager.SetHitStatus(true);
     }
 
+
+    // Registers missed attempted drum hit
     private void registerMiss(int queueIndex, MoveBeatUI beat)
     {
         scoreManager.Miss(Mathf.FloorToInt(queueIndex/2));
@@ -143,6 +148,7 @@ public class BeatmapScript : MonoBehaviour
         treeManager.SetHitStatus(false);
     }
 
+
     //Coroutine function for delaying hit-window
     IEnumerator WindowDelay(float time)
     {
@@ -151,6 +157,8 @@ public class BeatmapScript : MonoBehaviour
         window = windowtime;
     }
 
+
+    // Sets triggers for on-beat enviroment effects
     private void setEnvironmentTriggers(int drumIndex)
     {
         int playerIndex = Mathf.FloorToInt(drumIndex / 2);
@@ -163,45 +171,24 @@ public class BeatmapScript : MonoBehaviour
         if(Mathf.Floor(scoreManager.playerScores[playerIndex] / treeScoreRatio) >= treeStage)
         {
             treeStage += 1;
-            //treeSpawner.spawnTree(playerIndex, 2, new Color(0, 0, 0), true);
         }
 
     }
 
+
+    // Handles terrain manipultation such as glowing effects on beat
     private void handleTerrainBeatResponse()
     {
-         /*GameObject enaTree = GameObject.Find("tree_afsTREE_xao_xlprl");
-            MeshRenderer renderer = enaTree.GetComponent<MeshRenderer>();
-            MaterialPropertyBlock block = new MaterialPropertyBlock();
-            renderer.GetPropertyBlock(block);
-            block.c
-            renderer.SetPropertyBlock(block);*/
         try{
-            MeshRenderer renderer;
 
-            //Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
-            //newMaterial.SetFloat("_Power", glowPower);
-
-           /* IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "branch");
-            foreach(GameObject obj in glowingLayers)
-            {
-                renderer = obj.GetComponent<MeshRenderer>();
-                renderer.material.SetFloat("_Power", glowPower);
-            }*/
-
-            IEnumerable<GameObject> glowingLayers = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "glowingLayer");
-            foreach(GameObject obj in glowingLayers)
-            {
-                renderer = obj.GetComponent<MeshRenderer>();
-                renderer.material.SetFloat("_Power", glowPower);
-            }
+            Material newMaterial = new Material(Shader.Find("Shader Graphs/glowing shader"));
+            newMaterial.SetFloat("_Power", glowPower);
         } catch {
 
         }
 
         terrain.terrainData.wavingGrassStrength = windFactor;
         terrain.terrainData.wavingGrassSpeed = windFactor;
-        //terrain.terrainData.wavingGrassAmount = windFactor;
         
         if(terrainBeatStage == 3)
         {
@@ -220,6 +207,8 @@ public class BeatmapScript : MonoBehaviour
         }
     }
 
+
+    // Checks for successfull drum hit on-beat
     private bool checkCorrectDrumHit(int drumIndex, float velocity)
     {
         if (beatManager.beatQueues[drumIndex].Count > 0) 
@@ -234,6 +223,8 @@ public class BeatmapScript : MonoBehaviour
         return false;
     }
 
+
+    // Checks for drum input from each player from midi handler
     private bool checkDrumHit()
     {
         bool hit = false;
@@ -273,13 +264,16 @@ public class BeatmapScript : MonoBehaviour
             return hit;
     }
 
-    // Start is called before the first frame update
+
+    // Starts playing ambience track at start of level
     void Start()
     {
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<RhythmSpawner>();
         audioManager.PlayBackgroundTrack();
     }
 
+
+    // Resets in-game UI
     private void resetUI() {        
         VisualElement ending = GameObject.Find("EndScore").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Canvas");
         VisualElement beatSpawnUI = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("ScreenContainer");      
@@ -287,7 +281,7 @@ public class BeatmapScript : MonoBehaviour
         beatSpawnUI.style.opacity = new StyleFloat(1f);
     }
 
-    // Update is called once per frame
+    // Main update loop, checking for beat hits
     void Update()
     {
         //13
@@ -355,7 +349,6 @@ public class BeatmapScript : MonoBehaviour
             //Play all layers of music simultaneously
             else if(audioManager.activeSources.Count <= 1)
             {
-                //audioManager.PlayDrumTrack(2);
                 audioManager.PlayAllDrumTracks();
                 audioManager.PlayAllLayerTracks(0.75f);
             }
@@ -376,6 +369,7 @@ public class BeatmapScript : MonoBehaviour
             timer += Time.deltaTime;  
         }
 
+        //Intro timer functionality
         if(countdown <= 5 && countdown > 4) {
             
             resetUI();     
@@ -392,12 +386,16 @@ public class BeatmapScript : MonoBehaviour
         }      
     }
 
+
+    // Switches game scene
     IEnumerator sceneSwitch(string mission) {
         loadScreen.LoadScreenFadeIn();
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(mission);
     }
 
+
+    // Handles beat hit, determining if its a hit or a miss
     bool beatHit(int queueNo, MoveBeatUI beatSide, int oneShotIndex, float velocity) {
         if (beatSide.window == true)
         {

@@ -22,6 +22,8 @@ public class UILaneEffect : UIGlowEffect
         this.shakeDuration = 0.3f;
     }
 
+
+    //Sets required lane glowing and/or shaking effects
     public void SetMode(string mode, float glowStrength)
     {
         switch(mode)
@@ -89,6 +91,8 @@ public class UILaneEffect : UIGlowEffect
         }
     }
     
+
+    //Gets next left/right offset to apply to lane during shake effect
     public float getNextShakeValue()
     {
         if(this.shaking && this.shakeTime >= this.shakeDuration)

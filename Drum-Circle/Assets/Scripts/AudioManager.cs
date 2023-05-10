@@ -15,8 +15,6 @@ public class AudioManager : MonoBehaviour {
     public int[] oneShotMap;
     public int persistentLayerIndex;
 
-    // public float longestTime = 0;
-
     public static AudioManager instance;
     private Sound fadeIn = null;
     private Sound fadeOut = null;
@@ -32,6 +30,8 @@ public class AudioManager : MonoBehaviour {
 
     public AudioSource audioSource;
 
+
+    //Initialises sound from given audio clip
     void initialiseSound(Sound s)
     {
         s.source = gameObject.AddComponent<AudioSource>();
@@ -53,8 +53,6 @@ public class AudioManager : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-
-        //DontDestroyOnLoad(gameObject);
 
         foreach(Sound s in drumTracks)
         {
@@ -93,33 +91,36 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    public float sourceDuration(int index) {
-        return audioSource.time;
-    }
 
+    //Plays specified track by name
     public void PlaySingle(string name) {
         Sound s = Array.Find(drumTracks, sound => sound.Name == name);
         s.source.Play();
     }
+
+
+    //Stops specified track by name
     public void StopSingle(string name) {
         Sound s = Array.Find(drumTracks, sound => sound.Name == name);
         s.source.Stop();
     }
 
+
+    //Plays given sound
     public void PlayTrack(Sound s)
     {
         s.source.Play();
         activeSources.Add(s.source);
-        // if(s.clip.length > longestTime) {
-        //     longestTime = s.clip.length;
-        // }
     }
 
+
+    //Sets volume of given sound
     public float VolumeTrack(Sound s, float volume)
     {
         s.source.volume = volume;
         return s.source.volume;
     }
+
 
      //Starts a fade in based on passed speed (Fast/Slow)
     public void FadeInTrack(Sound s, string speed, float limit)
@@ -152,6 +153,7 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
+
     //Fades out music.
     public void FadeOutTrack(Sound s, string speed ="fast", float limit = 1)
     {
@@ -181,7 +183,7 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-
+    //Plays indexed drumt track
     public void PlayDrumTrack(int index)
     {
         if(index >= drumTracks.Length)
@@ -194,6 +196,7 @@ public class AudioManager : MonoBehaviour {
     }
 
 
+    //Plays all drum tracks
     public void PlayAllDrumTracks()
     {
         foreach(Sound s in drumTracks)
@@ -203,6 +206,7 @@ public class AudioManager : MonoBehaviour {
     }
 
 
+    //Plays indexed layer track at given volume
     public void PlayLayerTrack(int index, float volume)
     {
         if(index >= additiveLayers.Length)
@@ -215,6 +219,8 @@ public class AudioManager : MonoBehaviour {
         PlayTrack(s);
     }
 
+
+    //Plays all layer tracks at given volume
     public void PlayAllLayerTracks(float volume)
     {
         for(int i = 0; i < additiveLayers.Length; i++)
@@ -225,19 +231,8 @@ public class AudioManager : MonoBehaviour {
 
     }
 
-    public void PlayOneShot(string name)
-    {
-        Sound s = Array.Find(oneShots, sound => sound.Name == name);
 
-        if(s == null)
-        {
-            Debug.LogWarning("No one-shot found with name " + name);
-            return;
-        }
-
-        s.source.PlayOneShot(s.source.clip, 0.7F);
-    }
-
+    //Plays indexed drum one shot with given velocity
     public void PlayDrumOneShot(int index, float velocity)
     {
         if(index >= additiveLayers.Length)
@@ -251,6 +246,8 @@ public class AudioManager : MonoBehaviour {
         source.PlayOneShot(source.clip, 1f);
     }
 
+
+    //Plays mapped one shot for solo section
     public int PlaySoloOneShot(int playerIndex, int drumIndex, float velocity)
     {
         int index = oneShotMap[playerIndex * 2 + drumIndex];
@@ -258,13 +255,16 @@ public class AudioManager : MonoBehaviour {
         return index;
     }
 
+
+    //Plays ambience
     public void PlayBackgroundTrack()
     {
         PlayTrack(background);
     }
 
-
-     public float VolumeDrumTrack(int index, float volume)
+    
+    //Sets volume of indexed drum track
+    public float VolumeDrumTrack(int index, float volume)
     {
         if(index >= drumTracks.Length)
         {
@@ -276,7 +276,8 @@ public class AudioManager : MonoBehaviour {
     }
 
 
-     public float VolumeLayerTrack(int index, float volume)
+    //Sets volume of indexed layer track
+    public float VolumeLayerTrack(int index, float volume)
     {
         if(index >= additiveLayers.Length)
         {
@@ -287,6 +288,8 @@ public class AudioManager : MonoBehaviour {
         return VolumeTrack(additiveLayers[index], volume);
     }
 
+
+    //Fades in indexed drum track at given speed
     public void FadeInDrumTrack(int index, string speed)
     {
         if(index >= drumTracks.Length)
@@ -298,6 +301,8 @@ public class AudioManager : MonoBehaviour {
         FadeInTrack(drumTracks[index], speed, 1.0f);
     }
 
+
+    //Fades out indexed drum track
     public void FadeOutDrumTrack(int index)
     {
         if(index >= drumTracks.Length)
@@ -309,7 +314,9 @@ public class AudioManager : MonoBehaviour {
         FadeOutTrack(drumTracks[index]);
     }
 
-     public void FadeInLayerTrack(int index, string speed)
+
+    //Fades in indexed layer track at given speed
+    public void FadeInLayerTrack(int index, string speed)
     {
         if(index >= additiveLayers.Length)
         {
@@ -320,6 +327,8 @@ public class AudioManager : MonoBehaviour {
         FadeInTrack(additiveLayers[index], speed, 0.5f);
     }
 
+
+    //Fades out indexed layer track
     public void FadeOutLayerTrack(int index)
     {
         if(index >= additiveLayers.Length)
@@ -331,28 +340,7 @@ public class AudioManager : MonoBehaviour {
         FadeOutTrack(additiveLayers[index]);
     }
 
-    public void ReduceToBackgroundLayer()
-    {
-        for(int i = 0; i < additiveLayers.Length; i++)
-        {
-            if(i != persistentLayerIndex)
-            {
-                FadeOutLayerTrack(i);
-            }
-        }
-    }
-
-    public void FadeInRemainingLayers()
-    {
-        for(int i = 0; i < additiveLayers.Length; i++)
-        {
-            if(!this.activeLayerIndices.Contains(i))
-            {
-                FadeInLayerTrack(i, "slow");
-            }
-        }
-    }
-
+    //Fades in next additive music layer
     public void AddLayer()
     {
         if(this.activeLayerIndices.Count == additiveLayers.Length)
@@ -367,6 +355,8 @@ public class AudioManager : MonoBehaviour {
         Debug.Log("Faded In Layer " + index.ToString());
     }
 
+
+    //Fades out most recently added additive music layer
     public void RemoveLayer()
     {
         if(this.activeLayerIndices.Count <= 1)
@@ -380,6 +370,8 @@ public class AudioManager : MonoBehaviour {
         Debug.Log("Faded Out Layer " + value.ToString());
     }
 
+
+    //Returns number of additive layers currently audible
     public int addedLayersCount()
     {
         return this.activeLayerIndices.Count;

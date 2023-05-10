@@ -79,7 +79,9 @@ public class RhythmSpawner : MonoBehaviour
             this.prevTimesInIndices[i] = 0;
         }
     }
+    
 
+    //Configures freestyle mode if required
     public void setFreestyleMode(string mode, BeatTransfer? newBeatTransfer, int soloistIndex)
     {
         if(mode != "transfer" && mode != "solo" && mode != "none")
@@ -114,6 +116,8 @@ public class RhythmSpawner : MonoBehaviour
         }
     }
 
+
+    //spawns new beat UI marker
     public void spawn(int pos, int left, int size, int oneShotIndex = 0, string type = "falling")
     {
         //pos: 1,2,3,4,5
@@ -144,6 +148,8 @@ public class RhythmSpawner : MonoBehaviour
         }
     }
 
+
+    //Spawns beat marker after given delay
     public IEnumerator spawnWithDelayCoroutine(int pos, int left, int oneShotIndex, int size, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -155,6 +161,8 @@ public class RhythmSpawner : MonoBehaviour
         StartCoroutine(spawnWithDelayCoroutine(pos, left, oneShotIndex, size, delay));
     }
 
+
+    //Spawns beat from loaded MIDI beat map, searcing between two bounds to make sure notes aren't missed
     private IEnumerator spawnFromMidiCo(int timeInMills, int playerIndex)
     {
         int lb = timeInMills > prevTimesInMillis[playerIndex] + midiGridOffset ? timeInMills - midiGridOffset : prevTimesInMillis[playerIndex] + 1;
@@ -194,6 +202,8 @@ public class RhythmSpawner : MonoBehaviour
         return -1;
     }
 
+
+     //Spawns beat from loaded JSON beat map, searcing between two bounds to make sure notes aren't missed
     private int spawnFromJson(int index, int playerIndex)
     {
         List<AudioTimestamp> timestampedOnsets = audioAnalyser.playerJson[playerIndex].timestampedOnsets;
@@ -224,6 +234,8 @@ public class RhythmSpawner : MonoBehaviour
         return -1;
     }
 
+
+    //Spawns at given time
     public int spawnOnTime(float time)
     {
 
@@ -279,21 +291,4 @@ public class RhythmSpawner : MonoBehaviour
         window = windowtime;
     }
 
-
-    public void colorFadeTargetComponent(GameObject obj, Color color, float alpha)
-    {
-        MeshRenderer renderer = obj.GetComponent<MeshRenderer>();
-        Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-        newMaterial.SetFloat("_Mode", 2f);
-        newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        newMaterial.SetInt("_ZWrite", 0);
-        newMaterial.DisableKeyword("_ALPHATEST_ON");
-        newMaterial.EnableKeyword("_ALPHABLEND_ON");
-        newMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        newMaterial.renderQueue = 3000;
-        color.a = alpha;
-        newMaterial.color = color;
-        renderer.material = newMaterial;
-    }
 }

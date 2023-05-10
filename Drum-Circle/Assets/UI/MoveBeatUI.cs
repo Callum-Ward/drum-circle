@@ -67,6 +67,8 @@ public class MoveBeatUI : MonoBehaviour
         
     }
 
+
+    //Initialised individual beat marker when spawned
     public void Startup(bool left, int drumNo, int size, string type) {
         if (start == false) {
             beatSpawnContainer = beatSpawnTemplate.Instantiate();
@@ -138,6 +140,8 @@ public class MoveBeatUI : MonoBehaviour
         }   
     }
 
+
+    //Handles fade out of beat marker on hit or deletion
     IEnumerator FadeCoroutine() {
         float startF = 1f;
         float endF = 0f;

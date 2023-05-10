@@ -59,8 +59,7 @@ public class WaypointMover : MonoBehaviour
             if (Vector3.Distance(transform.position,currentWaypoint.position) < switchDistance)
             {
                 currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
-            
-                //nextWaypoint = waypoints.GetNextWaypoint(nextWaypoint);
+
             }
         }
     }

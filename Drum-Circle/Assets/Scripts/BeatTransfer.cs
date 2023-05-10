@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+//Functionality for passing a beat over to another player
+
 public class BeatTransfer {
     private const float delay = 1.0f;
     private int recipient;

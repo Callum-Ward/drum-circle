@@ -24,6 +24,7 @@ public class UITargetEffect : UIGlowEffect
         this.swellEffectDec = 0f;
     }
 
+    //Sets required target button glowing and/or swelling
     public void SetMode(string mode, float glowStrength = 0f)
     {
         switch(mode)
@@ -75,6 +76,8 @@ public class UITargetEffect : UIGlowEffect
         }
     }
 
+
+    //Gets next scale to apply to target button element during swell effect
     public float getNextScaleEffect()
     {
         if(this.swellStage == 1)

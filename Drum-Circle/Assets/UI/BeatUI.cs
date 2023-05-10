@@ -63,6 +63,7 @@ public class BeatUI : MonoBehaviour
     private int[] drumIndexUIMap = new int[6]{0, 3, 1, 4, 2, 5};
 
     
+    //Configures beat overlay UI elements
     private void OnEnable()
     {
         root = GameObject.Find("BeatSpawnUI").GetComponent<UIDocument>().rootVisualElement;
@@ -121,10 +122,13 @@ public class BeatUI : MonoBehaviour
 
     }
 
+
     public void setPlayerCount(int number) {
         playerNo = number;
     }
 
+
+    //Handles UI response on score update
     public void updateScore(int player, float scoreVal, int comboVal, int multiVal, int winningPlayer) {
         scoreTags[player].text = "Score: " + scoreVal;
         comboTags[player].text = "Combo: " + comboVal + "\nx" + multiVal;
@@ -148,15 +152,21 @@ public class BeatUI : MonoBehaviour
         }*/
     }
 
+
+    //Called on drum hit
     public void hitSwell(int drumIndex) {
         beatTargetEffects[drumIndexUIMap[drumIndex]].SetMode("swell");
     }
 
+
+    //Called on missed beat hit
     public void hitMiss(int playerIndex, float windowScore) {
         laneEffects[playerIndex].SetMode("miss", 4f);
         laneContainers[playerIndex].style.backgroundColor = laneEffects[playerIndex].getTransitionColor(laneContainers[playerIndex].style.backgroundColor.value);
     }
 
+
+    //Toggles freestyle mode for UI beat lanes
     public void toggleFreestyle(int playerIndex, bool freestyle)
     {
         if(freestyle)
@@ -171,7 +181,7 @@ public class BeatUI : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    //re-configures beat overlay UI elements on new level start
     public void startLevelUI()
     {     
         
@@ -205,12 +215,6 @@ public class BeatUI : MonoBehaviour
              }
         
             int targetOffset = Mathf.RoundToInt(screenHeight*beatmapScript.inputDelay);
-            // Lane1L.Add(container1);
-            // Lane1R.Add(container2);
-            // container1.style.position = Position.Absolute;
-            // container2.style.position = Position.Absolute;
-            // container2.style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
-            // container1.style.top = new StyleLength(Mathf.RoundToInt((screenHeight*(1-beatTargetLocation))+targetSize));
             start++;
         }
     }
@@ -268,6 +272,8 @@ public class BeatUI : MonoBehaviour
         StartCoroutine(FadeOutCoroutine(freestyleNotice));
     }
 
+
+    //Handels current UI effect for a given player's UI elements on each update
     private IEnumerator PlayerUIEffectCo(int playerIndex)
     {
         Color nextLaneColor = laneEffects[playerIndex].getNextGlowValue(laneContainers[playerIndex].style.backgroundColor.value);
@@ -315,6 +321,7 @@ public class BeatUI : MonoBehaviour
 
     }
 
+        //Handle sfade out of UI text
         IEnumerator FadeOutCoroutine(Label label) {
             float startF = 1f;
             float endF = 0f;

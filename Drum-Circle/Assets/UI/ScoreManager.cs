@@ -32,6 +32,8 @@ public class ScoreManager : MonoBehaviour
         scores = new string[] {"Score1", "Score2", "Score3"};
     }
 
+
+    //Handles the adding and removal of musical layers on score change and passes the updated scores to the UI
     public void Update()
     {
         Tuple<int, int> maxScore = new Tuple<int, int>(0, 0);

@@ -37,7 +37,9 @@ public class camera_front : MonoBehaviour
         rightCam.transform.rotation = Quaternion.Euler(rightRotation);
      
     }
-    // Update is called once per frame
+    
+    
+    //Update cycle to change camera position and rotation as required
     void Update()
     {
         currentWaypoint = (platform.transform.position + (platformDistance * Vector3.Normalize(platform.transform.position - centre))); //upadte camera position to keep platform in focus 

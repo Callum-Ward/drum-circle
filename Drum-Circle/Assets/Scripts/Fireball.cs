@@ -16,6 +16,8 @@ public class Fireball : MonoBehaviour
     private bool willSpawn;
     private int playerIndex;
 
+
+    // Sets heading and tree spawning capability on intialisation
     public void StartUp(int playerIndex)
     {
         this.playerIndex = playerIndex;
@@ -31,6 +33,8 @@ public class Fireball : MonoBehaviour
         treeSpawner = GameObject.Find("TreeSpawner").GetComponent<TreeSpawning>();
     }
 
+
+    //Continuously updates direction of fireball so that it heads towards correct point
     void Update()
     {
         if(heading != null)
@@ -42,9 +46,10 @@ public class Fireball : MonoBehaviour
         }
     }
 
+
+    //On collision, detroys and spawns tree if it should
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Colliding at " + transform.position + " -> " + heading);
         if(willSpawn)
         {
             treeSpawner.spawnAtLocation(playerIndex+1, heading, true);

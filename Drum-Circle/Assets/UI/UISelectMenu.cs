@@ -61,6 +61,8 @@ public class UISelectMenu : MonoBehaviour
         SceneManager.LoadScene(mission);
     }
 
+
+    //Update cycle to check for MIDI input and either scroll through or select level dependent on this
     public void Update() {
         if (mTimer <= 0) {
             mTimer = 0f;
